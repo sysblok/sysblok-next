@@ -81,11 +81,6 @@ export default async function Page({
     author = await getAuthorById(post.author);
   } catch {}
 
-  // Fetch coauthors if they exist
-  try {
-    coauthors = await getCoauthors(post.id);
-  } catch {}
-
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
@@ -93,9 +88,12 @@ export default async function Page({
   });
   const category = await getCategoryById(post.categories[0]);
 
-  // Determine which authors to display
   const displayAuthors =
-    coauthors.length > 0 ? coauthors : author ? [author] : [];
+    post.coauthors && post.coauthors.length > 0
+      ? post.coauthors
+      : author
+      ? [author]
+      : [];
 
   return (
     <Section>

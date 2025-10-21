@@ -57,6 +57,7 @@ export interface Post extends WPEntity {
   content: RenderedContent;
   excerpt: RenderedContent;
   author: number;
+  coauthors: Array<{ id: number; name: string; slug: string }>;
   featured_media: number;
   comment_status: "open" | "closed";
   ping_status: "open" | "closed";

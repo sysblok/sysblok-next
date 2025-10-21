@@ -292,19 +292,6 @@ export async function getAuthorById(id: number): Promise<Author> {
   return wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`);
 }
 
-export async function getCoauthors(postId: number) {
-  const response = await fetch(
-    `https://sysblok.ru/wp-json/wp/v2/coauthors?post=${postId}`
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch coauthors");
-  }
-
-  const coauthors = await response.json();
-  return coauthors;
-}
-
 export async function getAuthorBySlug(slug: string): Promise<Author> {
   return wordpressFetch<Author[]>("/wp-json/wp/v2/users", { slug }).then(
     (users) => users[0]
