@@ -222,10 +222,28 @@ export async function getPostById(id: number): Promise<Post> {
   return wordpressFetch<Post>(`/wp-json/wp/v2/posts/${id}`);
 }
 
+// export async function getPostBySlug(slug: string): Promise<Post> {
+//   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug }).then(
+//     (posts) => posts[0]
+//   );
+// }
+
 export async function getPostBySlug(slug: string): Promise<Post> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug }).then(
-    (posts) => posts[0]
-  );
+  const post = await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+    slug,
+  }).then((posts) => posts[0]);
+
+  // Fetch coauthors separately
+  try {
+    const coauthors = await wordpressFetch<
+      Array<{ id: number; name: string; slug: string }>
+    >("/wp-json/wp/v2/coauthors", { post: post.id });
+    post.coauthors = coauthors;
+  } catch {
+    post.coauthors = [];
+  }
+
+  return post;
 }
 
 export async function getAllCategories(): Promise<Category[]> {

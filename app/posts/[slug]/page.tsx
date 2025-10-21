@@ -75,7 +75,6 @@ export default async function Page({
     ? await getFeaturedMediaById(post.featured_media)
     : null;
   let author;
-  let coauthors = [];
 
   try {
     author = await getAuthorById(post.author);
