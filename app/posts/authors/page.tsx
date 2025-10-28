@@ -12,6 +12,28 @@ export const metadata: Metadata = {
   },
 };
 
+function getAuthorDisplayName(author: any): string {
+  if (author.display_name) {
+    return author.display_name;
+  }
+
+  if (author.first_name || author.last_name) {
+    return `${author.first_name || ""} ${author.last_name || ""}`.trim();
+  }
+
+  if (author.slug) {
+    const cleanSlug = author.slug.replace(/^cap-/, "");
+    const formatted = cleanSlug
+      .split("_")
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    if (formatted) return formatted;
+  }
+
+  return author.name;
+}
+
 export default async function Page() {
   const authors = await getAllAuthors();
 
@@ -23,7 +45,9 @@ export default async function Page() {
           <ul className="grid">
             {authors.map((author: any) => (
               <li key={author.id}>
-                <Link href={`/posts/?author=${author.id}`}>{author.name}</Link>
+                <Link href={`/posts/?author=${author.id}`}>
+                  {getAuthorDisplayName(author)}
+                </Link>
               </li>
             ))}
           </ul>

@@ -36,6 +36,17 @@ export interface WordPressResponse<T> {
   headers: WordPressPaginationHeaders;
 }
 
+export interface CoAuthor {
+  id: number;
+  name: string;
+  slug: string;
+  display_name?: string;
+  description?: string;
+  avatar_urls?: {
+    [key: string]: string;
+  };
+}
+
 // Keep original function for backward compatibility
 async function wordpressFetch<T>(
   path: string,
@@ -222,22 +233,14 @@ export async function getPostById(id: number): Promise<Post> {
   return wordpressFetch<Post>(`/wp-json/wp/v2/posts/${id}`);
 }
 
-// export async function getPostBySlug(slug: string): Promise<Post> {
-//   return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug }).then(
-//     (posts) => posts[0]
-//   );
-// }
-
 export async function getPostBySlug(slug: string): Promise<Post> {
   const post = await wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
     slug,
   }).then((posts) => posts[0]);
 
-  // Fetch coauthors separately
+  // Fetch coauthors with full information
   try {
-    const coauthors = await wordpressFetch<
-      Array<{ id: number; name: string; slug: string }>
-    >("/wp-json/wp/v2/coauthors", { post: post.id });
+    const coauthors = await getCoAuthorsByPost(post.id);
     post.coauthors = coauthors;
   } catch {
     post.coauthors = [];
@@ -303,7 +306,12 @@ export async function getPageBySlug(slug: string): Promise<Page> {
 }
 
 export async function getAllAuthors(): Promise<Author[]> {
-  return wordpressFetch<Author[]>("/wp-json/wp/v2/users");
+  // Get all users
+  const users = await wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
+    per_page: 100,
+  });
+
+  return users;
 }
 
 export async function getAuthorById(id: number): Promise<Author> {
@@ -436,6 +444,50 @@ export async function getPostsByAuthorPaginated(
   };
 
   return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+}
+
+export async function getCoAuthorById(id: number): Promise<CoAuthor> {
+  return wordpressFetch<CoAuthor>(`/wp-json/wp/v2/coauthors/${id}`);
+}
+
+export async function getCoAuthorsByPost(postId: number): Promise<CoAuthor[]> {
+  const coauthors = await wordpressFetch<CoAuthor[]>(
+    "/wp-json/wp/v2/coauthors",
+    {
+      post: postId,
+    }
+  );
+
+  const enrichedCoauthors = await Promise.all(
+    coauthors.map(async (coauthor) => {
+      try {
+        const slug = coauthor.slug.replace(/^cap-/, "");
+
+        const users = await wordpressFetch<Author[]>("/wp-json/wp/v2/users", {
+          slug,
+        });
+
+        if (users.length > 0) {
+          return {
+            ...coauthor,
+            name: users[0].name,
+            display_name: users[0].name,
+            description: users[0].description || coauthor.description,
+            avatar_urls: users[0].avatar_urls || coauthor.avatar_urls,
+          };
+        }
+      } catch (error) {
+        console.error(
+          `Failed to fetch user data for coauthor ${coauthor.slug}:`,
+          error
+        );
+      }
+
+      return coauthor;
+    })
+  );
+
+  return enrichedCoauthors;
 }
 
 export { WordPressAPIError };
