@@ -12,10 +12,10 @@ import type {
   FeaturedMedia,
 } from "./wordpress.d";
 
-const baseUrl = process.env.WORDPRESS_URL;
+const baseUrl = process.env.NEXT_WORDPRESS_URL;
 
 if (!baseUrl) {
-  throw new Error("WORDPRESS_URL environment variable is not defined");
+  throw new Error("NEXT_WORDPRESS_URL environment variable is not defined");
 }
 
 class WordPressAPIError extends Error {
@@ -250,7 +250,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
 }
 
 export async function getAllCategories(): Promise<Category[]> {
-  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories");
+  return wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { per_page: 100 });
 }
 
 export async function getCategoryById(id: number): Promise<Category> {
@@ -278,7 +278,7 @@ export async function getTagsByPost(postId: number): Promise<Tag[]> {
 }
 
 export async function getAllTags(): Promise<Tag[]> {
-  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags");
+  return wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { per_page: 100 });
 }
 
 export async function getTagById(id: number): Promise<Tag> {
@@ -292,7 +292,7 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
 }
 
 export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { per_page: 100 });
 }
 
 export async function getPageById(id: number): Promise<Page> {
