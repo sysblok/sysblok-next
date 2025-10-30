@@ -71,16 +71,24 @@ export default async function Page({
     ? await getFeaturedMediaById(post.featured_media)
     : null;
   let author;
-  // TODO: Add coauthor fetch
+
   try {
     author = await getAuthorById(post.author);
   } catch {}
+
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
   const category = await getCategoryById(post.categories[0]);
+
+  const displayAuthors =
+    post.coauthors && post.coauthors.length > 0
+      ? post.coauthors
+      : author
+      ? [author]
+      : [];
 
   return (
     <Section>
@@ -96,12 +104,24 @@ export default async function Page({
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
               Published {date}
-              {author?.name && <>
-                {" by "}
-                <span>
-                  <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
-                </span>
-              </>}
+              {displayAuthors.length > 0 && (
+                <>
+                  {" by "}
+                  <span>
+                    {displayAuthors.map(
+                      (auth: { id: number; name: string }, index: number) => (
+                        <span key={auth.id}>
+                          <a href={`/posts/?author=${auth.id}`}>{auth.name}</a>
+                          {index < displayAuthors.length - 1 &&
+                            (index === displayAuthors.length - 2
+                              ? " and "
+                              : ", ")}
+                        </span>
+                      )
+                    )}
+                  </span>
+                </>
+              )}
             </h5>
 
             <Link
