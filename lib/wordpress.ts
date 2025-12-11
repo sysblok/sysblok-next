@@ -137,7 +137,8 @@ function transformPost(wpPost: WPPost): Post {
   }
 
   let categories: Category[] = [],
-    tags: Tag[] = [];
+    tags: Tag[] = [],
+    authorSlugs: string[] = [];
 
   if (wpPost._embedded["wp:term"]) {
     for (let terms of wpPost._embedded["wp:term"]) {
@@ -148,6 +149,8 @@ function transformPost(wpPost: WPPost): Post {
           break;
         case "post_tag":
           tags = terms as Tag[];
+        case "author":
+          authorSlugs = terms.map(({ name }) => name);
         default:
           break;
       }
@@ -174,6 +177,7 @@ function transformPost(wpPost: WPPost): Post {
       wpPost._embedded["author"][0]?.id !== undefined
         ? wpPost._embedded["author"][0]
         : undefined,
+    authorSlugs,
     featuredMedia:
       wpPost._embedded["wp:featuredmedia"] &&
       transformMedia(wpPost._embedded["wp:featuredmedia"][0]),
@@ -531,9 +535,7 @@ export const getMediaById = (id: number) =>
 export const getAllPostSlugs = () => getAllPosts({ _fields: ["slug"] });
 
 export async function getCoAuthorsByPost(postId: number) {
-  const res = await fetch(
-    `${process.env.WP_URL}/wp-json/wp/v2/coauthors?post=${postId}`
-  );
+  const res = await fetch(`${baseUrl}/wp-json/wp/v2/coauthors?post=${postId}`); // TODO: Use wordpressFetch
   if (!res.ok) return [];
   const coauthors = await res.json();
 
@@ -549,11 +551,11 @@ export async function getPostData(slug: string) {
   const category = post.categories[0];
 
   const coAuthorSlugs = await getCoAuthorsByPost(post.id);
-  const authorSlugs = [...(coAuthorSlugs || [])].filter(Boolean);
+  const authorSlugs = [...(coAuthorSlugs || [])].filter(Boolean); // TODO: Use post.authorSlugs instead
 
   const authors = authorSlugs.length
     ? await getAllAuthors({ slug: authorSlugs })
-    : [];
+    : []; // TODO: Sort in the same order as authorSlugs
 
   return {
     post,
