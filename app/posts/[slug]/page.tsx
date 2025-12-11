@@ -1,12 +1,8 @@
 import {
   getPostBySlug,
-  getMediaById,
-  getAuthorById,
-  getCategoryById,
   getAllPostSlugs,
+  getPostData,
 } from "@/lib/wordpress";
-
-import { getPostData } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
@@ -17,6 +13,7 @@ import Link from "next/link";
 import Balancer from "react-wrap-balancer";
 
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
   return getAllPostSlugs();
@@ -35,17 +32,18 @@ export async function generateMetadata({
   }
 
   const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  ogUrl.searchParams.append("title", post.title.rendered);
+  const { title } = post;
+  ogUrl.searchParams.append("title", title);
   // Strip HTML tags for description
-  const description = post.excerpt.rendered.replace(/<[^>]*>/g, "").trim();
+  const description = post.excerpt;
   ogUrl.searchParams.append("description", description);
 
   return {
-    title: post.title.rendered,
-    description: description,
+    title,
+    description,
     openGraph: {
-      title: post.title.rendered,
-      description: description,
+      title,
+      description,
       type: "article",
       url: `${siteConfig.site_domain}/posts/${post.slug}`,
       images: [
@@ -53,13 +51,13 @@ export async function generateMetadata({
           url: ogUrl.toString(),
           width: 1200,
           height: 630,
-          alt: post.title.rendered,
+          alt: title,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title.rendered,
+      title,
       description: description,
       images: [ogUrl.toString()],
     },
@@ -75,17 +73,16 @@ export default async function Page({
 
   const postData = await getPostData(slug);
 
-  if (!postData || !postData.post) {
-    return <p>Post not found</p>;
-  }
+  if (!postData) notFound();
 
-  const { post, featuredMedia, category, authors } = postData;
+  const { post, featuredMedia, authors, category } = postData;
 
-  const date = new Date(post.date).toLocaleDateString("en-US", {
+  const date = post.date.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
+
 
   return (
     <Section>
@@ -94,7 +91,7 @@ export default async function Page({
           <h1>
             <Balancer>
               <span
-                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+                dangerouslySetInnerHTML={{ __html: post.title }}
               ></span>
             </Balancer>
           </h1>
@@ -124,19 +121,19 @@ export default async function Page({
               {category.name}
             </Link>
           </div>
-          {featuredMedia?.source_url && (
+          {featuredMedia?.sourceUrl && (
             <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
               {/* eslint-disable-next-line */}
               <img
                 className="w-full h-full object-cover"
-                src={featuredMedia.source_url}
-                alt={post.title.rendered}
+                src={featuredMedia.sourceUrl}
+                alt={featuredMedia.altText || post.title || "Post thumbnail"}
               />
             </div>
           )}
         </Prose>
 
-        <Article dangerouslySetInnerHTML={{ __html: post.content.rendered }} />
+        <Article dangerouslySetInnerHTML={{ __html: post.content }} />
       </Container>
     </Section>
   );
