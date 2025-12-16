@@ -534,33 +534,16 @@ export const getMediaById = (id: number) =>
 // Function specifically for generateStaticParams - fetches ALL post slugs
 export const getAllPostSlugs = () => getAllPosts({ _fields: ["slug"] });
 
-export async function getCoAuthorsByPost(postId: number) {
-  const res = await fetch(`${baseUrl}/wp-json/wp/v2/coauthors?post=${postId}`); // TODO: Use wordpressFetch
-  if (!res.ok) return [];
-  const coauthors = await res.json();
-
-  return coauthors.map((a: any) => a.name.replace(/^cap-/, ""));
-}
-
 export async function getPostData(slug: string) {
   const post = await getPostBySlug(slug);
   if (!post) return null;
 
   const { featuredMedia } = post;
-
   const category = post.categories[0];
 
-  const coAuthorSlugs = await getCoAuthorsByPost(post.id);
-  const authorSlugs = [...(coAuthorSlugs || [])].filter(Boolean); // TODO: Use post.authorSlugs instead
+  const authors = post.authorSlugs.length
+    ? await getAllAuthors({ slug: post.authorSlugs })
+    : [];
 
-  const authors = authorSlugs.length
-    ? await getAllAuthors({ slug: authorSlugs })
-    : []; // TODO: Sort in the same order as authorSlugs
-
-  return {
-    post,
-    featuredMedia,
-    category,
-    authors,
-  };
+  return { post, featuredMedia, category, authors };
 }
