@@ -1,8 +1,4 @@
-import {
-  getPostBySlug,
-  getAllPostSlugs,
-  getPostData,
-} from "@/lib/wordpress";
+import { getPostBySlug, getAllPostSlugs, getPostData } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
@@ -83,16 +79,13 @@ export default async function Page({
     year: "numeric",
   });
 
-
   return (
     <Section>
       <Container>
         <Prose>
           <h1>
             <Balancer>
-              <span
-                dangerouslySetInnerHTML={{ __html: post.title }}
-              ></span>
+              <span dangerouslySetInnerHTML={{ __html: post.title }}></span>
             </Balancer>
           </h1>
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
@@ -101,9 +94,11 @@ export default async function Page({
               {authors?.length > 0 && (
                 <>
                   {" by "}
-                  {authors.map((a: any, i: number) => (
-                    <span key={a.id}>
-                      <a href={`/posts/?author=${a.id}`}>{a.name}</a>
+                  {authors.map((author, i) => (
+                    <span key={author.id}>
+                      <Link href={`/posts/?author=${author.id}`}>
+                        {author.name}
+                      </Link>
                       {i < authors.length - 1 ? ", " : ""}
                     </span>
                   ))}
