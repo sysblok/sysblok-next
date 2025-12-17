@@ -541,9 +541,10 @@ export async function getPostData(slug: string) {
   const { featuredMedia } = post;
   const category = post.categories[0];
 
-  const authors = post.authorSlugs.length
-    ? await getAllAuthors({ slug: post.authorSlugs })
-    : [];
+  const authors =
+    post.authorSlugs.length == 1 && post.author
+      ? [post.author]
+      : await getAllAuthors({ slug: post.authorSlugs }); // TODO: Sort in the same order as authorSlugs
 
   return { post, featuredMedia, category, authors };
 }

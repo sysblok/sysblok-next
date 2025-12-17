@@ -424,7 +424,6 @@ export type CacheTag =
   | `tag-${number | string}`
   | "authors"
   | `author-${number | string}`
-  | `coauthors-post-${number}`
   | "media"
   | `media-${number | string}`
   | "pages"
