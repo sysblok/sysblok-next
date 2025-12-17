@@ -137,7 +137,8 @@ function transformPost(wpPost: WPPost): Post {
   }
 
   let categories: Category[] = [],
-    tags: Tag[] = [];
+    tags: Tag[] = [],
+    authorSlugs: string[] = [];
 
   if (wpPost._embedded["wp:term"]) {
     for (let terms of wpPost._embedded["wp:term"]) {
@@ -148,6 +149,8 @@ function transformPost(wpPost: WPPost): Post {
           break;
         case "post_tag":
           tags = terms as Tag[];
+        case "author":
+          authorSlugs = terms.map(({ name }) => name);
         default:
           break;
       }
@@ -174,6 +177,7 @@ function transformPost(wpPost: WPPost): Post {
       wpPost._embedded["author"][0]?.id !== undefined
         ? wpPost._embedded["author"][0]
         : undefined,
+    authorSlugs,
     featuredMedia:
       wpPost._embedded["wp:featuredmedia"] &&
       transformMedia(wpPost._embedded["wp:featuredmedia"][0]),
@@ -529,3 +533,18 @@ export const getMediaById = (id: number) =>
 
 // Function specifically for generateStaticParams - fetches ALL post slugs
 export const getAllPostSlugs = () => getAllPosts({ _fields: ["slug"] });
+
+export async function getPostData(slug: string) {
+  const post = await getPostBySlug(slug);
+  if (!post) return null;
+
+  const { featuredMedia } = post;
+  const category = post.categories[0];
+
+  const authors =
+    post.authorSlugs.length == 1 && post.author
+      ? [post.author]
+      : await getAllAuthors({ slug: post.authorSlugs }); // TODO: Sort in the same order as authorSlugs
+
+  return { post, featuredMedia, category, authors };
+}

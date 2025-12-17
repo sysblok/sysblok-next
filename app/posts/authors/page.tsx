@@ -21,7 +21,7 @@ export default async function Page() {
         <Prose className="mb-8">
           <h2>All Authors</h2>
           <ul className="grid">
-            {authors.map((author: any) => (
+            {authors.map((author) => (
               <li key={author.id}>
                 <Link href={`/posts/?author=${author.id}`}>{author.name}</Link>
               </li>

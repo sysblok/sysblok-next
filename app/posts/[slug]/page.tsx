@@ -1,7 +1,4 @@
-import {
-  getPostBySlug,
-  getAllPostSlugs,
-} from "@/lib/wordpress";
+import { getPostBySlug, getAllPostSlugs, getPostData } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
 import { badgeVariants } from "@/components/ui/badge";
@@ -69,17 +66,18 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
 
-  if (!post) notFound();
+  const postData = await getPostData(slug);
 
-  const { featuredMedia, author } = post;
+  if (!postData) notFound();
+
+  const { post, featuredMedia, authors, category } = postData;
+
   const date = post.date.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories[0];
 
   return (
     <Section>
@@ -87,20 +85,25 @@ export default async function Page({
         <Prose>
           <h1>
             <Balancer>
-              <span
-                dangerouslySetInnerHTML={{ __html: post.title }}
-              ></span>
+              <span dangerouslySetInnerHTML={{ __html: post.title }}></span>
             </Balancer>
           </h1>
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
               Published {date}
-              {author?.name && <>
-                {" by "}
-                <span>
-                  <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
-                </span>
-              </>}
+              {authors?.length > 0 && (
+                <>
+                  {" by "}
+                  {authors.map((author, i) => (
+                    <span key={author.id}>
+                      <Link href={`/posts/?author=${author.id}`}>
+                        {author.name}
+                      </Link>
+                      {i < authors.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </>
+              )}
             </h5>
 
             <Link

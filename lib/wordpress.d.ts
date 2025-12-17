@@ -86,7 +86,7 @@ export interface WPPost extends WPEntity {
   _embedded?: {
     author: Author[];
     "wp:featuredmedia"?: WPMedia[];
-    "wp:term": Array<Category[] | Tag[]>;
+    "wp:term": Array<Category[] | Tag[] | Coauthor[]>;
   };
 }
 
@@ -127,6 +127,10 @@ export interface Category extends Taxonomy {
 export interface Tag extends Taxonomy {
   description: string;
   taxonomy: "post_tag";
+}
+
+export interface Coauthor extends Taxonomy {
+  taxonomy: "author";
 }
 
 export interface Author {
@@ -273,6 +277,7 @@ export interface Post extends PostMetaEntity {
   format: WPPost["format"];
   categories: Category[];
   tags: Tag[];
+  authorSlugs: string[];
   meta: Record<string, unknown>;
 }
 
