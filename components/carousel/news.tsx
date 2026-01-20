@@ -73,41 +73,42 @@ export async function News({
           <CarouselContent>
             {newsItems.map((item) => (
               <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <Card className="h-full">
-                    <CardHeader>
-                      <div className="relative h-48 w-full mb-4 overflow-hidden rounded-md">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <CardTitle className="line-clamp-2">
-                        {item.title}
-                      </CardTitle>
-                      <CardDescription>{item.date}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground line-clamp-3">
-                        {item.description}
-                      </p>
-                    </CardContent>
-                    <CardFooter>
-                      {item.url && (
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-primary hover:underline"
-                        >
-                          Читать далее →
-                        </a>
-                      )}
-                    </CardFooter>
-                  </Card>
-                </div>
+                <Card className="h-full">
+                  <CardHeader>
+                    <div className="relative h-48 w-full mb-4 overflow-hidden rounded-md">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <CardTitle className="line-clamp-2">{item.title}</CardTitle>
+                    <time
+                      dateTime={item.date}
+                      className="text-sm text-muted-foreground"
+                    >
+                      {item.date}
+                    </time>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground line-clamp-3">
+                      {item.description}
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    {item.url && (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline"
+                      >
+                        Читать далее →
+                      </a>
+                    )}
+                  </CardFooter>
+                </Card>
               </CarouselItem>
             ))}
           </CarouselContent>
