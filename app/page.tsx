@@ -3,7 +3,7 @@ import { Container, Prose } from "@/components/craft";
 
 import { getCategoryBySlug, getPostsPaginated } from "@/lib/wordpress";
 import { PostCard } from "@/components/posts/post-card";
-import { NewsCarousel } from "@/components/carousel/news-carousel";
+import { News } from "@/components/carousel/news";
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
@@ -41,12 +41,7 @@ export default async function Home() {
       </Prose>
 
       {/* Секция с новостями в карусели */}
-      {newsItems.length > 0 && (
-        <div className="my-12">
-          <h2 className="text-2xl font-bold mb-6">Последние новости</h2>
-          <NewsCarousel news={newsItems} />
-        </div>
-      )}
+      <News categoryId={newsCategory.id} />
       {posts.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-4">
           {posts.map((post) => (
