@@ -8,13 +8,12 @@ import {
 } from "@/components/ui/carousel";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 
 interface NewsCarouselProps {
   categoryId?: number;
@@ -43,9 +42,7 @@ export async function News({
   const newsItems = newsPosts.map((post) => ({
     id: post.id,
     title: post.title || "Untitled Post",
-    description: post.excerpt
-      ? post.excerpt.split(" ").slice(0, 24).join(" ").trim() + "..."
-      : "No excerpt available",
+    description: post.excerpt || "No excerpt available",
     image: post.featuredMedia?.sourceUrl || "/images/placeholder.jpg",
     date: post.date.toLocaleDateString("ru-RU", {
       year: "numeric",
@@ -74,38 +71,34 @@ export async function News({
             {newsItems.map((item) => (
               <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
                 <Card className="h-full">
-                  <CardHeader>
-                    <div className="relative h-48 w-full mb-4 overflow-hidden rounded-md">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <CardTitle className="line-clamp-2">{item.title}</CardTitle>
-                    <time
-                      dateTime={item.date}
-                      className="text-sm text-muted-foreground"
-                    >
-                      {item.date}
-                    </time>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {item.description}
-                    </p>
-                  </CardContent>
+                  {/* <div className="relative h-48 w-full mb-4 overflow-hidden rounded-md">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div> */}
+                  <CardTitle className="line-clamp-2">{item.title}</CardTitle>
+                  <time
+                    dateTime={item.date}
+                    className="text-sm text-muted-foreground px-6"
+                  >
+                    {item.date}
+                  </time>
+                  <CardDescription className="line-clamp-3">
+                    {item.description}
+                  </CardDescription>
                   <CardFooter>
                     {item.url && (
-                      <a
+                      <Link
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-primary hover:underline"
                       >
                         Читать далее →
-                      </a>
+                      </Link>
                     )}
                   </CardFooter>
                 </Card>

@@ -7,32 +7,12 @@ import { News } from "@/components/carousel/news";
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
+  // Получаем только id категории для исключения из основных постов
   const newsCategory = await getCategoryBySlug("news");
 
-  // Получаем новости и остальные посты параллельно
-  const [newsResponse, postsResponse] = await Promise.all([
-    getPostsPaginated(1, 10, { categories: newsCategory.id }),
-    getPostsPaginated(1, 30, { categories_exclude: newsCategory.id }),
-  ]);
-
-  const { data: newsPosts } = newsResponse;
-  const { data: posts } = postsResponse;
-
-  // Трансформируем посты WordPress в формат для карусели
-  const newsItems = newsPosts.map((post) => ({
-    id: post.id,
-    title: post.title || "Untitled Post",
-    description: post.excerpt
-      ? post.excerpt.split(" ").slice(0, 24).join(" ").trim() + "..."
-      : "No excerpt available",
-    image: post.featuredMedia?.sourceUrl || "/images/placeholder.jpg",
-    date: post.date.toLocaleDateString("ru-RU", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    url: `/posts/${post.slug}`,
-  }));
+  const { data: posts } = await getPostsPaginated(1, 30, {
+    categories_exclude: newsCategory.id,
+  });
 
   return (
     <Container>
