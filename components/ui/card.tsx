@@ -25,7 +25,7 @@ const CardTitle = ({
   className,
   ...props
 }: React.ComponentPropsWithRef<"div">) => (
-  <div
+  <h3
     className={cn(
       "text-2xl font-semibold leading-none tracking-tight",
       className
