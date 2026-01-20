@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 const Card = ({ className, ...props }: React.ComponentPropsWithRef<"div">) => (
   <div
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm",
       className
     )}
     {...props}
@@ -59,7 +59,10 @@ const CardFooter = ({
   className,
   ...props
 }: React.ComponentPropsWithRef<"div">) => (
-  <div className={cn("flex items-center p-6 pt-0", className)} {...props} />
+  <div
+    className={cn("flex mt-auto items-center p-6 pt-0", className)}
+    {...props}
+  />
 );
 CardFooter.displayName = "CardFooter";
 
