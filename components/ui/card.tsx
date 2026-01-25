@@ -42,7 +42,7 @@ const CardFooter = ({
   className,
   ...props
 }: React.ComponentPropsWithRef<"div">) => (
-  <div className={cn("flex mt-auto p-6 pt-0", className)} {...props} />
+  <div className={cn("mt-auto p-6 pt-0", className)} {...props} />
 );
 CardFooter.displayName = "CardFooter";
 
