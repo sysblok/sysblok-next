@@ -79,7 +79,7 @@ export async function News({
                     {item.date}
                   </time>
 
-                  <CardDescription className="line-clamp-2 m-6 mt-3">
+                  <CardDescription className="line-clamp-3 m-6 mt-3">
                     {item.description}
                   </CardDescription>
                   <CardFooter>

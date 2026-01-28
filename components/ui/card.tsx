@@ -6,7 +6,7 @@ const Card = ({ className, ...props }: React.ComponentPropsWithRef<"div">) => (
   <div
     className={cn(
       "flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm",
-      className
+      className,
     )}
     {...props}
   />
@@ -20,7 +20,7 @@ const CardTitle = ({
   <h3
     className={cn(
       "text-2xl font-semibold leading-none tracking-tight p-6 pb-0",
-      className
+      className,
     )}
     {...props}
   />
@@ -31,10 +31,7 @@ const CardDescription = ({
   className,
   ...props
 }: React.ComponentPropsWithRef<"p">) => (
-  <p
-    className={cn("text-sm text-muted-foreground p-6 pt-3", className)}
-    {...props}
-  />
+  <p className={cn("text-sm text-muted-foreground ", className)} {...props} />
 );
 CardDescription.displayName = "CardDescription";
 
