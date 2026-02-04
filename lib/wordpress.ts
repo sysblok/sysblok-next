@@ -23,12 +23,16 @@ const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
 if (!baseUrl) {
   throw new Error(
-    "NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined"
+    "NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined",
   );
 }
 
 export class WordPressAPIError extends Error {
-  constructor(message: string, public status: number, public endpoint: string) {
+  constructor(
+    message: string,
+    public status: number,
+    public endpoint: string,
+  ) {
     super(message);
     this.name = "WordPressAPIError";
   }
@@ -37,16 +41,16 @@ export class WordPressAPIError extends Error {
 const wordpressFetch = <T>(
   path: string,
   query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = []
+  cacheTags: CacheTag[] = [],
 ) =>
   wordpressFetchWithPagination<T>(path, query, cacheTags).then(
-    ({ data }) => data
+    ({ data }) => data,
   );
 
 async function wordpressFetchWithPagination<T>(
   path: string,
   query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = []
+  cacheTags: CacheTag[] = [],
 ): Promise<WordPressResponse<T>> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query, { arrayFormat: "comma" })}` : ""
@@ -67,7 +71,7 @@ async function wordpressFetchWithPagination<T>(
     throw new WordPressAPIError(
       `WordPress API request failed: ${response.statusText}`,
       response.status,
-      url
+      url,
     );
   }
 
@@ -85,7 +89,7 @@ async function wordpressFetchWithPagination<T>(
 async function wordpressFetchAll<T>(
   path: string,
   queryParams?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = []
+  cacheTags: CacheTag[] = [],
 ): Promise<T[]> {
   const getPage = (page: number) =>
     wordpressFetchWithPagination<T[]>(
@@ -95,7 +99,7 @@ async function wordpressFetchAll<T>(
         per_page: 100,
         page,
       },
-      cacheTags
+      cacheTags,
     );
 
   const { headers, data } = await getPage(1);
@@ -277,7 +281,7 @@ export type CardPost = Pick<
 export async function getPostsPaginated(
   page: number = 1,
   perPage: number = 9,
-  filterParams?: WordPressQuery<WPPost>
+  filterParams?: WordPressQuery<WPPost>,
 ): Promise<WordPressResponse<CardPost[]>> {
   const query: WordPressQuery<WPPost> = {
     _fields: postCardFields,
@@ -304,7 +308,7 @@ export async function getPostsPaginated(
   const response = await wordpressFetchWithPagination<WPPost[]>(
     "/wp-json/wp/v2/posts",
     query,
-    cacheTags
+    cacheTags,
   );
 
   return {
@@ -320,7 +324,7 @@ export const getAllPosts = (queryParams: WordPressQuery<WPPost>) =>
       _fields: postFields,
       ...queryParams,
     },
-    ["posts"]
+    ["posts"],
   );
 
 export const getPostById = (id: number) =>
@@ -330,7 +334,7 @@ export const getPostById = (id: number) =>
       _embed: true,
       _fields: postFields,
     },
-    [`post-${id}`]
+    [`post-${id}`],
   ).then(transformPost);
 
 export const getPostBySlug = (slug: string) =>
@@ -341,7 +345,7 @@ export const getPostBySlug = (slug: string) =>
       _embed: true,
       _fields: postFields,
     },
-    [`post-${slug}`]
+    [`post-${slug}`],
   ).then((posts) => posts[0] && transformPost(posts[0]));
 
 const categoryFields: Array<keyof Category> = [
@@ -363,21 +367,21 @@ export const getAllCategories = (queryParams?: WordPressQuery<Category>) =>
       _fields: categoryFields,
       ...queryParams,
     },
-    ["categories"]
+    ["categories"],
   );
 
 export const getCategoryById = (id: number) =>
   wordpressFetch<Category>(
     `/wp-json/wp/v2/categories/${id}`,
     { _fields: categoryFields },
-    [`category-${id}`]
+    [`category-${id}`],
   );
 
 export const getCategoryBySlug = (slug: string) =>
   wordpressFetch<Category[]>(
     "/wp-json/wp/v2/categories",
     { slug, _fields: categoryFields },
-    ["categories"]
+    ["categories"],
   ).then((categories) => categories[0]);
 
 const tagFields: Array<keyof Tag> = [
@@ -398,7 +402,7 @@ export const getAllTags = (queryParams?: WordPressQuery<Tag>) =>
       _fields: tagFields,
       ...queryParams,
     },
-    ["tags"]
+    ["tags"],
   );
 
 export const getTagById = (id: number) =>
@@ -443,7 +447,7 @@ export const getAllPages = (queryParams: WordPressQuery<WPPage>) =>
       _fields: pageFields,
       ...queryParams,
     },
-    ["pages"]
+    ["pages"],
   );
 
 export const getPageById = (id: number) =>
@@ -453,7 +457,7 @@ export const getPageById = (id: number) =>
       _embed: true,
       _fields: pageFields,
     },
-    [`page-${id}`]
+    [`page-${id}`],
   ).then(transformPage);
 
 export const getPageBySlug = (slug: string) =>
@@ -464,7 +468,7 @@ export const getPageBySlug = (slug: string) =>
       _fields: pageFields,
       slug,
     },
-    [`page-${slug}`]
+    [`page-${slug}`],
   ).then((pages) => pages[0] && transformPage(pages[0]));
 
 const authorFields: Array<keyof Author> = [
@@ -485,21 +489,21 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
       _fields: authorFields,
       ...queryParams,
     },
-    ["authors"]
+    ["authors"],
   );
 
 export const getAuthorById = (id: number) =>
   wordpressFetch<Author>(
     `/wp-json/wp/v2/users/${id}`,
     { _fields: authorFields },
-    [`author-${id}`]
+    [`author-${id}`],
   );
 
 export const getAuthorBySlug = (slug: string) =>
   wordpressFetch<Author[]>(
     "/wp-json/wp/v2/users",
     { slug, _fields: authorFields },
-    ["authors"]
+    ["authors"],
   ).then((users) => users[0]);
 
 const mediaFields: Array<keyof WPMedia> = [
@@ -522,13 +526,28 @@ const mediaFields: Array<keyof WPMedia> = [
   "source_url",
 ];
 
+export async function getStickyPost(): Promise<Post | null> {
+  const response = await wordpressFetchWithPagination<WPPost[]>(
+    "/wp-json/wp/v2/posts",
+    {
+      _fields: postFields,
+      _embed: true,
+      sticky: true,
+      per_page: 1,
+    },
+    ["posts"],
+  );
+
+  return response.data.length > 0 ? transformPost(response.data[0]) : null;
+}
+
 export const getMediaById = (id: number) =>
   wordpressFetch<WPMedia>(
     `/wp-json/wp/v2/media/${id}`,
     {
       _fields: mediaFields,
     },
-    ["media", `media-${id}`]
+    ["media", `media-${id}`],
   ).then(transformMedia);
 
 // Function specifically for generateStaticParams - fetches ALL post slugs
