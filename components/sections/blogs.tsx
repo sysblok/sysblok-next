@@ -18,7 +18,7 @@ export async function Blogs({ categoryId }: { categoryId: number }) {
         ))}
       </div>
       <div className="mt-6 text-right">
-        <Link href="/blogs" className="text-blue-600 hover:underline">
+        <Link href="/blogs" className="text-sm text-blue-600 hover:underline">
           Больше записей из блогов →
         </Link>
       </div>
