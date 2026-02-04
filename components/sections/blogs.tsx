@@ -1,11 +1,13 @@
-import { getPostsPaginated } from "@/lib/wordpress";
+import { getCategoryBySlug, getPostsFromSubcategories } from "@/lib/wordpress";
 import { PostCard } from "@/components/posts/post-card";
 import Link from "next/link";
 
-export async function Blogs({ categoryId }: { categoryId: number }) {
-  const { data: posts } = await getPostsPaginated(1, 3, {
-    categories: categoryId,
-  });
+export async function Blogs() {
+  const blogCategory = await getCategoryBySlug("blog");
+
+  if (!blogCategory) return null;
+
+  const posts = await getPostsFromSubcategories(blogCategory.id, 3);
 
   if (posts.length === 0) return null;
 

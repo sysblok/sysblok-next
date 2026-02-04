@@ -10,7 +10,6 @@ import { Blogs } from "@/components/sections/blogs";
 export default async function Home() {
   // Получаем только id категории для исключения из основных постов
   const newsCategory = await getCategoryBySlug("news");
-  const blogsCategory = await getCategoryBySlug("blogs");
 
   const { data: posts } = await getPostsPaginated(1, 30, {
     categories_exclude: newsCategory.id,
@@ -24,7 +23,7 @@ export default async function Home() {
 
       {/* Секция с новостями в карусели */}
       <News categoryId={newsCategory.id} />
-      <Blogs categoryId={blogsCategory.id} />
+      <Blogs />
       {posts.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-4">
           {posts.map((post) => (
