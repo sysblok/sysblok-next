@@ -20,7 +20,10 @@ export async function Blogs() {
         ))}
       </div>
       <div className="mt-6 text-right">
-        <Link href="/blogs" className="text-sm text-blue-600 hover:underline">
+        <Link
+          href="https://next.sysblok.team/posts?category=1773"
+          className="text-sm text-blue-600 hover:underline"
+        >
           Больше записей из блогов →
         </Link>
       </div>
