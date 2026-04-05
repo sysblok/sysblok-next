@@ -542,7 +542,6 @@ export const getChildCategories = async (
   return getAllCategories({ parent: parentId });
 };
 
-// Получить по одному посту из каждой подкатегории
 export async function getPostsFromSubcategories(
   parentCategoryId: number,
   limit: number = 3,
@@ -558,23 +557,13 @@ export async function getPostsFromSubcategories(
     ["categories"],
   );
 
-  const posts: CardPost[] = [];
-
-  // Для каждой подкатегории берем один последний пост
-  for (const subcategory of subcategories) {
-    if (posts.length >= limit) break;
-
-    // Используем существующую getPostsPaginated
-    const { data } = await getPostsPaginated(1, 1, {
-      categories: subcategory.id,
-    });
-
-    if (data.length > 0) {
-      posts.push(data[0]);
-    }
-  }
-
-  return posts;
+  return (
+    await Promise.all(
+      subcategories.map(({ id }) =>
+        getPostsPaginated(1, 1, { categories: id }),
+      ),
+    )
+  ).map(({ data }) => data[0]);
 }
 
 // Function specifically for generateStaticParams - fetches ALL post slugs
