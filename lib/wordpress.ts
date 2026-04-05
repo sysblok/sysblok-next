@@ -547,8 +547,16 @@ export async function getPostsFromSubcategories(
   parentCategoryId: number,
   limit: number = 3,
 ): Promise<CardPost[]> {
-  // Получаем все подкатегории
-  const subcategories = await getChildCategories(parentCategoryId);
+  const subcategories = await wordpressFetch<Category>(
+    "/wp-json/wp/v2/categories",
+    {
+      hide_empty: true,
+      _fields: categoryFields,
+      parent: parentCategoryId,
+      per_page: limit,
+    },
+    ["categories"],
+  );
 
   const posts: CardPost[] = [];
 
