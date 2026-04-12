@@ -3,9 +3,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
-import {
-  CardPost,
-} from "@/lib/wordpress";
+import { CardPost } from "@/lib/wordpress";
 
 export function PostCard({ post }: { post: CardPost }) {
   const media = post.featuredMedia;
@@ -14,14 +12,14 @@ export function PostCard({ post }: { post: CardPost }) {
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories[0]
+  const category = post.categories?.[0];
 
   return (
     <Link
       href={`/posts/${post.slug}`}
       className={cn(
         "border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8",
-        "hover:bg-accent/75 transition-all"
+        "hover:bg-accent/75 transition-all",
       )}
     >
       <div className="flex flex-col gap-4">
@@ -44,8 +42,8 @@ export function PostCard({ post }: { post: CardPost }) {
         ></div>
         <div className="text-sm">
           {post.excerpt
-              ? post.excerpt.split(" ").slice(0, 24).join(" ").trim() + "..."
-              : "No excerpt available"}
+            ? post.excerpt.split(" ").slice(0, 24).join(" ").trim() + "..."
+            : "No excerpt available"}
         </div>
       </div>
 
