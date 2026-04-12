@@ -8,6 +8,7 @@ import {
 } from "@/lib/wordpress";
 import { PostCard } from "@/components/posts/post-card";
 import { News } from "@/components/carousel/news";
+import { Blogs } from "@/components/sections/blogs";
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
@@ -35,8 +36,7 @@ export default async function Home() {
       )}
 
       <News categoryId={newsCategory.id} />
-
-      {/* Остальные посты */}
+      <Blogs />
       {posts.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-4">
           {posts.map((post) => (
