@@ -361,6 +361,8 @@ export interface PageQuery extends EntityQuery<WPPage> {
   parent?: number | Array<number>; // Limit result set to items with particular parent IDs.
   parent_exclude?: number | Array<number>; // Limit result set to all items except those of a particular parent ID.
   menu_order?: number; // Limit result set to posts with a specific menu_order value.
+  meta_key?: string; // для фильтрации по кастомным мета-полям
+  meta_value?: string;
 }
 
 export interface MediaQuery extends EntityQuery<WPMedia> {
@@ -397,19 +399,20 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
 
 type Flatten<T> = T extends any[] ? T[number] : T;
 
-export type WordPressQuery<T> = Flatten<T> extends WPPost
-  ? PostQuery
-  : Flatten<T> extends WPPage
-  ? PageQuery
-  : Flatten<T> extends WPMedia
-  ? MediaQuery
-  : Flatten<T> extends Tag
-  ? TagQuery
-  : Flatten<T> extends Category
-  ? CategoryQuery
-  : Flatten<T> extends Author
-  ? AuthorQuery
-  : BaseQuery<Flatten<T>>;
+export type WordPressQuery<T> =
+  Flatten<T> extends WPPost
+    ? PostQuery
+    : Flatten<T> extends WPPage
+      ? PageQuery
+      : Flatten<T> extends WPMedia
+        ? MediaQuery
+        : Flatten<T> extends Tag
+          ? TagQuery
+          : Flatten<T> extends Category
+            ? CategoryQuery
+            : Flatten<T> extends Author
+              ? AuthorQuery
+              : BaseQuery<Flatten<T>>;
 
 export type CacheTag =
   | "wordpress"

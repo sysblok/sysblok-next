@@ -526,21 +526,34 @@ const mediaFields: Array<keyof WPMedia> = [
   "source_url",
 ];
 export async function getStickyPost(): Promise<Post | null> {
-  const [stickyPost, stickyPage] = await Promise.all([
+  const [stickyPostResponse, stickyPageResponse] = await Promise.all([
     wordpressFetchWithPagination<WPPost[]>(
       "/wp-json/wp/v2/posts",
       { _fields: postFields, _embed: true, sticky: true, per_page: 1 },
       ["posts"],
     ),
-    wordpressFetchWithPagination<WPPost[]>(
+    wordpressFetchWithPagination<WPPage[]>(
       "/wp-json/wp/v2/pages",
-      { _fields: postFields, _embed: true, sticky: true, per_page: 1 },
+      {
+        _fields: pageFields,
+        _embed: true,
+        meta_key: "_sticky_page",
+        meta_value: "1",
+        per_page: 1,
+      },
       ["pages"],
     ),
   ]);
 
-  const result = stickyPost.data[0] ?? stickyPage.data[0] ?? null;
-  return result ? transformPost(result) : null;
+  if (stickyPageResponse.data[0]) {
+    return transformPage(stickyPageResponse.data[0]) as unknown as Post;
+  }
+
+  if (stickyPostResponse.data[0]) {
+    return transformPost(stickyPostResponse.data[0]);
+  }
+
+  return null;
 }
 
 export const getMediaById = (id: number) =>
