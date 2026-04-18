@@ -264,18 +264,23 @@ const postCardFields: Array<keyof WPPost> = [
   "_embedded",
 ];
 
-export type CardPost = Pick<
-  Post,
-  | "id"
-  | "date"
-  | "slug"
-  | "title"
-  | "excerpt"
-  | "author"
-  | "featuredMedia"
-  | "categories"
-  | "tags"
->;
+export type CardPost =
+  | Pick<
+      Post,
+      | "id"
+      | "date"
+      | "slug"
+      | "title"
+      | "excerpt"
+      | "author"
+      | "featuredMedia"
+      | "categories"
+      | "tags"
+    >
+  | Pick<
+      Page,
+      "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featuredMedia"
+    >;
 
 // New function for paginated posts
 export async function getPostsPaginated(
@@ -525,7 +530,7 @@ const mediaFields: Array<keyof WPMedia> = [
   "media_details",
   "source_url",
 ];
-export async function getStickyPost(): Promise<Post | null> {
+export async function getStickyPost(): Promise<Post | Page | null> {
   const [stickyPostResponse, stickyPageResponse] = await Promise.all([
     wordpressFetchWithPagination<WPPost[]>(
       "/wp-json/wp/v2/posts",
@@ -546,7 +551,7 @@ export async function getStickyPost(): Promise<Post | null> {
   ]);
 
   if (stickyPageResponse.data[0]) {
-    return transformPage(stickyPageResponse.data[0]) as unknown as Post;
+    return transformPage(stickyPageResponse.data[0]);
   }
 
   if (stickyPostResponse.data[0]) {

@@ -12,11 +12,13 @@ export function PostCard({ post }: { post: CardPost }) {
     day: "numeric",
     year: "numeric",
   });
-  const category = post.categories?.[0];
+  const category = "categories" in post ? post.categories?.[0] : undefined;
 
   return (
     <Link
-      href={`/posts/${post.slug}`}
+      href={
+        "categories" in post ? `/posts/${post.slug}` : `/pages/${post.slug}`
+      }
       className={cn(
         "border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8",
         "hover:bg-accent/75 transition-all",
