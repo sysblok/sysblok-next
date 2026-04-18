@@ -570,6 +570,37 @@ export const getMediaById = (id: number) =>
     ["media", `media-${id}`],
   ).then(transformMedia);
 
+// Получить дочерние категории (используем getAllCategories с фильтром)
+export const getChildCategories = async (
+  parentId: number,
+): Promise<Category[]> => {
+  return getAllCategories({ parent: parentId });
+};
+
+export async function getPostsFromSubcategories(
+  parentCategoryId: number,
+  limit: number = 3,
+): Promise<CardPost[]> {
+  const subcategories = await wordpressFetch<Category>(
+    "/wp-json/wp/v2/categories",
+    {
+      hide_empty: true,
+      _fields: categoryFields,
+      parent: parentCategoryId,
+      per_page: limit,
+    },
+    ["categories"],
+  );
+
+  return (
+    await Promise.all(
+      subcategories.map(({ id }) =>
+        getPostsPaginated(1, 1, { categories: id }),
+      ),
+    )
+  ).map(({ data }) => data[0]);
+}
+
 // Function specifically for generateStaticParams - fetches ALL post slugs
 export const getAllPostSlugs = () => getAllPosts({ _fields: ["slug"] });
 
