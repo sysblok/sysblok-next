@@ -1,7 +1,11 @@
 // Craft Imports
 import { Container, Prose } from "@/components/craft";
 
-import { getCategoryBySlug, getPostsPaginated } from "@/lib/wordpress";
+import {
+  getCategoryBySlug,
+  getPostsPaginated,
+  getStickyPost,
+} from "@/lib/wordpress";
 import { PostCard } from "@/components/posts/post-card";
 import { News } from "@/components/carousel/news";
 import { Blogs } from "@/components/sections/blogs";
@@ -10,18 +14,27 @@ import { Blogs } from "@/components/sections/blogs";
 export default async function Home() {
   // Получаем только id категории для исключения из основных постов
   const newsCategory = await getCategoryBySlug("news");
+  // Получаем закрепленный пост
+  const stickyPost = await getStickyPost();
 
   const { data: posts } = await getPostsPaginated(1, 30, {
     categories_exclude: newsCategory.id,
+    exclude: stickyPost ? [stickyPost.id] : undefined,
   });
 
   return (
     <Container>
       <Prose>
-        <h1>Системный Блокъ </h1>
+        <h1>Системный Блокъ</h1>
       </Prose>
 
-      {/* Секция с новостями в карусели */}
+      {/* Закрепленный пост */}
+      {stickyPost && (
+        <div className="mb-8">
+          <PostCard post={stickyPost} />
+        </div>
+      )}
+
       <News categoryId={newsCategory.id} />
       <Blogs />
       {posts.length > 0 ? (
