@@ -6,25 +6,24 @@ This is Next.js application that fetches data from a WordPress site using the Wo
 
 ## Make usage
 
- * `make build`          - Build the Docker container
- * `make build-dev`      - Build the development Docker container
- * `make up`             - Run the production Docker container
- * `make up-dev`         - Run the development Docker container
- * `make build-up`       - Build and run the Docker container
- * `make build-up-dev`   - Build and run the development Docker container
- * `make start`          - Start the development Docker container"
- * `make start-dev`      - Start the development Docker container"
- * `make stop`           - Stop the Docker container"
- * `make stop-dev`       - Stop the development Docker container"
- * `make down`           - Stop and remove the development Docker container"
- * `make down-dev`       - Stop and remove the development Docker container"
- * `make restart`        - Restart the Docker container"
- * `make restart-dev`    - Restart the development Docker container"
- * `make logs`           - Show container logs"
- * `make logs-dev`      - Show development container logs"
+- `make build` - Build the Docker container
+- `make build-dev` - Build the development Docker container
+- `make up` - Run the production Docker container
+- `make up-dev` - Run the development Docker container
+- `make build-up` - Build and run the Docker container
+- `make build-up-dev` - Build and run the development Docker container
+- `make start` - Start the development Docker container"
+- `make start-dev` - Start the development Docker container"
+- `make stop` - Stop the Docker container"
+- `make stop-dev` - Stop the development Docker container"
+- `make down` - Stop and remove the development Docker container"
+- `make down-dev` - Stop and remove the development Docker container"
+- `make restart` - Restart the Docker container"
+- `make restart-dev` - Restart the development Docker container"
+- `make logs` - Show container logs"
+- `make logs-dev` - Show development container logs"
 
- To start dev server without docker - `npm run dev` or `npm run dev-ssl`(with https)
-
+To start dev server without docker - `npm run dev` or `npm run dev-ssl`(with https)
 
 ## Table of Contents
 
@@ -212,7 +211,7 @@ Instead of fetching all posts and paginating client-side, the `getPostsPaginated
 const response = await getPostsPaginated(2, 10, {
   author: "123",
   category: "news",
-  search: "nextjs"
+  search: "nextjs",
 });
 
 const { data: posts, headers } = response;
@@ -225,10 +224,10 @@ The `getPostsPaginated` function returns a `WordPressResponse<Post[]>` object:
 
 ```typescript
 interface WordPressResponse<T> {
-  data: T;                    // The actual posts array
+  data: T; // The actual posts array
   headers: {
-    total: number;            // Total number of posts matching the query
-    totalPages: number;       // Total number of pages
+    total: number; // Total number of posts matching the query
+    totalPages: number; // Total number of pages
   };
 }
 ```
@@ -307,7 +306,7 @@ The pagination system includes sophisticated cache tags for optimal performance:
 
 ```typescript
 // Dynamic cache tags based on query parameters
-["wordpress", "posts", "posts-page-1", "posts-category-123"]
+["wordpress", "posts", "posts-page-1", "posts-category-123"];
 ```
 
 This ensures that when content changes, only the relevant pagination pages are revalidated, maintaining excellent performance even with large content sets.
@@ -475,13 +474,11 @@ Features:
 The search system is implemented across several layers:
 
 1. **Client-Side Component** (`search-input.tsx`):
-
    - Uses Next.js App Router's URL handling
    - Debounced input for better performance
    - Maintains search state in URL parameters
 
 2. **Server-Side Processing** (`page.tsx`):
-
    - Handles search parameters server-side
    - Combines search with other filters
    - Parallel data fetching for better performance
@@ -564,15 +561,18 @@ This starter implements an intelligent caching and revalidation system using Nex
 The WordPress API functions use a sophisticated hierarchical cache tag system for granular revalidation:
 
 #### Global Tags
+
 - `wordpress` - Affects all WordPress content
 
 #### Content Type Tags
+
 - `posts` - All post content
 - `categories` - All category content
 - `tags` - All tag content
 - `authors` - All author content
 
 #### Pagination-Specific Tags
+
 - `posts-page-1`, `posts-page-2`, etc. - Individual pagination pages
 - `posts-search` - Search result pages
 - `posts-author-123` - Posts filtered by specific author
@@ -580,6 +580,7 @@ The WordPress API functions use a sophisticated hierarchical cache tag system fo
 - `posts-tag-789` - Posts filtered by specific tag
 
 #### Individual Item Tags
+
 - `post-123` - Specific post content
 - `category-456` - Specific category content
 - `tag-789` - Specific tag content
@@ -590,7 +591,6 @@ This granular system ensures that when content changes, only the relevant cached
 ### Automatic Revalidation
 
 1. **Install the WordPress Plugin:**
-
    - Navigate to the `/plugin` directory
    - Use the pre-built `next-revalidate.zip` file or create a ZIP from the `next-revalidate` folder
    - Install and activate through WordPress admin
@@ -598,7 +598,6 @@ This granular system ensures that when content changes, only the relevant cached
    - Configure your Next.js URL and webhook secret
 
 2. **Configure Next.js:**
-
    - Add `NEXT_WORDPRESS_WEBHOOK_SECRET` to your environment variables (same secret as in WordPress plugin)
    - The webhook endpoint at `/api/revalidate` is already set up
    - No additional configuration needed

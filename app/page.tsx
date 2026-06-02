@@ -1,11 +1,7 @@
 // Craft Imports
 import { Container, Prose } from "@/components/craft";
 
-import {
-  getCategoryBySlug,
-  getPostsPaginated,
-  getStickyPost,
-} from "@/lib/wordpress";
+import { getCategoryBySlug, getPostsPaginated, getStickyPost } from "@/lib/wordpress";
 import { PostCard } from "@/components/posts/post-card";
 import { News } from "@/components/carousel/news";
 import { Blogs } from "@/components/sections/blogs";

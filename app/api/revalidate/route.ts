@@ -16,35 +16,27 @@ export async function POST(request: NextRequest) {
 
     if (secret !== process.env.NEXT_WORDPRESS_WEBHOOK_SECRET) {
       console.error("Invalid webhook secret");
-      return NextResponse.json(
-        { message: "Invalid webhook secret" },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: "Invalid webhook secret" }, { status: 401 });
     }
 
     const { contentType, contentId, contentSlug } = requestBody;
 
     if (!contentType) {
-      return NextResponse.json(
-        { message: "Missing content type" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Missing content type" }, { status: 400 });
     }
 
     try {
       console.log(
-        `Revalidating content: ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
-        }${
+        `Revalidating content: ${contentType}${contentId ? ` (ID: ${contentId})` : ""}${
           contentSlug ? ` (slug: ${contentSlug})` : ""
-        }`
+        }`,
       );
 
       if (contentType === "post") {
         revalidateTag("posts");
         if (contentId) revalidateTag(`post-${contentId}`);
         if (contentSlug) revalidateTag(`post-${contentSlug}`);
-      }  else if (contentType === "page") {
+      } else if (contentType === "page") {
         revalidateTag("pages");
         if (contentSlug) revalidateTag(`page-${contentSlug}`);
         if (contentId) revalidateTag(`page-${contentId}`);
@@ -93,7 +85,7 @@ export async function POST(request: NextRequest) {
           error: (error as Error).message,
           timestamp: new Date().toISOString(),
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
   } catch (error) {
@@ -104,7 +96,7 @@ export async function POST(request: NextRequest) {
         error: (error as Error).message,
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

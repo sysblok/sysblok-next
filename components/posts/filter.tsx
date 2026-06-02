@@ -85,11 +85,7 @@ export function FilterPosts({
         onValueChange={(value) => handleFilterChange("category", value)}
       >
         <SelectTrigger disabled={!hasCategories}>
-          {hasCategories ? (
-            <SelectValue placeholder="All Categories" />
-          ) : (
-            "No categories found"
-          )}
+          {hasCategories ? <SelectValue placeholder="All Categories" /> : "No categories found"}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Categories</SelectItem>
@@ -106,11 +102,7 @@ export function FilterPosts({
         onValueChange={(value) => handleFilterChange("author", value)}
       >
         <SelectTrigger disabled={!hasAuthors} className="text-center">
-          {hasAuthors ? (
-            <SelectValue placeholder="All Authors" />
-          ) : (
-            "No authors found"
-          )}
+          {hasAuthors ? <SelectValue placeholder="All Authors" /> : "No authors found"}
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Authors</SelectItem>

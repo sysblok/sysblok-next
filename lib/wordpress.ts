@@ -22,9 +22,7 @@ import { extractExcerptText } from "./utils";
 const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
 if (!baseUrl) {
-  throw new Error(
-    "NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined",
-  );
+  throw new Error("NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined");
 }
 
 export class WordPressAPIError extends Error {
@@ -38,14 +36,8 @@ export class WordPressAPIError extends Error {
   }
 }
 
-const wordpressFetch = <T>(
-  path: string,
-  query?: WordPressQuery<T>,
-  cacheTags: CacheTag[] = [],
-) =>
-  wordpressFetchWithPagination<T>(path, query, cacheTags).then(
-    ({ data }) => data,
-  );
+const wordpressFetch = <T>(path: string, query?: WordPressQuery<T>, cacheTags: CacheTag[] = []) =>
+  wordpressFetchWithPagination<T>(path, query, cacheTags).then(({ data }) => data);
 
 async function wordpressFetchWithPagination<T>(
   path: string,
@@ -178,9 +170,7 @@ function transformPost(wpPost: WPPost): Post {
     format: wpPost.format,
     meta: wpPost.meta,
     author:
-      wpPost._embedded["author"][0]?.id !== undefined
-        ? wpPost._embedded["author"][0]
-        : undefined,
+      wpPost._embedded["author"][0]?.id !== undefined ? wpPost._embedded["author"][0] : undefined,
     authorSlugs,
     featuredMedia:
       wpPost._embedded["wp:featuredmedia"] &&
@@ -211,9 +201,7 @@ function transformPage(wpPage: WPPage): Page {
     template: wpPage.template,
     meta: wpPage.meta,
     author:
-      wpPage._embedded["author"][0]?.id !== undefined
-        ? wpPage._embedded["author"][0]
-        : undefined,
+      wpPage._embedded["author"][0]?.id !== undefined ? wpPage._embedded["author"][0] : undefined,
     featuredMedia:
       wpPage._embedded["wp:featuredmedia"] &&
       transformMedia(wpPage._embedded["wp:featuredmedia"][0]),
@@ -277,10 +265,7 @@ export type CardPost =
       | "categories"
       | "tags"
     >
-  | Pick<
-      Page,
-      "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featuredMedia"
-    >;
+  | Pick<Page, "id" | "date" | "slug" | "title" | "excerpt" | "author" | "featuredMedia">;
 
 // New function for paginated posts
 export async function getPostsPaginated(
@@ -376,18 +361,14 @@ export const getAllCategories = (queryParams?: WordPressQuery<Category>) =>
   );
 
 export const getCategoryById = (id: number) =>
-  wordpressFetch<Category>(
-    `/wp-json/wp/v2/categories/${id}`,
-    { _fields: categoryFields },
-    [`category-${id}`],
-  );
+  wordpressFetch<Category>(`/wp-json/wp/v2/categories/${id}`, { _fields: categoryFields }, [
+    `category-${id}`,
+  ]);
 
 export const getCategoryBySlug = (slug: string) =>
-  wordpressFetch<Category[]>(
-    "/wp-json/wp/v2/categories",
-    { slug, _fields: categoryFields },
-    ["categories"],
-  ).then((categories) => categories[0]);
+  wordpressFetch<Category[]>("/wp-json/wp/v2/categories", { slug, _fields: categoryFields }, [
+    "categories",
+  ]).then((categories) => categories[0]);
 
 const tagFields: Array<keyof Tag> = [
   "id",
@@ -411,14 +392,12 @@ export const getAllTags = (queryParams?: WordPressQuery<Tag>) =>
   );
 
 export const getTagById = (id: number) =>
-  wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: tagFields }, [
-    `tag-${id}`,
-  ]);
+  wordpressFetch<Tag>(`/wp-json/wp/v2/tags/${id}`, { _fields: tagFields }, [`tag-${id}`]);
 
 export const getTagBySlug = (slug: string) =>
-  wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: tagFields }, [
-    "tags",
-  ]).then((tags) => tags[0]);
+  wordpressFetch<Tag[]>("/wp-json/wp/v2/tags", { slug, _fields: tagFields }, ["tags"]).then(
+    (tags) => tags[0],
+  );
 
 const pageFields: Array<keyof WPPage> = [
   "id",
@@ -498,18 +477,12 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
   );
 
 export const getAuthorById = (id: number) =>
-  wordpressFetch<Author>(
-    `/wp-json/wp/v2/users/${id}`,
-    { _fields: authorFields },
-    [`author-${id}`],
-  );
+  wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`]);
 
 export const getAuthorBySlug = (slug: string) =>
-  wordpressFetch<Author[]>(
-    "/wp-json/wp/v2/users",
-    { slug, _fields: authorFields },
-    ["authors"],
-  ).then((users) => users[0]);
+  wordpressFetch<Author[]>("/wp-json/wp/v2/users", { slug, _fields: authorFields }, [
+    "authors",
+  ]).then((users) => users[0]);
 
 const mediaFields: Array<keyof WPMedia> = [
   "id",
@@ -571,9 +544,7 @@ export const getMediaById = (id: number) =>
   ).then(transformMedia);
 
 // Получить дочерние категории (используем getAllCategories с фильтром)
-export const getChildCategories = async (
-  parentId: number,
-): Promise<Category[]> => {
+export const getChildCategories = async (parentId: number): Promise<Category[]> => {
   return getAllCategories({ parent: parentId });
 };
 
@@ -593,11 +564,7 @@ export async function getPostsFromSubcategories(
   );
 
   return (
-    await Promise.all(
-      subcategories.map(({ id }) =>
-        getPostsPaginated(1, 1, { categories: id }),
-      ),
-    )
+    await Promise.all(subcategories.map(({ id }) => getPostsPaginated(1, 1, { categories: id })))
   ).map(({ data }) => data[0]);
 }
 

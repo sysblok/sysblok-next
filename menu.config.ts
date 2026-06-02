@@ -9,5 +9,4 @@ export const mainMenu = {
   about: "/pages/about",
 };
 
-export const contentMenu: Record<string, string> = {
-};
+export const contentMenu: Record<string, string> = {};

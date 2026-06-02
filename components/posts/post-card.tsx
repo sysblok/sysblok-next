@@ -20,9 +20,7 @@ export function PostCard({ post, showAuthor = false }: PostCardProps) {
 
   return (
     <Link
-      href={
-        "categories" in post ? `/posts/${post.slug}` : `/pages/${post.slug}`
-      }
+      href={"categories" in post ? `/posts/${post.slug}` : `/pages/${post.slug}`}
       className={cn(
         "border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8",
         "hover:bg-accent/75 transition-all",
@@ -46,9 +44,7 @@ export function PostCard({ post, showAuthor = false }: PostCardProps) {
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-base mb-1">{author.name}</h3>
               {author.description && (
-                <p className="text-xs text-muted-foreground line-clamp-2">
-                  {author.description}
-                </p>
+                <p className="text-xs text-muted-foreground line-clamp-2">{author.description}</p>
               )}
             </div>
           </div>

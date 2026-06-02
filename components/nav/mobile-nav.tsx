@@ -12,13 +12,7 @@ import { cn } from "@/lib/utils";
 // Component Imports
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-  SheetHeader,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
 import { mainMenu, contentMenu } from "@/menu.config";
@@ -41,11 +35,7 @@ export function MobileNav() {
       <SheetContent side="left" className="pr-0">
         <SheetHeader>
           <SheetTitle className="text-left">
-            <MobileLink
-              href="/"
-              className="flex items-center"
-              onOpenChange={setOpen}
-            >
+            <MobileLink href="/" className="flex items-center" onOpenChange={setOpen}>
               <ArrowRightSquare className="mr-2 h-4 w-4" />
               <span>{siteConfig.site_name}</span>
             </MobileLink>
@@ -60,15 +50,17 @@ export function MobileNav() {
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </MobileLink>
             ))}
-            {Object.entries(contentMenu).length > 0 && <>
-              <h3 className="text-small pt-6">Blog Menu</h3>
-              <Separator />
-              {Object.entries(contentMenu).map(([key, href]) => (
-                <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </MobileLink>
-              ))}
-            </>}
+            {Object.entries(contentMenu).length > 0 && (
+              <>
+                <h3 className="text-small pt-6">Blog Menu</h3>
+                <Separator />
+                {Object.entries(contentMenu).map(([key, href]) => (
+                  <MobileLink key={key} href={href} onOpenChange={setOpen}>
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </MobileLink>
+                ))}
+              </>
+            )}
           </div>
         </ScrollArea>
       </SheetContent>
@@ -82,13 +74,7 @@ interface MobileLinkProps extends LinkProps {
   className?: string;
 }
 
-function MobileLink({
-  href,
-  onOpenChange,
-  className,
-  children,
-  ...props
-}: MobileLinkProps) {
+function MobileLink({ href, onOpenChange, className, children, ...props }: MobileLinkProps) {
   const router = useRouter();
   return (
     <Link

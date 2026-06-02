@@ -1,7 +1,6 @@
 import { Section, Container, Prose } from "@/components/craft";
 
 export default function Loading() {
-
   return (
     <Section>
       <Container>
@@ -11,5 +10,5 @@ export default function Loading() {
         </Prose>
       </Container>
     </Section>
-  )
+  );
 }

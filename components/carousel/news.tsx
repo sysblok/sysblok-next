@@ -6,12 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,8 +26,7 @@ export async function News({
   title = "Последние новости",
 }: NewsCarouselProps) {
   // Если categoryId не передан, получаем его через slug
-  const newsCategoryId =
-    categoryId || (await getCategoryBySlug(categorySlug)).id;
+  const newsCategoryId = categoryId || (await getCategoryBySlug(categorySlug)).id;
 
   const { data: newsPosts } = await getPostsPaginated(1, limit, {
     categories: newsCategoryId,
@@ -72,10 +66,7 @@ export async function News({
               <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
                 <Card className="h-full">
                   <CardTitle className="line-clamp-2">{item.title}</CardTitle>
-                  <time
-                    dateTime={item.date}
-                    className="text-sm text-muted-foreground px-6"
-                  >
+                  <time dateTime={item.date} className="text-sm text-muted-foreground px-6">
                     {item.date}
                   </time>
 

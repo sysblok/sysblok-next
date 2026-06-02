@@ -60,11 +60,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const postData = await getPostData(slug);
@@ -96,9 +92,7 @@ export default async function Page({
                   {" by "}
                   {authors.map((author, i) => (
                     <span key={author.id}>
-                      <Link href={`/posts/?author=${author.id}`}>
-                        {author.name}
-                      </Link>
+                      <Link href={`/posts/?author=${author.id}`}>{author.name}</Link>
                       {i < authors.length - 1 ? ", " : ""}
                     </span>
                   ))}
@@ -108,10 +102,7 @@ export default async function Page({
 
             <Link
               href={`/posts/?category=${category.id}`}
-              className={cn(
-                badgeVariants({ variant: "outline" }),
-                "!no-underline"
-              )}
+              className={cn(badgeVariants({ variant: "outline" }), "!no-underline")}
             >
               {category.name}
             </Link>

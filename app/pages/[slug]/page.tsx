@@ -28,10 +28,12 @@ export async function generateMetadata({
   const { title } = page;
   ogUrl.searchParams.append("title", title);
   // Strip HTML tags for description and limit length
-  const description = page.excerpt || page.content
-    .replace(/<[^>]*>/g, "")
-    .trim()
-    .slice(0, 200) + "...";
+  const description =
+    page.excerpt ||
+    page.content
+      .replace(/<[^>]*>/g, "")
+      .trim()
+      .slice(0, 200) + "...";
   ogUrl.searchParams.append("description", description);
 
   return {
@@ -60,11 +62,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
 
