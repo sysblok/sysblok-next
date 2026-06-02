@@ -7,9 +7,11 @@
     "dev-ssl": "next dev --turbo --experimental-https",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -46,10 +48,20 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9.29.0",
     "eslint-config-next": "^15.3.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
     "oxfmt": "^0.53.0",
     "oxlint": "^1.68.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "oxlint --fix"
+    ],
+    "*.{js,jsx,ts,tsx,json,md}": [
+      "oxfmt"
+    ]
   }
 }
