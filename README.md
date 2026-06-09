@@ -95,14 +95,14 @@ The `lib/wordpress.ts` file contains a comprehensive set of functions for intera
 // Default fetch options for all WordPress API calls
 const defaultFetchOptions = {
   next: {
-    tags: ["wordpress"],
+    tags: ['wordpress'],
     revalidate: 3600, // 1 hour cache
   },
   headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
-};
+}
 ```
 
 ### Available Functions
@@ -157,8 +157,8 @@ class WordPressAPIError extends Error {
     public status: number,
     public endpoint: string,
   ) {
-    super(message);
-    this.name = "WordPressAPIError";
+    super(message)
+    this.name = 'WordPressAPIError'
   }
 }
 ```
@@ -183,15 +183,15 @@ Each function supports Next.js 15's cache tags for efficient revalidation:
 try {
   // Fetch posts with filtering
   const posts = await getAllPosts({
-    author: "123",
-    category: "news",
-    tag: "featured",
-  });
+    author: '123',
+    category: 'news',
+    tag: 'featured',
+  })
 
   // Handle errors properly
 } catch (error) {
   if (error instanceof WordPressAPIError) {
-    console.error(`API Error: ${error.message} (${error.status})`);
+    console.error(`API Error: ${error.message} (${error.status})`)
   }
 }
 ```
@@ -209,13 +209,13 @@ Instead of fetching all posts and paginating client-side, the `getPostsPaginated
 ```typescript
 // Fetch page 2 with 10 posts per page
 const response = await getPostsPaginated(2, 10, {
-  author: "123",
-  category: "news",
-  search: "nextjs",
-});
+  author: '123',
+  category: 'news',
+  search: 'nextjs',
+})
 
-const { data: posts, headers } = response;
-const { total, totalPages } = headers;
+const { data: posts, headers } = response
+const { total, totalPages } = headers
 ```
 
 ### Pagination Response Structure
@@ -224,11 +224,11 @@ The `getPostsPaginated` function returns a `WordPressResponse<Post[]>` object:
 
 ```typescript
 interface WordPressResponse<T> {
-  data: T; // The actual posts array
+  data: T // The actual posts array
   headers: {
-    total: number; // Total number of posts matching the query
-    totalPages: number; // Total number of pages
-  };
+    total: number // Total number of posts matching the query
+    totalPages: number // Total number of pages
+  }
 }
 ```
 
@@ -246,15 +246,21 @@ For existing implementations using `getAllPosts`, you can migrate to the more ef
 
 ```typescript
 // Before: Client-side pagination
-const allPosts = await getAllPosts({ author, category });
-const page = 1;
-const postsPerPage = 9;
-const paginatedPosts = allPosts.slice((page - 1) * postsPerPage, page * postsPerPage);
-const totalPages = Math.ceil(allPosts.length / postsPerPage);
+const allPosts = await getAllPosts({ author, category })
+const page = 1
+const postsPerPage = 9
+const paginatedPosts = allPosts.slice(
+  (page - 1) * postsPerPage,
+  page * postsPerPage,
+)
+const totalPages = Math.ceil(allPosts.length / postsPerPage)
 
 // After: Server-side pagination
-const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, { author, category });
-const { total, totalPages } = headers;
+const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, {
+  author,
+  category,
+})
+const { total, totalPages } = headers
 ```
 
 ### Example Implementation
@@ -306,7 +312,7 @@ The pagination system includes sophisticated cache tags for optimal performance:
 
 ```typescript
 // Dynamic cache tags based on query parameters
-["wordpress", "posts", "posts-page-1", "posts-category-123"];
+;['wordpress', 'posts', 'posts-page-1', 'posts-category-123']
 ```
 
 This ensures that when content changes, only the relevant pagination pages are revalidated, maintaining excellent performance even with large content sets.
@@ -317,17 +323,17 @@ The `lib/wordpress.d.ts` file contains comprehensive TypeScript type definitions
 
 ```typescript
 interface WPEntity {
-  id: number;
-  date: string;
-  date_gmt: string;
-  modified: string;
-  modified_gmt: string;
-  slug: string;
-  status: "publish" | "future" | "draft" | "pending" | "private";
-  link: string;
+  id: number
+  date: string
+  date_gmt: string
+  modified: string
+  modified_gmt: string
+  slug: string
+  status: 'publish' | 'future' | 'draft' | 'pending' | 'private'
+  link: string
   guid: {
-    rendered: string;
-  };
+    rendered: string
+  }
 }
 ```
 
@@ -357,15 +363,15 @@ Key type definitions include:
 
 ```typescript
 interface FilterBarProps {
-  authors: Author[];
-  tags: Tag[];
-  categories: Category[];
-  selectedAuthor?: Author["id"];
-  selectedTag?: Tag["id"];
-  selectedCategory?: Category["id"];
-  onAuthorChange?: (authorId: Author["id"] | undefined) => void;
-  onTagChange?: (tagId: Tag["id"] | undefined) => void;
-  onCategoryChange?: (categoryId: Category["id"] | undefined) => void;
+  authors: Author[]
+  tags: Tag[]
+  categories: Category[]
+  selectedAuthor?: Author['id']
+  selectedTag?: Tag['id']
+  selectedCategory?: Category['id']
+  onAuthorChange?: (authorId: Author['id'] | undefined) => void
+  onTagChange?: (tagId: Tag['id'] | undefined) => void
+  onCategoryChange?: (categoryId: Category['id'] | undefined) => void
 }
 ```
 
@@ -373,18 +379,18 @@ interface FilterBarProps {
 
 ```typescript
 interface MediaDetails {
-  width: number;
-  height: number;
-  file: string;
-  sizes: Record<string, MediaSize>;
+  width: number
+  height: number
+  file: string
+  sizes: Record<string, MediaSize>
 }
 
 interface MediaSize {
-  file: string;
-  width: number;
-  height: number;
-  mime_type: string;
-  source_url: string;
+  file: string
+  width: number
+  height: number
+  mime_type: string
+  source_url: string
 }
 ```
 
@@ -515,8 +521,8 @@ searchAuthors(query: string)
 
 ```typescript
 // In your page component
-const { search } = await searchParams;
-const posts = search ? await getAllPosts({ search }) : await getAllPosts();
+const { search } = await searchParams
+const posts = search ? await getAllPosts({ search }) : await getAllPosts()
 ```
 
 The search functionality automatically updates filters and results as you type, providing a smooth user experience while maintaining good performance through debouncing and server-side rendering.
@@ -627,25 +633,25 @@ The Next.js Revalidation plugin includes:
 You can manually revalidate content using Next.js cache functions:
 
 ```typescript
-import { revalidateTag } from "next/cache";
+import { revalidateTag } from 'next/cache'
 
 // Revalidate all WordPress content
-revalidateTag("wordpress");
+revalidateTag('wordpress')
 
 // Revalidate specific content types
-revalidateTag("posts");
-revalidateTag("categories");
-revalidateTag("tags");
-revalidateTag("authors");
+revalidateTag('posts')
+revalidateTag('categories')
+revalidateTag('tags')
+revalidateTag('authors')
 
 // Revalidate specific items
-revalidateTag("post-123");
-revalidateTag("category-456");
+revalidateTag('post-123')
+revalidateTag('category-456')
 
 // Revalidate pagination-specific content
-revalidateTag("posts-page-1");
-revalidateTag("posts-category-123");
-revalidateTag("posts-search");
+revalidateTag('posts-page-1')
+revalidateTag('posts-category-123')
+revalidateTag('posts-search')
 ```
 
 This system ensures your content stays fresh while maintaining optimal performance through intelligent caching.
