@@ -1,9 +1,18 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "nextjs", "typescript"],
   "categories": {
     "correctness": "warn"
   },
   "rules": {
-    "eslint/no-unused-vars": "error"
+    "eslint/no-unused-vars": "error",
+
+    "nextjs/no-img-element": "error",
+    "nextjs/no-html-link-for-pages": "error",
+
+    "react/react-in-jsx-scope": "off",
+
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

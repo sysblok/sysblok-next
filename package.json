@@ -7,8 +7,8 @@
     "dev-ssl": "next dev --turbo --experimental-https",
     "build": "next build",
     "start": "next start",
-    "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check",
+    "fmt": "oxfmt && prettier --write \"**/*.{css,json,md}\"",
+    "fmt:check": "oxfmt --check && prettier --check \"**/*.{css,json,md}\"",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "prepare": "husky"
@@ -46,22 +46,25 @@
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9.29.0",
-    "eslint-config-next": "^15.3.4",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.7",
     "oxfmt": "^0.53.0",
     "oxlint": "^1.68.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.8.4",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "oxlint --fix"
-    ],
-    "*.{js,jsx,ts,tsx,json,md}": [
+    "*.{ts,tsx}": [
+      "oxlint --fix",
       "oxfmt"
+    ],
+    "*.{json,yaml,yml}": [
+      "oxfmt"
+    ],
+    "*.{css,json,md}": [
+      "prettier --write"
     ]
   }
 }
