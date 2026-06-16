@@ -1,38 +1,38 @@
-import { getPostBySlug, getAllPostSlugs, getPostData } from "@/lib/wordpress";
+import { getPostBySlug, getAllPostSlugs, getPostData } from '@/lib/wordpress'
 
-import { Section, Container, Article, Prose } from "@/components/craft";
-import { badgeVariants } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import { siteConfig } from "@/site.config";
+import { Section, Container, Article, Prose } from '@/components/craft'
+import { badgeVariants } from '@/components/ui/badge'
+import { cn } from '@/lib/utils'
+import { siteConfig } from '@/site.config'
 
-import Link from "next/link";
-import Balancer from "react-wrap-balancer";
+import Link from 'next/link'
+import Balancer from 'react-wrap-balancer'
 
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 export async function generateStaticParams() {
-  return getAllPostSlugs();
+  return getAllPostSlugs()
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
 
   if (!post) {
-    return {};
+    return {}
   }
 
-  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  const { title } = post;
-  ogUrl.searchParams.append("title", title);
+  const ogUrl = new URL(`${siteConfig.site_domain}/api/og`)
+  const { title } = post
+  ogUrl.searchParams.append('title', title)
   // Strip HTML tags for description
-  const description = post.excerpt;
-  ogUrl.searchParams.append("description", description);
+  const description = post.excerpt
+  ogUrl.searchParams.append('description', description)
 
   return {
     title,
@@ -40,7 +40,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      type: "article",
+      type: 'article',
       url: `${siteConfig.site_domain}/posts/${post.slug}`,
       images: [
         {
@@ -52,28 +52,28 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title,
       description: description,
       images: [ogUrl.toString()],
     },
-  };
+  }
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+  const { slug } = await params
 
-  const postData = await getPostData(slug);
+  const postData = await getPostData(slug)
 
-  if (!postData) notFound();
+  if (!postData) notFound()
 
-  const { post, featuredMedia, authors, category } = postData;
+  const { post, featuredMedia, authors, category } = postData
 
-  const date = post.date.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const date = post.date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  })
 
   return (
     <Section>
@@ -89,11 +89,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               Published {date}
               {authors?.length > 0 && (
                 <>
-                  {" by "}
+                  {' by '}
                   {authors.map((author, i) => (
                     <span key={author.id}>
                       <Link href={`/posts/?author=${author.id}`}>{author.name}</Link>
-                      {i < authors.length - 1 ? ", " : ""}
+                      {i < authors.length - 1 ? ', ' : ''}
                     </span>
                   ))}
                 </>
@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
             <Link
               href={`/posts/?category=${category.id}`}
-              className={cn(badgeVariants({ variant: "outline" }), "!no-underline")}
+              className={cn(badgeVariants({ variant: 'outline' }), '!no-underline')}
             >
               {category.name}
             </Link>
@@ -113,7 +113,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
               <img
                 className="w-full h-full object-cover"
                 src={featuredMedia.sourceUrl}
-                alt={featuredMedia.altText || post.title || "Post thumbnail"}
+                alt={featuredMedia.altText || post.title || 'Post thumbnail'}
               />
             </div>
           )}
@@ -122,5 +122,5 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <Article dangerouslySetInnerHTML={{ __html: post.content }} />
       </Container>
     </Section>
-  );
+  )
 }

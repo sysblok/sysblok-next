@@ -1,44 +1,42 @@
-import "./globals.css";
+import './globals.css'
 
-import { Section, Container } from "@/components/craft";
-import { Inter as FontSans } from "next/font/google";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { MobileNav } from "@/components/nav/mobile-nav";
-import { Analytics } from "@vercel/analytics/react";
-import { Button } from "@/components/ui/button";
+import { Section, Container } from '@/components/craft'
+import { Inter as FontSans } from 'next/font/google'
+import { ThemeProvider } from '@/components/theme/theme-provider'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { MobileNav } from '@/components/nav/mobile-nav'
+import { Analytics } from '@vercel/analytics/react'
+import { Button } from '@/components/ui/button'
 
-import { mainMenu, contentMenu } from "@/menu.config";
-import { siteConfig } from "@/site.config";
-import { cn } from "@/lib/utils";
+import { mainMenu, contentMenu } from '@/menu.config'
+import { siteConfig } from '@/site.config'
+import { cn } from '@/lib/utils'
 
-import Balancer from "react-wrap-balancer";
-import Logo from "@/public/logo.svg";
-import Image from "next/image";
-import Link from "next/link";
+import Balancer from 'react-wrap-balancer'
+import Link from 'next/link'
 
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
 
 const font = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
 
 export const metadata: Metadata = {
   title:
-    "Системный Блокъ - Онлайн-журнал о влиянии цифровых технологий на культуру, человека и общество",
-  description: "Онлайн-журнал о влиянии цифровых технологий на культуру, человека и общество",
+    'Системный Блокъ - Онлайн-журнал о влиянии цифровых технологий на культуру, человека и общество',
+  description: 'Онлайн-журнал о влиянии цифровых технологий на культуру, человека и общество',
   metadataBase: new URL(siteConfig.site_domain),
   alternates: {
-    canonical: "/",
+    canonical: '/',
   },
-};
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className={cn("min-h-screen font-sans antialiased", font.variable)}>
+      <body className={cn('min-h-screen font-sans antialiased', font.variable)}>
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
           <Nav />
           {children}
@@ -47,12 +45,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
       </body>
     </html>
-  );
+  )
 }
 
 const Nav = ({ className, children, id }: NavProps) => {
   return (
-    <nav className={cn("sticky z-50 top-0 bg-background", "border-b", className)} id={id}>
+    <nav className={cn('sticky z-50 top-0 bg-background', 'border-b', className)} id={id}>
       <div
         id="nav-container"
         className="max-w-5xl mx-auto py-4 px-6 sm:px-8 flex justify-between items-center"
@@ -73,8 +71,8 @@ const Nav = ({ className, children, id }: NavProps) => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
 const Footer = () => {
   return (
@@ -116,5 +114,5 @@ const Footer = () => {
         </Container>
       </Section>
     </footer>
-  );
-};
+  )
+}

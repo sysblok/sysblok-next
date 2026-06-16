@@ -1,22 +1,22 @@
 // Craft Imports
-import { Container, Prose } from "@/components/craft";
+import { Container, Prose } from '@/components/craft'
 
-import { getCategoryBySlug, getPostsPaginated, getStickyPost } from "@/lib/wordpress";
-import { PostCard } from "@/components/posts/post-card";
-import { News } from "@/components/carousel/news";
-import { Blogs } from "@/components/sections/blogs";
+import { getCategoryBySlug, getPostsPaginated, getStickyPost } from '@/lib/wordpress'
+import { PostCard } from '@/components/posts/post-card'
+import { News } from '@/components/carousel/news'
+import { Blogs } from '@/components/sections/blogs'
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
   // Получаем только id категории для исключения из основных постов
-  const newsCategory = await getCategoryBySlug("news");
+  const newsCategory = await getCategoryBySlug('news')
   // Получаем закрепленный пост
-  const stickyPost = await getStickyPost();
+  const stickyPost = await getStickyPost()
 
   const { data: posts } = await getPostsPaginated(1, 30, {
     categories_exclude: newsCategory.id,
     exclude: stickyPost ? [stickyPost.id] : undefined,
-  });
+  })
 
   return (
     <Container>
@@ -45,5 +45,5 @@ export default async function Home() {
         </div>
       )}
     </Container>
-  );
+  )
 }

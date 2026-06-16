@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
@@ -7,13 +7,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/admin",
+        source: '/admin',
         destination: `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin`,
         permanent: true,
       },
-    ];
+    ]
   },
-  output: "standalone",
-};
+  output: 'standalone',
+}
 
-export default nextConfig;
+export default nextConfig

@@ -249,10 +249,7 @@ For existing implementations using `getAllPosts`, you can migrate to the more ef
 const allPosts = await getAllPosts({ author, category })
 const page = 1
 const postsPerPage = 9
-const paginatedPosts = allPosts.slice(
-  (page - 1) * postsPerPage,
-  page * postsPerPage,
-)
+const paginatedPosts = allPosts.slice((page - 1) * postsPerPage, page * postsPerPage)
 const totalPages = Math.ceil(allPosts.length / postsPerPage)
 
 // After: Server-side pagination

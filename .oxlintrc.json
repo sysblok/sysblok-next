@@ -1,11 +1,20 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["react", "nextjs", "typescript"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
   "categories": {
-    "correctness": "warn"
+    "correctness": "error",
+    "suspicious": "warn"
   },
   "rules": {
     "eslint/no-unused-vars": "error",
+    "eslint/no-unused-expressions": "error",
+    "eslint/eqeqeq": "error",
+    "eslint/no-underscore-dangle": ["warn", { "allow": ["_embedded", "_links", "_fields"] }],
+    "eslint/no-shadow": "warn",
 
     "nextjs/no-img-element": "error",
     "nextjs/no-html-link-for-pages": "error",
@@ -13,6 +22,16 @@
     "react/react-in-jsx-scope": "off",
 
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/await-thenable": "error",
+    "typescript/no-explicit-any": "warn",
+    "typescript/use-unknown-in-catch-callback-variable": "error",
+    "typescript/prefer-optional-chain": "warn",
+    "typescript/prefer-nullish-coalescing": "off",
+    "typescript/no-unsafe-type-assertion": "off",
+    "typescript/consistent-return": "warn"
   }
 }

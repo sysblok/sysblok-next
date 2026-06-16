@@ -1,4 +1,4 @@
-import { Section, Container, Prose } from "@/components/craft";
+import { Section, Container, Prose } from '@/components/craft'
 
 export default function Loading() {
   return (
@@ -10,5 +10,5 @@ export default function Loading() {
         </Prose>
       </Container>
     </Section>
-  );
+  )
 }

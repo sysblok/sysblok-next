@@ -1,15 +1,15 @@
-import { getCategoryBySlug, getPostsFromSubcategories } from "@/lib/wordpress";
-import { PostCard } from "@/components/posts/post-card";
-import Link from "next/link";
+import { getCategoryBySlug, getPostsFromSubcategories } from '@/lib/wordpress'
+import { PostCard } from '@/components/posts/post-card'
+import Link from 'next/link'
 
 export async function Blogs() {
-  const blogCategory = await getCategoryBySlug("blog");
+  const blogCategory = await getCategoryBySlug('blog')
 
-  if (!blogCategory) return null;
+  if (!blogCategory) return null
 
-  const posts = await getPostsFromSubcategories(blogCategory.id, 3);
+  const posts = await getPostsFromSubcategories(blogCategory.id, 3)
 
-  if (posts.length === 0) return null;
+  if (posts.length === 0) return null
 
   return (
     <section className="mb-12">
@@ -28,5 +28,5 @@ export async function Blogs() {
         </Link>
       </div>
     </section>
-  );
+  )
 }

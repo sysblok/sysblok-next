@@ -7,10 +7,11 @@
     "dev-ssl": "next dev --turbo --experimental-https",
     "build": "next build",
     "start": "next start",
-    "fmt": "oxfmt && prettier --write \"**/*.{css,json,md}\"",
-    "fmt:check": "oxfmt --check && prettier --check \"**/*.{css,json,md}\"",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint --type-aware --type-check",
+    "lint:fix": "oxlint --type-aware --type-check --fix",
+    "typecheck": "oxlint --type-aware --type-check",
     "prepare": "husky"
   },
   "dependencies": {
@@ -50,21 +51,18 @@
     "lint-staged": "^17.0.7",
     "oxfmt": "^0.53.0",
     "oxlint": "^1.68.0",
+    "oxlint-tsgolint": "^0.23.0",
     "postcss": "^8.5.6",
-    "prettier": "^3.8.4",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "oxlint --fix",
+      "oxlint --type-aware --type-check --fix",
       "oxfmt"
     ],
-    "*.{json,yaml,yml}": [
+    "*.{css,json,md,yml,yaml}": [
       "oxfmt"
-    ],
-    "*.{css,json,md}": [
-      "prettier --write"
     ]
   }
 }

@@ -1,4 +1,4 @@
-import { getPostsPaginated, getAllAuthors, getAllTags, getAllCategories } from "@/lib/wordpress";
+import { getPostsPaginated, getAllAuthors, getAllTags, getAllCategories } from '@/lib/wordpress'
 
 import {
   Pagination,
@@ -7,40 +7,40 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination'
 
-import { Section, Container, Prose } from "@/components/craft";
-import { PostCard } from "@/components/posts/post-card";
-import { FilterPosts } from "@/components/posts/filter";
-import { SearchInput } from "@/components/posts/search-input";
+import { Section, Container, Prose } from '@/components/craft'
+import { PostCard } from '@/components/posts/post-card'
+import { FilterPosts } from '@/components/posts/filter'
+import { SearchInput } from '@/components/posts/search-input'
 
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Blog Posts",
-  description: "Browse all our blog posts",
-};
+  title: 'Blog Posts',
+  description: 'Browse all our blog posts',
+}
 
-export const dynamic = "auto";
-export const revalidate = 600;
+export const dynamic = 'auto'
+export const revalidate = 600
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{
-    author?: string;
-    tag?: string;
-    category?: string;
-    page?: string;
-    search?: string;
-  }>;
+    author?: string
+    tag?: string
+    category?: string
+    page?: string
+    search?: string
+  }>
 }) {
-  const params = await searchParams;
-  const { author, tag, category, page: pageParam, search } = params;
+  const params = await searchParams
+  const { author, tag, category, page: pageParam, search } = params
 
   // Handle pagination
-  const page = pageParam ? parseInt(pageParam, 10) : 1;
-  const postsPerPage = 9;
+  const page = pageParam ? parseInt(pageParam, 10) : 1
+  const postsPerPage = 9
 
   // Fetch data based on search parameters using efficient pagination
   const [postsResponse, authors, tags, categories] = await Promise.all([
@@ -53,21 +53,21 @@ export default async function Page({
     getAllAuthors({ search }),
     getAllTags({ search }),
     getAllCategories({ search }),
-  ]);
+  ])
 
-  const { data: posts, headers } = postsResponse;
-  const { total, totalPages } = headers;
+  const { data: posts, headers } = postsResponse
+  const { total, totalPages } = headers
 
   // Create pagination URL helper
   const createPaginationUrl = (newPage: number) => {
-    const params = new URLSearchParams();
-    if (newPage > 1) params.set("page", newPage.toString());
-    if (category) params.set("category", category);
-    if (author) params.set("author", author);
-    if (tag) params.set("tag", tag);
-    if (search) params.set("search", search);
-    return `/posts${params.toString() ? `?${params.toString()}` : ""}`;
-  };
+    const params = new URLSearchParams()
+    if (newPage > 1) params.set('page', newPage.toString())
+    if (category) params.set('category', category)
+    if (author) params.set('author', author)
+    if (tag) params.set('tag', tag)
+    if (search) params.set('search', search)
+    return `/posts${params.toString() ? `?${params.toString()}` : ''}`
+  }
 
   return (
     <Section>
@@ -76,8 +76,8 @@ export default async function Page({
           <Prose>
             <h2>All Posts</h2>
             <p className="text-muted-foreground">
-              {total} {total === 1 ? "post" : "posts"} found
-              {search && " matching your search"}
+              {total} {total === 1 ? 'post' : 'posts'} found
+              {search && ' matching your search'}
             </p>
           </Prose>
 
@@ -119,10 +119,10 @@ export default async function Page({
                       // Show current page, first page, last page, and 2 pages around current
                       return (
                         pageNum === 1 || pageNum === totalPages || Math.abs(pageNum - page) <= 1
-                      );
+                      )
                     })
                     .map((pageNum, index, array) => {
-                      const showEllipsis = index > 0 && pageNum - array[index - 1] > 1;
+                      const showEllipsis = index > 0 && pageNum - array[index - 1] > 1
                       return (
                         <div key={pageNum} className="flex items-center">
                           {showEllipsis && <span className="px-2">...</span>}
@@ -135,7 +135,7 @@ export default async function Page({
                             </PaginationLink>
                           </PaginationItem>
                         </div>
-                      );
+                      )
                     })}
 
                   {page < totalPages && (
@@ -150,5 +150,5 @@ export default async function Page({
         </div>
       </Container>
     </Section>
-  );
+  )
 }

@@ -7,7 +7,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run dev` - Start development server with turbo mode
 - `npm run build` - Build for production
 - `npm run start` - Start production server
-- `npm run lint` - Run ESLint to check code quality
+- `npm run lint` - Run oxlint with type-aware rules and type-check (tsgolint)
+- `npm run lint:fix` - Auto-fix oxlint issues where possible
+- `npm run typecheck` - Type-check via oxlint/tsgolint (same as `lint`)
+- `npm run fmt` - Format code with oxfmt (TS/TSX/CSS/JSON/MD/YAML)
+- `npm run fmt:check` - Check formatting without writing files
 
 ## Architecture Overview
 
