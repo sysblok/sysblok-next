@@ -1,19 +1,19 @@
-import { getAllAuthors } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
-import BackButton from "@/components/back";
-import Link from "next/link";
+import { getAllAuthors } from '@/lib/wordpress'
+import { Section, Container, Prose } from '@/components/craft'
+import { Metadata } from 'next'
+import BackButton from '@/components/back'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "All Authors",
-  description: "Browse all authors of our blog posts",
+  title: 'All Authors',
+  description: 'Browse all authors of our blog posts',
   alternates: {
-    canonical: "/posts/authors",
+    canonical: '/posts/authors',
   },
-};
+}
 
 export default async function Page() {
-  const authors = await getAllAuthors();
+  const authors = await getAllAuthors()
 
   return (
     <Section>
@@ -31,5 +31,5 @@ export default async function Page() {
         <BackButton />
       </Container>
     </Section>
-  );
+  )
 }

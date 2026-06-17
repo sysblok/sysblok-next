@@ -1,31 +1,24 @@
-"use client";
+'use client'
 
 // React and Next Imports
-import * as React from "react";
-import Link, { LinkProps } from "next/link";
-import { useRouter } from "next/navigation";
+import * as React from 'react'
+import Link, { LinkProps } from 'next/link'
 
 // Utility Imports
-import { Menu, ArrowRightSquare } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Menu, ArrowRightSquare } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 // Component Imports
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-  SheetHeader,
-} from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
+import { Separator } from '@/components/ui/separator'
 
-import { mainMenu, contentMenu } from "@/menu.config";
-import { siteConfig } from "@/site.config";
+import { mainMenu, contentMenu } from '@/menu.config'
+import { siteConfig } from '@/site.config'
 
 export function MobileNav() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -41,11 +34,7 @@ export function MobileNav() {
       <SheetContent side="left" className="pr-0">
         <SheetHeader>
           <SheetTitle className="text-left">
-            <MobileLink
-              href="/"
-              className="flex items-center"
-              onOpenChange={setOpen}
-            >
+            <MobileLink href="/" className="flex items-center" onOpenChange={setOpen}>
               <ArrowRightSquare className="mr-2 h-4 w-4" />
               <span>{siteConfig.site_name}</span>
             </MobileLink>
@@ -60,47 +49,39 @@ export function MobileNav() {
                 {key.charAt(0).toUpperCase() + key.slice(1)}
               </MobileLink>
             ))}
-            {Object.entries(contentMenu).length > 0 && <>
-              <h3 className="text-small pt-6">Blog Menu</h3>
-              <Separator />
-              {Object.entries(contentMenu).map(([key, href]) => (
-                <MobileLink key={key} href={href} onOpenChange={setOpen}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </MobileLink>
-              ))}
-            </>}
+            {Object.entries(contentMenu).length > 0 && (
+              <>
+                <h3 className="text-small pt-6">Blog Menu</h3>
+                <Separator />
+                {Object.entries(contentMenu).map(([key, href]) => (
+                  <MobileLink key={key} href={href} onOpenChange={setOpen}>
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </MobileLink>
+                ))}
+              </>
+            )}
           </div>
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  );
+  )
 }
 
 interface MobileLinkProps extends LinkProps {
-  onOpenChange?: (open: boolean) => void;
-  children: React.ReactNode;
-  className?: string;
+  onOpenChange?: (open: boolean) => void
+  children: React.ReactNode
+  className?: string
 }
 
-function MobileLink({
-  href,
-  onOpenChange,
-  className,
-  children,
-  ...props
-}: MobileLinkProps) {
-  const router = useRouter();
+function MobileLink({ href, onOpenChange, className, children, ...props }: MobileLinkProps) {
   return (
     <Link
       href={href}
-      onClick={() => {
-        router.push(href.toString());
-        onOpenChange?.(false);
-      }}
-      className={cn("text-lg", className)}
+      onClick={() => onOpenChange?.(false)}
+      className={cn('text-lg', className)}
       {...props}
     >
       {children}
     </Link>
-  );
+  )
 }

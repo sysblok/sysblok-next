@@ -1,7 +1,9 @@
-import { revalidatePath, revalidateTag } from "next/cache";
-import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from 'next/cache'
+import { NextRequest, NextResponse } from 'next/server'
 
-export const maxDuration = 30;
+export const maxDuration = 30
+
+const REVALIDATE_NOW = { expire: 0 } as const
 
 /**
  * WordPress webhook handler for content revalidation
@@ -11,100 +13,92 @@ export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   try {
-    const requestBody = await request.json();
-    const secret = request.headers.get("x-webhook-secret");
+    const requestBody = await request.json()
+    const secret = request.headers.get('x-webhook-secret')
 
     if (secret !== process.env.NEXT_WORDPRESS_WEBHOOK_SECRET) {
-      console.error("Invalid webhook secret");
-      return NextResponse.json(
-        { message: "Invalid webhook secret" },
-        { status: 401 }
-      );
+      console.error('Invalid webhook secret')
+      return NextResponse.json({ message: 'Invalid webhook secret' }, { status: 401 })
     }
 
-    const { contentType, contentId, contentSlug } = requestBody;
+    const { contentType, contentId, contentSlug } = requestBody
 
     if (!contentType) {
-      return NextResponse.json(
-        { message: "Missing content type" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: 'Missing content type' }, { status: 400 })
     }
 
     try {
       console.log(
-        `Revalidating content: ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
-        }${
-          contentSlug ? ` (slug: ${contentSlug})` : ""
-        }`
-      );
+        `Revalidating content: ${contentType}${contentId ? ` (ID: ${contentId})` : ''}${
+          contentSlug ? ` (slug: ${contentSlug})` : ''
+        }`,
+      )
 
-      if (contentType === "post") {
-        revalidateTag("posts");
-        if (contentId) revalidateTag(`post-${contentId}`);
-        if (contentSlug) revalidateTag(`post-${contentSlug}`);
-      }  else if (contentType === "page") {
-        revalidateTag("pages");
-        if (contentSlug) revalidateTag(`page-${contentSlug}`);
-        if (contentId) revalidateTag(`page-${contentId}`);
-      } else if (contentType === "category") {
-        revalidateTag("categories");
+      if (contentType === 'post') {
+        revalidateTag('posts', REVALIDATE_NOW)
+        if (contentId) revalidateTag(`post-${contentId}`, REVALIDATE_NOW)
+        if (contentSlug) revalidateTag(`post-${contentSlug}`, REVALIDATE_NOW)
+      } else if (contentType === 'page') {
+        revalidateTag('pages', REVALIDATE_NOW)
+        if (contentSlug) revalidateTag(`page-${contentSlug}`, REVALIDATE_NOW)
+        if (contentId) revalidateTag(`page-${contentId}`, REVALIDATE_NOW)
+      } else if (contentType === 'category') {
+        revalidateTag('categories', REVALIDATE_NOW)
         if (contentId) {
-          revalidateTag(`posts-category-${contentId}`);
-          revalidateTag(`category-${contentId}`);
+          revalidateTag(`posts-category-${contentId}`, REVALIDATE_NOW)
+          revalidateTag(`category-${contentId}`, REVALIDATE_NOW)
         }
-      } else if (contentType === "tag") {
-        revalidateTag("tags");
+      } else if (contentType === 'tag') {
+        revalidateTag('tags', REVALIDATE_NOW)
         if (contentId) {
-          revalidateTag(`posts-tag-${contentId}`);
-          revalidateTag(`tag-${contentId}`);
+          revalidateTag(`posts-tag-${contentId}`, REVALIDATE_NOW)
+          revalidateTag(`tag-${contentId}`, REVALIDATE_NOW)
         }
-      } else if (contentType === "author" || contentType === "user") {
-        revalidateTag("authors");
+      } else if (contentType === 'author' || contentType === 'user') {
+        revalidateTag('authors', REVALIDATE_NOW)
         if (contentId) {
-          revalidateTag(`posts-author-${contentId}`);
-          revalidateTag(`author-${contentId}`);
+          revalidateTag(`posts-author-${contentId}`, REVALIDATE_NOW)
+          revalidateTag(`author-${contentId}`, REVALIDATE_NOW)
         }
-      } else if (contentType === "media") {
-        if (contentId) revalidateTag(`media-${contentId}`);
-        else revalidateTag(`media`);
-      } else if (contentType !== "menu") {
+      } else if (contentType === 'media') {
+        if (contentId) revalidateTag(`media-${contentId}`, REVALIDATE_NOW)
+        else revalidateTag('media', REVALIDATE_NOW)
+      } else if (contentType !== 'menu') {
         // revalidate all wordpress requests
-        revalidateTag("wordpress");
+        revalidateTag('wordpress', REVALIDATE_NOW)
       }
 
       // Also revalidate the entire layout for safety
-      revalidatePath("/", "layout");
+      revalidatePath('/', 'layout')
 
       return NextResponse.json({
         revalidated: true,
         message: `Revalidated ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
+          contentId ? ` (ID: ${contentId})` : ''
         } and related content`,
         timestamp: new Date().toISOString(),
-      });
+      })
     } catch (error) {
-      console.error("Error revalidating path:", error);
+      console.error('Error revalidating path:', error)
       return NextResponse.json(
         {
           revalidated: false,
-          message: "Failed to revalidate site",
+          message: 'Failed to revalidate site',
           error: (error as Error).message,
           timestamp: new Date().toISOString(),
         },
-        { status: 500 }
-      );
+        { status: 500 },
+      )
     }
   } catch (error) {
-    console.error("Revalidation error:", error);
+    console.error('Revalidation error:', error)
     return NextResponse.json(
       {
-        message: "Error revalidating content",
+        message: 'Error revalidating content',
         error: (error as Error).message,
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

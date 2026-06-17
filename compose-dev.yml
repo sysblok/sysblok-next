@@ -7,7 +7,7 @@ services:
       - .env.example
       - .env
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/app # Mount the current directory to /app in the container
       - /app/node_modules # Prevent overwriting node_modules

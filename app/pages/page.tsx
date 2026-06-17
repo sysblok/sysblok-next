@@ -1,19 +1,19 @@
-import { getAllPages } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
-import BackButton from "@/components/back";
-import Link from "next/link";
+import { getAllPages } from '@/lib/wordpress'
+import { Section, Container, Prose } from '@/components/craft'
+import { Metadata } from 'next'
+import BackButton from '@/components/back'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: "All Pages",
-  description: "Browse all pages of our blog posts",
+  title: 'All Pages',
+  description: 'Browse all pages of our blog posts',
   alternates: {
-    canonical: "/posts/pages",
+    canonical: '/posts/pages',
   },
-};
+}
 
 export default async function Page() {
-  const pages = await getAllPages({ _fields: [ "id", "slug", "title" ]});
+  const pages = await getAllPages({ _fields: ['id', 'slug', 'title'] })
 
   return (
     <Section>
@@ -21,7 +21,7 @@ export default async function Page() {
         <Prose className="mb-8">
           <h2>All Pages</h2>
           <ul className="grid">
-            {pages.map((page: any) => (
+            {pages.map((page) => (
               <li key={page.id}>
                 <Link href={`/pages/${page.slug}`}>{page.title.rendered}</Link>
               </li>
@@ -31,5 +31,5 @@ export default async function Page() {
         <BackButton />
       </Container>
     </Section>
-  );
+  )
 }
