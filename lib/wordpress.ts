@@ -16,6 +16,7 @@ import type {
   Post,
   Media,
   Page,
+  WPNavigation,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 
@@ -589,3 +590,26 @@ export async function getPostData(slug: string) {
 
   return { post, featuredMedia, category, authors }
 }
+
+// --- Navigation ---
+
+const navigationFields: Array<keyof WPNavigation> = [
+  'id',
+  'date',
+  'slug',
+  'status',
+  'link',
+  'title',
+  'content',
+  'type',
+]
+
+export const getNavigationBySlug = (slug: string) =>
+  wordpressFetch<WPNavigation[]>(
+    '/wp-json/wp/v2/navigation',
+    {
+      slug,
+      _fields: navigationFields,
+    },
+    ['navigation', `navigation-${slug}`],
+  ).then((navigations) => navigations[0] ?? null)

@@ -108,6 +108,19 @@ export interface WPPage extends WPEntity {
   }
 }
 
+// Navigation types
+export interface WPNavigation extends WPEntity {
+  content: RenderedContent
+  type: 'wp_navigation'
+}
+
+export interface NavItem {
+  label: string
+  href?: string
+  description?: string
+  children?: NavItem[]
+}
+
 // Taxonomy types
 interface Taxonomy {
   id: number
@@ -329,7 +342,7 @@ interface BaseQuery<T> {
 interface EntityQuery<T> extends BaseQuery<T> {
   after?: string // Limit response to posts published after a given ISO8601 compliant date.
   modified_after?: string // Limit response to posts modified after a given ISO8601 compliant date.
-  author?: number | string | Array<number | string> // Limit result set to posts assigned to specific authors.
+  author?: number | string | Array<number | string> // Limit response to posts assigned to specific authors.
   author_exclude?: number | string | Array<number | string> // Ensure result set excludes posts assigned to specific authors.
   before?: string // Limit response to posts published before a given ISO8601 compliant date.
   modified_before?: string // Limit response to posts modified before a given ISO8601 compliant date.
@@ -431,3 +444,5 @@ export type CacheTag =
   | `media-${number | string}`
   | 'pages'
   | `page-${number | string}`
+  | 'navigation'
+  | `navigation-${string}`
