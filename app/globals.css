@@ -117,6 +117,10 @@
 }
 
 /* Layout */
+.section {
+  max-width: 1388px;
+  margin: 0 auto;
+}
 .section-menu-stripe {
   border-bottom: 1px solid #e8e8e8;
   background-color: #ffffff;
@@ -235,6 +239,7 @@
   padding: 10px 0;
   margin: 0;
   list-style: none;
+  text-transform: uppercase;
   background-color: #ffffff;
   border: 1px solid #e8e8e8;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
@@ -370,11 +375,16 @@
   }
 }
 
-/* Показываем бургер на всех экранах */
-.menu-stripe-center {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+@media (max-width: 991px) {
+  .menu-stripe-left,
+  .menu-stripe-right {
+    display: none;
+  }
+
+  .menu-stripe-center {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 /* =========================================

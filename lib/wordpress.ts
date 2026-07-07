@@ -278,10 +278,39 @@ export async function getPostsPaginated(
   perPage: number = 9,
   filterParams?: WordPressQuery<WPPost>,
 ): Promise<WordPressResponse<CardPost[]>> {
+  //  Конвертируем slug в ID, если нужно
+  let processedFilterParams = filterParams
+
+  if (filterParams?.categories) {
+    const categories = Array.isArray(filterParams.categories)
+      ? filterParams.categories
+      : [filterParams.categories]
+
+    const categoryIds: number[] = []
+
+    for (const cat of categories) {
+      if (typeof cat === 'string') {
+        // Это slug, получаем ID
+        const category = await getCategoryBySlug(cat)
+        if (category) {
+          categoryIds.push(category.id)
+        }
+      } else {
+        // Уже ID
+        categoryIds.push(cat)
+      }
+    }
+
+    processedFilterParams = {
+      ...filterParams,
+      categories: categoryIds.length === 1 ? categoryIds[0] : categoryIds,
+    }
+  }
+
   const query: WordPressQuery<WPPost> = {
     _fields: postCardFields,
     context: 'embed',
-    ...filterParams,
+    ...processedFilterParams,
     _embed: true,
     per_page: perPage,
     page,
@@ -290,14 +319,14 @@ export async function getPostsPaginated(
   // Build cache tags based on filters
   const cacheTags: CacheTag[] = ['posts']
 
-  if (filterParams?.author) {
-    cacheTags.push(`posts-author-${cacheTagSegment(filterParams.author)}`)
+  if (processedFilterParams?.author) {
+    cacheTags.push(`posts-author-${cacheTagSegment(processedFilterParams.author)}`)
   }
-  if (filterParams?.tags) {
-    cacheTags.push(`posts-tag-${cacheTagSegment(filterParams.tags)}`)
+  if (processedFilterParams?.tags) {
+    cacheTags.push(`posts-tag-${cacheTagSegment(processedFilterParams.tags)}`)
   }
-  if (filterParams?.categories) {
-    cacheTags.push(`posts-category-${cacheTagSegment(filterParams.categories)}`)
+  if (processedFilterParams?.categories) {
+    cacheTags.push(`posts-category-${cacheTagSegment(processedFilterParams.categories)}`)
   }
 
   const response = await wordpressFetchWithPagination<WPPost[]>(
