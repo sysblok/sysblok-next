@@ -9,94 +9,96 @@ export function wordpressUrlToNextPath(url?: string): string | undefined {
     const urlObj = new URL(url, wordpressUrl)
     let pathname = urlObj.pathname
 
-    // Remove trailing slash for consistency (except root)
     if (pathname !== '/') {
       pathname = pathname.replace(/\/$/, '')
     }
 
-    // Map /category/{slug}/ to /posts?category={slug}
     const categoryMatch = pathname.match(/^\/category\/([^/]+)$/)
     if (categoryMatch) {
       return `/posts?category=${categoryMatch[1]}`
     }
 
-    // Map specific known pages to /pages/{slug}
     if (pathname === '/about') {
       return '/pages/about'
     }
 
-    // Posts/custom paths: strip domain, keep pathname
     return pathname
   } catch {
     return undefined
   }
 }
 
-export function parseNavigationHtml(html: string): NavItem[] {
-  const items: NavItem[] = []
-  // Matches <li> with wp-block-navigation-item class, handles attribute order
-  const liRegex = /<li[^>]*\bclass="[^"]*\bwp-block-navigation-item\b[^"]*"[^>]*>([\s\S]*?)<\/li>/gi
+/**
+ * Extracts top-level <li>...</li> blocks with proper depth counting.
+ * Regex with non-greedy *? breaks on nested <li> — it stops at the first
+ * </li> found, which may belong to a child element, not the parent.
+ */
+function extractTopLevelLis(html: string): string[] {
+  const result: string[] = []
+  let depth = 0
+  let start = -1
+  let i = 0
 
-  let match
-  while ((match = liRegex.exec(html)) !== null) {
-    const liContent = match[1]
-    const fullLiTag = match[0]
-
-    const isSubmenu = /\bwp-block-navigation-submenu\b/.test(fullLiTag)
-
-    const labelMatch = liContent.match(
-      /<span[^>]*\bclass="[^"]*\bwp-block-navigation-item__label\b[^"]*"[^>]*>([\s\S]*?)<\/span>/i,
-    )
-    const label = labelMatch ? labelMatch[1].trim() : ''
-
-    if (!label) continue
-
-    const descMatch = liContent.match(
-      /<span[^>]*\bclass="[^"]*\bwp-block-navigation-item__description\b[^"]*"[^>]*>([\s\S]*?)<\/span>/i,
-    )
-    const description = descMatch ? descMatch[1].trim() : undefined
-
-    const hrefMatch = liContent.match(/<a[^>]*\bhref="([^"]*)"/i)
-    const rawHref = hrefMatch ? hrefMatch[1] : undefined
-    const href = wordpressUrlToNextPath(rawHref)
-
-    const item: NavItem = { label, href, description }
-
-    if (isSubmenu) {
-      const subUlMatch = liContent.match(
-        /<ul[^>]*\bclass="[^"]*\bwp-block-navigation__submenu-container\b[^"]*"[^>]*>([\s\S]*?)<\/ul>/i,
-      )
-      if (subUlMatch) {
-        item.children = parseSubmenuHtml(subUlMatch[1])
+  while (i < html.length) {
+    if (html[i] === '<') {
+      if (html.startsWith('<li', i) && (html[i + 3] === ' ' || html[i + 3] === '>')) {
+        if (depth === 0) start = i
+        depth++
+        i += 3
+        continue
+      }
+      if (html.startsWith('</li>', i)) {
+        if (depth > 0) depth--
+        if (depth === 0 && start !== -1) {
+          result.push(html.slice(start, i + 5))
+          start = -1
+        }
+        i += 5
+        continue
       }
     }
-
-    items.push(item)
+    i++
   }
 
-  return items
+  return result
 }
 
-function parseSubmenuHtml(html: string): NavItem[] {
-  const items: NavItem[] = []
-  const liRegex = /<li[^>]*\bclass="[^"]*\bwp-block-navigation-item\b[^"]*"[^>]*>([\s\S]*?)<\/li>/gi
+function parseLiItem(liHtml: string): NavItem | null {
+  const isSubmenu = /\bwp-block-navigation-submenu\b/.test(liHtml)
 
-  let match
-  while ((match = liRegex.exec(html)) !== null) {
-    const liContent = match[1]
-    const labelMatch = liContent.match(
-      /<span[^>]*\bclass="[^"]*\bwp-block-navigation-item__label\b[^"]*"[^>]*>([\s\S]*?)<\/span>/i,
+  const labelMatch = liHtml.match(
+    /<span[^>]*\bclass="[^"]*\bwp-block-navigation-item__label\b[^"]*"[^>]*>([\s\S]*?)<\/span>/i,
+  )
+  const label = labelMatch ? labelMatch[1].trim() : ''
+  if (!label) return null
+
+  const descMatch = liHtml.match(
+    /<span[^>]*\bclass="[^"]*\bwp-block-navigation-item__description\b[^"]*"[^>]*>([\s\S]*?)<\/span>/i,
+  )
+  const description = descMatch ? descMatch[1].trim() : undefined
+
+  const hrefMatch = liHtml.match(/<a[^>]*\bhref="([^"]*)"/i)
+  const rawHref = hrefMatch ? hrefMatch[1] : undefined
+  const href = wordpressUrlToNextPath(rawHref)
+
+  const item: NavItem = { label, href, description }
+
+  if (isSubmenu) {
+    const subUlMatch = liHtml.match(
+      /<ul[^>]*\bclass="[^"]*\bwp-block-navigation__submenu-container\b[^"]*"[^>]*>([\s\S]*?)<\/ul>/i,
     )
-    const label = labelMatch ? labelMatch[1].trim() : ''
-
-    if (!label) continue
-
-    const hrefMatch = liContent.match(/<a[^>]*\bhref="([^"]*)"/i)
-    const rawHref = hrefMatch ? hrefMatch[1] : undefined
-    const href = wordpressUrlToNextPath(rawHref)
-
-    items.push({ label, href })
+    if (subUlMatch) {
+      const childLis = extractTopLevelLis(subUlMatch[1])
+      item.children = childLis
+        .map((child) => parseLiItem(child))
+        .filter((x): x is NavItem => x !== null)
+    }
   }
 
-  return items
+  return item
+}
+
+export function parseNavigationHtml(html: string): NavItem[] {
+  const topLevelLis = extractTopLevelLis(html)
+  return topLevelLis.map((li) => parseLiItem(li)).filter((x): x is NavItem => x !== null)
 }

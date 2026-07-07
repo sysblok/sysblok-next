@@ -21,6 +21,7 @@ const config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
+        narrator: ['Georgia', 'Futura', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

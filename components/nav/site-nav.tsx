@@ -3,8 +3,8 @@ import { Search } from 'lucide-react'
 import { getNavigationBySlug } from '@/lib/wordpress'
 import { parseNavigationHtml } from '@/lib/navigation'
 import { siteConfig } from '@/site.config'
-import { DesktopMenu } from './desktop-menu'
 import { MobileNav } from './mobile-nav'
+import { DesktopMenu } from './desktop-menu' // ← ДОБАВИТЬ
 import { HeaderSocialLinks } from './header-social-links'
 import type { NavItem } from '@/lib/wordpress.d'
 
@@ -31,15 +31,12 @@ export async function SiteNav() {
             </div>
           </div>
           <div className="menu-stripe-center">
-            <DesktopMenu items={items} />
+            <DesktopMenu items={items} /> {/* ← ДОБАВИТЬ */}
             <MobileNav items={items} />
           </div>
           <div className="menu-stripe-right">
             <HeaderSocialLinks />
-            <span
-              className="header-search-link search-link search-link-in-the-corner"
-              aria-label="Поиск"
-            >
+            <span className="header-search-link" aria-label="Поиск">
               <Search size={18} />
             </span>
           </div>
