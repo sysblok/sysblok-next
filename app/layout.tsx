@@ -1,6 +1,7 @@
 import './globals.css'
 
 import { ThemeProvider } from '@/components/theme/theme-provider'
+import { AuthBar } from '@/components/nav/auth-bar'
 
 import { Analytics } from '@vercel/analytics/react'
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
           <SiteNav />
+          <AuthBar />
           {children}
           <Footer />
         </ThemeProvider>
