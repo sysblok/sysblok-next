@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
- * Middleware for route protection and auth state.
+ * Proxy for route protection and auth state.
  *
  * Checks for the presence of the session cookie (not its validity —
  * that's handled when the server actually calls the WP API).
  *
  * If the cookie is missing on a protected route, redirects to /login.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const sessionCookie = request.cookies.get('sysblok_session')
   const { pathname } = request.nextUrl
 
