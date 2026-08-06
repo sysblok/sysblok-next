@@ -17,6 +17,7 @@ import type {
   Media,
   Page,
   WPNavigation,
+  FooterArea,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 
@@ -642,3 +643,8 @@ export const getNavigationBySlug = (slug: string) =>
     },
     ['navigation', `navigation-${slug}`],
   ).then((navigations) => navigations[0] ?? null)
+
+// --- Footer ---
+
+export const getFooter = () =>
+  wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])

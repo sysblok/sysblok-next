@@ -446,3 +446,10 @@ export type CacheTag =
   | `page-${number | string}`
   | 'navigation'
   | `navigation-${string}`
+  | 'footer'
+
+// Footer types
+export interface FooterArea {
+  id: string
+  html: string
+}
