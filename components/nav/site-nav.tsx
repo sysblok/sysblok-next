@@ -1,20 +1,16 @@
 import Link from 'next/link'
 import { Search } from 'lucide-react'
-import { getNavigationBySlug } from '@/lib/wordpress'
-import { parseNavigationHtml } from '@/lib/navigation'
+import { getMenu } from '@/lib/wordpress'
 import { siteConfig } from '@/site.config'
 import { MobileNav } from './mobile-nav'
-import { DesktopMenu } from './desktop-menu' // ← ДОБАВИТЬ
+import { DesktopMenu } from './desktop-menu'
 import { HeaderSocialLinks } from './header-social-links'
 import type { NavItem } from '@/lib/wordpress.d'
 
 export async function SiteNav() {
   let items: NavItem[] = []
   try {
-    const navData = await getNavigationBySlug('desktop-menu')
-    if (navData?.content?.rendered) {
-      items = parseNavigationHtml(navData.content.rendered)
-    }
+    items = await getMenu('desktop-menu')
   } catch (e) {
     console.error('Failed to fetch navigation:', e)
   }
@@ -31,7 +27,7 @@ export async function SiteNav() {
             </div>
           </div>
           <div className="menu-stripe-center">
-            <DesktopMenu items={items} /> {/* ← ДОБАВИТЬ */}
+            <DesktopMenu items={items} />
             <MobileNav items={items} />
           </div>
           <div className="menu-stripe-right">
