@@ -24,7 +24,6 @@ export function MobileNav({ items }: MobileNavProps) {
       {/* Кнопка бургер-меню — всегда видима */}
       <button onClick={() => setOpen(true)} className="menu-toggle-btn" aria-label="Открыть меню">
         <Menu size={24} />
-        <span className="menu-toggle-label">Меню</span>
       </button>
 
       {/* Оверлей */}

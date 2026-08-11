@@ -391,14 +391,12 @@
 
 /* Mobile adjustments */
 @media (max-width: 991px) {
-  .menu-stripe-left,
-  .menu-stripe-right {
-    display: none;
+  .menu-stripe-center {
+    justify-content: center;
   }
 
-  .menu-stripe-center {
-    width: 100%;
-    justify-content: flex-start;
+  .header-social-links {
+    display: none;
   }
 
   .sysblok-navbar {
@@ -448,18 +446,6 @@
 @media (min-width: 992px) {
   .menu-toggle-btn {
     display: none;
-  }
-}
-
-@media (max-width: 991px) {
-  .menu-stripe-left,
-  .menu-stripe-right {
-    display: none;
-  }
-
-  .menu-stripe-center {
-    width: 100%;
-    justify-content: flex-start;
   }
 }
 
