@@ -19,6 +19,7 @@ import type {
   WPNavigation,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
+import type { NavItem } from './wordpress.d'
 
 const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
 
@@ -642,3 +643,9 @@ export const getNavigationBySlug = (slug: string) =>
     },
     ['navigation', `navigation-${slug}`],
   ).then((navigations) => navigations[0] ?? null)
+
+export const getMenu = (name: string) =>
+  wordpressFetch<NavItem[]>(`/wp-json/sysblock-api/v1/menu/${name}`, undefined, [
+    'navigation',
+    `navigation-${name}`,
+  ])
