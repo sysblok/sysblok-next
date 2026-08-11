@@ -57,6 +57,14 @@
   font-display: fallback;
 }
 
+:root {
+  --vk-color: #5186bd;
+
+  --telegram-color: #08c;
+
+  --twitter-color: #0e1011;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -223,7 +231,7 @@
 
 .site-logo .text-logo {
   font-family: var(--font-narrator);
-  font-size: 1rem;
+  font-size: 15px;
   font-weight: 700;
   color: #141414;
   text-transform: uppercase;
@@ -287,6 +295,28 @@
   color: #8a8a8a;
 }
 
+.social-button-link {
+  color: #3a3a3a;
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s ease; /* плавный переход */
+}
+
+.social-button-link--vk:hover {
+  color: var(--vk-color);
+}
+
+.social-button-link--twitter:hover {
+  color: var(--twitter-color);
+}
+
+.social-button-link--telegram:hover {
+  color: var(--telegram-color);
+}
+
 /* Dropdown */
 .dropdown-menu {
   display: none;
@@ -344,19 +374,6 @@
   display: flex;
   align-items: center;
   gap: 15px;
-}
-
-.social-button-link {
-  color: #3a3a3a;
-  font-size: 18px;
-  line-height: 1;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-}
-
-.social-button-link:hover {
-  color: #8a8a8a;
 }
 
 .header-search-link {
