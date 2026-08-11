@@ -20,15 +20,15 @@ export async function SiteNav() {
       <div className="container-fluid container-fluid-with-max-width">
         <div className="menu-stripe-wrapper">
           <div className="menu-stripe-left">
+            <MobileNav items={items} />
+          </div>
+          <div className="menu-stripe-center">
             <div className="site-logo text-logo-wrapper">
               <Link href="/" className="logo-link">
                 <span className="text-logo">{siteConfig.site_name}</span>
               </Link>
             </div>
-          </div>
-          <div className="menu-stripe-center">
             <DesktopMenu items={items} />
-            <MobileNav items={items} />
           </div>
           <div className="menu-stripe-right">
             <HeaderSocialLinks />
