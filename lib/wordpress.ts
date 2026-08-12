@@ -17,6 +17,7 @@ import type {
   Media,
   Page,
   WPNavigation,
+  FooterArea,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 import type { NavItem } from './wordpress.d'
@@ -649,3 +650,7 @@ export const getMenu = (name: string) =>
     'navigation',
     `navigation-${name}`,
   ])
+
+// --- Footer ---
+export const getFooter = () =>
+  wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
