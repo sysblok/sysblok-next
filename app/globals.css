@@ -187,7 +187,6 @@
   margin: 0 auto;
 }
 .section-menu-stripe {
-  border-bottom: 1px solid #e8e8e8;
   background-color: #ffffff;
   font-family: var(--font-narrator);
 }
@@ -197,7 +196,8 @@
   align-items: center;
   justify-content: space-between;
   height: 5ch;
-  width: 1332px;
+  width: 1300px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .menu-stripe-left,
@@ -213,7 +213,7 @@
 
 .menu-stripe-center {
   flex-grow: 1;
-  justify-content: center;
+
   gap: 60px;
 }
 
@@ -652,11 +652,6 @@
 /* =========================================
    Исправление для правой части хедера
    ========================================= */
-
-.menu-stripe-right {
-  padding-right: 0;
-  gap: 15px;
-}
 
 /* Убираем отступ у поиска */
 .header-search-link {
