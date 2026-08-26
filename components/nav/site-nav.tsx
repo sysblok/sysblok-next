@@ -33,7 +33,7 @@ export async function SiteNav() {
           <div className="menu-stripe-right">
             <HeaderSocialLinks />
             <span className="header-search-link" aria-label="Поиск">
-              <Search size={18} />
+              <Search size={18} strokeWidth={2.9} style={{ transform: 'scaleX(-1)' }} />
             </span>
           </div>
         </div>
