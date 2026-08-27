@@ -26,7 +26,7 @@ After activating:
 Add to your `.env.local`:
 
 ```bash
-NEXT_PUBLIC_WP_LOGIN_URL="https://your-wordpress-site.com/wp-login.php"
+WORDPRESS_LOGIN_SLUG="wp-login.php"
 WP_AUTH_SHARED_SECRET="same-secret-as-in-wordpress-plugin"
 AUTH_SESSION_SECRET="random-string-for-cookie-encryption"
 ```
