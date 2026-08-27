@@ -71,11 +71,14 @@ export async function getAuthToken(): Promise<string | null> {
  * The state is stored in a short-lived cookie for verification on callback.
  */
 export function buildLoginUrl(state: string, returnTo?: string): string {
-  const wpLoginUrl = process.env.NEXT_PUBLIC_WP_LOGIN_URL
+  const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+  const loginSlug = process.env.WORDPRESS_LOGIN_SLUG
   const publicUrl = process.env.NEXT_PUBLIC_URL
 
-  if (!wpLoginUrl || !publicUrl) {
-    throw new Error('NEXT_PUBLIC_WP_LOGIN_URL and NEXT_PUBLIC_URL must be defined')
+  if (!wpBaseUrl || !loginSlug || !publicUrl) {
+    throw new Error(
+      'NEXT_PUBLIC_WORDPRESS_URL, WORDPRESS_LOGIN_SLUG and NEXT_PUBLIC_URL must be defined',
+    )
   }
 
   const callbackUrl = new URL('/api/auth/callback', publicUrl)
@@ -84,7 +87,7 @@ export function buildLoginUrl(state: string, returnTo?: string): string {
     callbackUrl.searchParams.set('return_to', returnTo)
   }
 
-  const loginUrl = new URL(wpLoginUrl)
+  const loginUrl = new URL(`${wpBaseUrl}/${loginSlug}`)
   loginUrl.searchParams.set('redirect_to', callbackUrl.toString())
 
   return loginUrl.toString()
