@@ -76,6 +76,12 @@
   display: inline-block;
 }
 
+:root {
+  --vk-color: #5186bd;
+  --telegram-color: #08c;
+  --twitter-color: #0e1011;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
