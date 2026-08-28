@@ -7,7 +7,7 @@ export function HeaderSocialLinks() {
         href="https://vk.com/sysblok"
         target="_blank"
         rel="noopener noreferrer"
-        className="social-button-link"
+        className="social-button-link social-button-link--vk"
         aria-label="VK"
       >
         <svg
@@ -24,7 +24,7 @@ export function HeaderSocialLinks() {
         href="https://twitter.com/sysblok"
         target="_blank"
         rel="noopener noreferrer"
-        className="social-button-link"
+        className="social-button-link social-button-link--twitter"
         aria-label="X (Twitter)"
       >
         <svg
@@ -41,7 +41,7 @@ export function HeaderSocialLinks() {
         href="https://t.me/sysblok"
         target="_blank"
         rel="noopener noreferrer"
-        className="social-button-link"
+        className="social-button-link social-button-link--telegram"
         aria-label="Telegram"
       >
         <svg
