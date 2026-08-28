@@ -171,25 +171,21 @@
 
 .container-fluid-with-max-width {
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+
+  margin: 0 auto;
 }
 
 @media (min-width: 992px) {
   .container-fluid-with-max-width {
-    max-width: 1170px;
+    max-width: 1388px;
   }
 }
 
 /* Layout */
 .section {
-  max-width: 1388px;
   margin: 0 auto;
 }
 .section-menu-stripe {
-  border-bottom: 1px solid #e8e8e8;
   background-color: #ffffff;
   font-family: var(--font-narrator);
 }
@@ -198,7 +194,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: 5ch;
+  width: 1300px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .menu-stripe-left,
@@ -206,8 +204,6 @@
 .menu-stripe-right {
   display: flex;
   align-items: center;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
 }
 
 .menu-stripe-left {
@@ -216,12 +212,13 @@
 
 .menu-stripe-center {
   flex-grow: 1;
-  justify-content: center;
+
+  gap: 60px;
 }
 
 .menu-stripe-right {
   flex-shrink: 0;
-  padding-right: 3.1rem;
+  gap: 45px;
 }
 
 /* Logo */
@@ -243,7 +240,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  top: 1px;
+
   z-index: 110;
 }
 
@@ -264,7 +261,7 @@
 .navbar-nav > li + li::before {
   content: '';
   position: absolute;
-  left: -10px;
+
   top: 50%;
   transform: translateY(-50%);
   width: 1px;
@@ -352,6 +349,8 @@
 .dropdown-item {
   display: block;
   width: 100%;
+  font-size: 12px;
+  text-transform: uppercase;
   padding: 6px 20px;
   clear: both;
   font-weight: 400;
@@ -373,7 +372,7 @@
 .header-social-links {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 55px;
 }
 
 .header-search-link {
@@ -391,14 +390,12 @@
 
 /* Mobile adjustments */
 @media (max-width: 991px) {
-  .menu-stripe-left,
-  .menu-stripe-right {
-    display: none;
+  .menu-stripe-center {
+    justify-content: center;
   }
 
-  .menu-stripe-center {
-    width: 100%;
-    justify-content: flex-start;
+  .header-social-links {
+    display: none;
   }
 
   .sysblok-navbar {
@@ -451,106 +448,50 @@
   }
 }
 
-@media (max-width: 991px) {
-  .menu-stripe-left,
-  .menu-stripe-right {
-    display: none;
-  }
-
-  .menu-stripe-center {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
 /* =========================================
    Оверлей
    ========================================= */
-
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  animation: overlayFadeIn 0.3s ease;
-}
-
-@keyframes overlayFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
 /* =========================================
    Сайдбар (боковое меню)
    ========================================= */
 
-.side-menu {
+/* =========================================
+   Мобильное выпадающее меню (сверху, на всю ширину)
+   ========================================= */
+
+.mobile-menu-overlay {
   position: fixed;
-  top: 0;
+  top: 60px;
   left: 0;
-  height: 100%;
-  width: 340px;
-  max-width: 85vw;
-  background: #ffffff;
-  z-index: 1000;
-  transform: translateX(-100%);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.12);
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 999;
+}
+
+.mobile-menu-dropdown {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 0;
   overflow: hidden;
+  background: #ffffff;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  z-index: 1000;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.side-menu-open {
-  transform: translateX(0);
+.mobile-menu-dropdown-open {
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 
-/* Шапка сайдбара */
-.side-menu-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e8e8e8;
-  flex-shrink: 0;
-  min-height: 60px;
-}
-
-.side-menu-logo {
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.15em;
-  text-decoration: none;
-  color: #141414;
-  text-transform: uppercase;
-  font-family: var(--font-narrator);
-}
-
-.side-menu-logo:hover {
-  color: #141414;
-}
-
-.side-menu-close {
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: #666;
-  transition:
-    color 0.2s,
-    transform 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.side-menu-close:hover {
-  color: #141414;
-  transform: rotate(90deg);
+.mobile-menu-nav {
+  padding: 8px 0;
 }
 
 /* Навигация сайдбара */
@@ -572,6 +513,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   padding: 14px 24px;
   text-decoration: none;
   color: #141414;
@@ -602,9 +544,10 @@
 
 .side-menu-link-child {
   font-weight: 400;
-  text-transform: none;
+  font-size: 12px;
+  text-transform: uppercase;
   letter-spacing: 0;
-  font-size: 13.7px;
+  font-size: 12px;
   color: #555;
   padding-left: 48px;
 }
@@ -673,18 +616,14 @@
    ========================================= */
 
 @media (max-width: 768px) {
-  .side-menu {
-    width: 300px;
-  }
-
   .side-menu-link {
     padding: 12px 20px;
-    font-size: 13px;
+    font-size: 13.7px;
   }
 
   .side-menu-link-child {
     padding-left: 36px;
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .side-menu-header {
@@ -712,11 +651,6 @@
 /* =========================================
    Исправление для правой части хедера
    ========================================= */
-
-.menu-stripe-right {
-  padding-right: 0;
-  gap: 15px;
-}
 
 /* Убираем отступ у поиска */
 .header-search-link {

@@ -4,7 +4,6 @@ import * as React from 'react'
 import Link, { LinkProps } from 'next/link'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { siteConfig } from '@/site.config'
 import type { NavItem } from '@/lib/wordpress.d'
 
 interface MobileNavProps {
@@ -19,35 +18,29 @@ export function MobileNav({ items }: MobileNavProps) {
     setOpenAccordion(openAccordion === label ? null : label)
   }
 
+  const closeMenu = () => {
+    setOpen(false)
+    setOpenAccordion(null)
+  }
+
   return (
     <>
-      {/* Кнопка бургер-меню — всегда видима */}
-      <button onClick={() => setOpen(true)} className="menu-toggle-btn" aria-label="Открыть меню">
-        <Menu size={24} />
-        <span className="menu-toggle-label">Меню</span>
+      {/* Кнопка бургер-меню — переключается в крестик */}
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="menu-toggle-btn"
+        aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
+        aria-expanded={open}
+      >
+        {open ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Оверлей */}
-      {open && <div className="menu-overlay" onClick={() => setOpen(false)} />}
+      {/* Прозрачный кликовый перехватчик для закрытия по клику вне меню */}
+      {open && <div className="mobile-menu-overlay" onClick={closeMenu} />}
 
-      {/* Боковое меню */}
-      <aside className={cn('side-menu', open && 'side-menu-open')}>
-        {/* Шапка меню */}
-        <div className="side-menu-header">
-          <Link href="/" className="side-menu-logo" onClick={() => setOpen(false)}>
-            <span className="font-bold uppercase tracking-wider">{siteConfig.site_name}</span>
-          </Link>
-          <button
-            onClick={() => setOpen(false)}
-            className="side-menu-close"
-            aria-label="Закрыть меню"
-          >
-            <X size={24} />
-          </button>
-        </div>
-
-        {/* Навигация */}
-        <nav className="side-menu-nav">
+      {/* Выпадающая панель на всю ширину под хедером */}
+      <div className={cn('mobile-menu-dropdown', open && 'mobile-menu-dropdown-open')}>
+        <nav className="mobile-menu-nav">
           {items.map((item) => {
             const hasChildren = item.children && item.children.length > 0
             const isOpen = openAccordion === item.label
@@ -72,7 +65,7 @@ export function MobileNav({ items }: MobileNavProps) {
                           key={child.label}
                           href={child.href || '#'}
                           className="side-menu-link side-menu-link-child"
-                          onOpenChange={setOpen}
+                          onOpenChange={closeMenu}
                         >
                           {child.label}
                         </MobileLink>
@@ -88,7 +81,7 @@ export function MobileNav({ items }: MobileNavProps) {
                 <MobileLink
                   href={item.href || '#'}
                   className="side-menu-link side-menu-link-parent"
-                  onOpenChange={setOpen}
+                  onOpenChange={closeMenu}
                 >
                   {item.label}
                 </MobileLink>
@@ -97,7 +90,6 @@ export function MobileNav({ items }: MobileNavProps) {
           })}
         </nav>
 
-        {/* Социальные ссылки в футере меню */}
         <div className="side-menu-footer">
           <div className="side-menu-socials">
             <a
@@ -117,6 +109,7 @@ export function MobileNav({ items }: MobileNavProps) {
                 <path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.391 0 15.684 0zm3.692 17.123h-1.744c-.66 0-.864-.525-2.05-1.727-1.033-1-1.49-1.135-1.744-1.135-.356 0-.458.102-.458.593v1.575c0 .424-.135.678-1.253.678-1.846 0-3.896-1.12-5.335-3.202C4.624 10.857 4.03 8.57 4.03 8.096c0-.254.102-.491.593-.491h1.744c.44 0 .61.203.78.678.847 2.49 2.27 4.675 2.85 4.675.22 0 .322-.102.322-.66V9.721c-.068-1.186-.695-1.287-.695-1.71 0-.203.17-.407.44-.407h2.744c.373 0 .508.203.508.644v3.49c0 .372.17.508.271.508.22 0 .407-.136.813-.542 1.254-1.406 2.151-3.574 2.151-3.574.119-.254.322-.491.763-.491h1.744c.525 0 .644.27.525.644-.22 1.017-2.354 4.031-2.354 4.031-.186.305-.254.44 0 .78.186.254.796.779 1.203 1.253.745.847 1.32 1.558 1.473 2.05.17.49-.085.744-.576.744z" />
               </svg>
             </a>
+
             <a
               href="https://twitter.com/sysblok"
               target="_blank"
@@ -153,20 +146,20 @@ export function MobileNav({ items }: MobileNavProps) {
             </a>
           </div>
         </div>
-      </aside>
+      </div>
     </>
   )
 }
 
 interface MobileLinkProps extends LinkProps {
-  onOpenChange?: (open: boolean) => void
+  onOpenChange?: () => void
   children: React.ReactNode
   className?: string
 }
 
 function MobileLink({ href, onOpenChange, className, children, ...props }: MobileLinkProps) {
   return (
-    <Link href={href} onClick={() => onOpenChange?.(false)} className={className} {...props}>
+    <Link href={href} onClick={() => onOpenChange?.()} className={className} {...props}>
       {children}
     </Link>
   )
