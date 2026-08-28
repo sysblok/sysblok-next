@@ -172,8 +172,7 @@
 .container-fluid-with-max-width {
   width: 100%;
 
-  margin-right: auto;
-  margin-left: auto;
+  margin: 0 auto;
 }
 
 @media (min-width: 992px) {
@@ -480,7 +479,7 @@
   max-height: 0;
   overflow: hidden;
   background: #ffffff;
-  border-top: 1px solid #e8e8e8;
+
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   z-index: 1000;
   transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
