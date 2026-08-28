@@ -89,9 +89,7 @@ const Footer = async () => {
         </Container>
 
         <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center">
-          <p className="text-muted-foreground">
-            &copy; 2018–2026 <a href="https://sysblok.ru">Системный Блокъ</a>
-          </p>
+          <p className="text-muted-foreground">&copy; 2018–2026 Системный Блокъ</p>
         </Container>
       </Section>
     </footer>
