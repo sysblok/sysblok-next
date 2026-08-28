@@ -4,6 +4,7 @@ import { Section, Container } from '@/components/craft'
 import { VkIcon, XIcon, TelegramIcon, YoutubeIcon } from '@/components/icons/social-icons'
 import Link from 'next/link'
 import type { ComponentType, SVGProps } from 'react'
+import { AboutArea } from '@/components/aboutArea'
 
 const socialIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   vk: VkIcon,
@@ -55,12 +56,7 @@ const Footer = async () => {
         <Container>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {areaMap['widgetized-area-1'] && (
-              <div
-                className={textAreaClasses}
-                dangerouslySetInnerHTML={{
-                  __html: areaMap['widgetized-area-1'],
-                }}
-              />
+              <AboutArea html={areaMap['widgetized-area-1']} className={textAreaClasses} />
             )}
 
             {socialLinks.length > 0 && (

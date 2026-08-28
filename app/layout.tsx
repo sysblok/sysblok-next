@@ -3,8 +3,6 @@ import './globals.css'
 import { Inter as FontSans } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 
-import Footer from '@/components/Footer'
-
 import { Analytics } from '@vercel/analytics/react'
 
 import { siteConfig } from '@/site.config'
@@ -13,6 +11,7 @@ import { cn } from '@/lib/utils'
 import { SiteNav } from '@/components/nav/site-nav'
 
 import type { Metadata } from 'next'
+import Footer from '@/components/footer'
 
 const font = FontSans({
   subsets: ['latin'],
@@ -46,54 +45,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 
 ;<Footer />
-// const Footer = () => {
-//   return (
-//     <footer>
-//       <Section>
-//         <Container className="flex">
-//           <div className="flex flex-col gap-6 not-prose">
-//             <Link href="/">
-//               <h3 className="sr-only">{siteConfig.site_name}</h3>
-//             </Link>
-//             <p>
-//               <Balancer>{siteConfig.site_description}</Balancer>
-//             </p>
-//           </div>
-//           <div className="flex flex-col gap-2 text-sm ml-6">
-//             <h5 className="font-medium text-base">Website</h5>
-//             {Object.entries(mainMenu).map(([key, href]) => (
-//               <Link
-//                 className="hover:underline underline-offset-4"
-//                 key={href}
-//                 href={href}
-//               >
-//                 {key.charAt(0).toUpperCase() + key.slice(1)}
-//               </Link>
-//             ))}
-//           </div>
-//           {Object.entries(contentMenu).length > 0 && (
-//             <div className="flex flex-col gap-2 text-sm">
-//               <h5 className="font-medium text-base">Blog</h5>
-//               {Object.entries(contentMenu).map(([key, href]) => (
-//                 <Link
-//                   className="hover:underline underline-offset-4"
-//                   key={href}
-//                   href={href}
-//                 >
-//                   {key.charAt(0).toUpperCase() + key.slice(1)}
-//                 </Link>
-//               ))}
-//             </div>
-//           )}
-//         </Container>
-//         <Container className="border-t not-prose flex flex-col md:flex-row md:gap-2 gap-6 justify-between md:items-center">
-//           <ThemeToggle />
-//           <p className="text-muted-foreground">
-//             &copy; <a href="https://9d8.dev">9d8</a>. All rights reserved.
-//             2025-present.
-//           </p>
-//         </Container>
-//       </Section>
-//     </footer>
-//   );
-// };
