@@ -1,27 +1,8 @@
-// components/Footer.tsx
 import { getFooter } from '@/lib/wordpress'
 import { Section, Container } from '@/components/craft'
-import { VkIcon, XIcon, TelegramIcon, YoutubeIcon } from '@/components/icons/social-icons'
 import Link from 'next/link'
-
-import type { ComponentType } from 'react'
-import type { IconProps } from '@/components/icons/social-icons'
-
+import { SOCIAL_LINKS } from '@/lib/social-links'
 import { AboutArea } from '@/components/aboutArea'
-
-const socialIcons: Record<string, ComponentType<IconProps>> = {
-  vk: VkIcon,
-  x: XIcon,
-  telegram: TelegramIcon,
-  youtube: YoutubeIcon,
-}
-
-const SOCIAL_LINKS = [
-  { platform: 'telegram', href: 'https://t.me/sysblok' },
-  { platform: 'vk', href: 'https://vk.com/sysblok' },
-  { platform: 'x', href: 'https://x.com/sysblok' },
-  { platform: 'youtube', href: 'https://youtube.com/@sysblok' },
-]
 
 const headingClasses =
   '[&_h4]:font-medium [&_h4]:uppercase [&_h4]:tracking-wide [&_h4]:mb-4 [&_h4]:text-foreground ' +
@@ -51,8 +32,6 @@ const Footer = async () => {
   const areas = await getFooter()
   const areaMap = Object.fromEntries(areas.map((a) => [a.id, a.html]))
 
-  const socialLinks = SOCIAL_LINKS
-
   return (
     <footer>
       <Section>
@@ -62,7 +41,7 @@ const Footer = async () => {
               <AboutArea html={areaMap['widgetized-area-1']} className={textAreaClasses} />
             )}
 
-            {socialLinks.length > 0 && (
+            {SOCIAL_LINKS.length > 0 && (
               <div>
                 <h4
                   className="font-medium uppercase tracking-wide mb-4 text-foreground"
@@ -73,22 +52,18 @@ const Footer = async () => {
                   Соцсети
                 </h4>
                 <div className="flex gap-4">
-                  {socialLinks.map(({ href, platform }) => {
-                    const Icon = socialIcons[platform]
-                    if (!Icon) return null
-                    return (
-                      <Link
-                        key={href}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="social-button-link"
-                        aria-label={platform}
-                      >
-                        <Icon aria-label={platform} />
-                      </Link>
-                    )
-                  })}
+                  {SOCIAL_LINKS.map(({ href, platform, icon: Icon }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-button-link"
+                      aria-label={platform}
+                    >
+                      <Icon aria-label={platform} />
+                    </Link>
+                  ))}
                 </div>
               </div>
             )}
