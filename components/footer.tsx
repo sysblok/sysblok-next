@@ -3,10 +3,13 @@ import { getFooter } from '@/lib/wordpress'
 import { Section, Container } from '@/components/craft'
 import { VkIcon, XIcon, TelegramIcon, YoutubeIcon } from '@/components/icons/social-icons'
 import Link from 'next/link'
-import type { ComponentType, SVGProps } from 'react'
+
+import type { ComponentType } from 'react'
+import type { IconProps } from '@/components/icons/social-icons'
+
 import { AboutArea } from '@/components/aboutArea'
 
-const socialIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+const socialIcons: Record<string, ComponentType<IconProps>> = {
   vk: VkIcon,
   x: XIcon,
   telegram: TelegramIcon,
@@ -14,9 +17,9 @@ const socialIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
 }
 
 const SOCIAL_LINKS = [
+  { platform: 'telegram', href: 'https://t.me/sysblok' },
   { platform: 'vk', href: 'https://vk.com/sysblok' },
   { platform: 'x', href: 'https://x.com/sysblok' },
-  { platform: 'telegram', href: 'https://t.me/sysblok' },
   { platform: 'youtube', href: 'https://youtube.com/@sysblok' },
 ]
 
@@ -82,7 +85,7 @@ const Footer = async () => {
                         className="social-button-link"
                         aria-label={platform}
                       >
-                        <Icon width={18} height={18} />
+                        <Icon aria-label={platform} />
                       </Link>
                     )
                   })}

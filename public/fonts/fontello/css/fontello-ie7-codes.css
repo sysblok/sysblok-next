@@ -1,0 +1,9 @@
+.icon-youtube {
+  *zoom: expression(this.runtimeStyle[ 'zoom'] = '1', this.innerHTML = '&#xf167;&nbsp;');
+}
+.icon-vkontakte {
+  *zoom: expression(this.runtimeStyle[ 'zoom'] = '1', this.innerHTML = '&#xf189;&nbsp;');
+}
+.icon-telegram {
+  *zoom: expression(this.runtimeStyle[ 'zoom'] = '1', this.innerHTML = '&#xf2c6;&nbsp;');
+}
