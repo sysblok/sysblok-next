@@ -472,6 +472,84 @@
 }
 
 /* =========================================
+   Typography — Headings
+   ========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.no-auto-hyphenation,
+table {
+  -webkit-hyphens: manual;
+  -moz-hyphens: manual;
+  hyphens: manual;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  font-family: var(--font-narrator);
+  position: relative;
+  line-height: 1.2;
+  letter-spacing: -0.009em;
+}
+
+h4 {
+  margin: 3rem 0 2rem;
+  font-size: 20px;
+}
+
+.section-footer h4 {
+  margin: 0 0 1rem;
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   Footer — About area text
+   ========================================= */
+
+.footer-about-area {
+  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 18px;
+}
+
+/* =========================================
+   Footer — Widget text (about, links, contacts)
+   ========================================= */
+
+.footer-about-area,
+.footer-about-area a,
+.footer-links,
+.footer-links a {
+  font-family: Verdana, Arial, Georgia, 'Cormorant Garamond', sans-serif;
+  font-size: 15px;
+}
+
+.footer-about-area a,
+.footer-links a {
+  color: #5b5b5b;
+}
+
+.footer-about-area a:hover,
+.footer-links a:hover {
+  color: #141414;
+}
+
+/* =========================================
    Оверлей
    ========================================= */
 

@@ -6,7 +6,7 @@ export type IconProps = HTMLAttributes<HTMLElement> & {
 
 function FontIcon({
   iconClass,
-  size = 18,
+  size = 30,
   className = '',
   style,
   ...props
