@@ -525,7 +525,7 @@ h4 {
   font-size: 20px;
   font-weight: 400;
   text-transform: uppercase;
-  background-color: #f5f5f5;
+  color: #231f20;
 }
 
 /* =========================================
@@ -554,13 +554,21 @@ h4 {
   font-size: 15px;
 }
 
+.section-footer a,
+.section-footer address {
+  color: #5b5b5b;
+}
+
+.section-footer address {
+  font-style: normal;
+}
 /* Ссылки и адрес — везде 15px Verdana, независимо от контейнера */
 .footer-about-area a,
 .footer-links a,
 .footer-about-area address {
   font-family: Verdana, Arial, Georgia, 'Cormorant Garamond', sans-serif;
   font-size: 15px;
-  color: #5b5b5b;
+
   text-decoration: none;
 }
 
@@ -568,10 +576,6 @@ h4 {
 .footer-links a:hover {
   color: #141414;
   text-decoration: underline;
-}
-
-.footer-about-area address {
-  font-style: normal;
 }
 
 /* =========================================

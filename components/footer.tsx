@@ -14,15 +14,11 @@ const textAreaClasses =
   '[&>div+div]:mt-6 ' +
   headingClasses +
   ' ' +
-  '[&_a]:text-muted-foreground [&_a:hover]:text-foreground [&_a:hover]:underline [&_a]:underline-offset-4 ' +
+  '[&_a]:underline-offset-4 ' +
   '[&_a]:leading-loose ' +
-  '[&_address]:not-italic [&_address]:text-muted-foreground [&_address]:leading-loose'
+  '[&_address]:not-italic [&_address]:leading-loose'
 
-const inlineLinksClasses =
-  headingClasses +
-  ' ' +
-  '[&_div]:leading-loose [&_div]:text-muted-foreground ' +
-  '[&_a:hover]:text-foreground [&_a:hover]:underline [&_a]:underline-offset-4'
+const inlineLinksClasses = headingClasses
 
 const Footer = async () => {
   const areas = await getFooter()
