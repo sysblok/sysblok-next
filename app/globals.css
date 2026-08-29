@@ -525,10 +525,19 @@ h4 {
   font-size: 20px;
   font-weight: 400;
   text-transform: uppercase;
+  background-color: #f5f5f5;
 }
 
 /* =========================================
-   Footer — About area text
+   Footer — background
+   ========================================= */
+
+.section-footer {
+  background-color: #f5f5f5;
+}
+
+/* =========================================
+   Footer — About area (intro text) — 18px Georgia
    ========================================= */
 
 .footer-about-area {
@@ -537,25 +546,32 @@ h4 {
 }
 
 /* =========================================
-   Footer — Widget text (about, links, contacts)
+   Footer — Links (ТЕГИ/ТЕМЫ) — 15px Verdana
    ========================================= */
 
-.footer-about-area,
-.footer-about-area a,
-.footer-links,
-.footer-links a {
+.footer-links {
   font-family: Verdana, Arial, Georgia, 'Cormorant Garamond', sans-serif;
   font-size: 15px;
 }
 
+/* Ссылки и адрес — везде 15px Verdana, независимо от контейнера */
 .footer-about-area a,
-.footer-links a {
+.footer-links a,
+.footer-about-area address {
+  font-family: Verdana, Arial, Georgia, 'Cormorant Garamond', sans-serif;
+  font-size: 15px;
   color: #5b5b5b;
+  text-decoration: none;
 }
 
 .footer-about-area a:hover,
 .footer-links a:hover {
   color: #141414;
+  text-decoration: underline;
+}
+
+.footer-about-area address {
+  font-style: normal;
 }
 
 /* =========================================
