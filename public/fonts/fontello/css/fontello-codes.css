@@ -1,0 +1,9 @@
+.icon-youtube:before {
+  content: '\f167';
+} /* '' */
+.icon-vkontakte:before {
+  content: '\f189';
+} /* '' */
+.icon-telegram:before {
+  content: '\f2c6';
+} /* '' */
