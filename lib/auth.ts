@@ -29,9 +29,6 @@ if (!process.env.AUTH_SESSION_SECRET) {
 }
 const sessionSecret: string = process.env.AUTH_SESSION_SECRET
 
-/** Shared secret for WP auth code exchange and token invalidation */
-export { authSharedSecret }
-
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -97,8 +94,25 @@ export async function getAuthToken(): Promise<string | null> {
 }
 
 // ---------------------------------------------------------------------------
-// Login URL
+// Login
 // ---------------------------------------------------------------------------
+
+/**
+ * Generate a CSRF state parameter and store it in a cookie.
+ * Returns the state string for use in the login URL.
+ */
+export async function createAuthState(): Promise<string> {
+  const state = crypto.randomUUID()
+  const cookieStore = await cookies()
+  cookieStore.set('auth_state', state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 600, // 10 minutes — enough time to complete login + 2FA
+    path: '/',
+  })
+  return state
+}
 
 /**
  * Build the WordPress login URL with proper redirect_to and CSRF state.
@@ -116,4 +130,24 @@ export function buildLoginUrl(state: string, returnTo?: string): string {
   loginUrl.searchParams.set('redirect_to', callbackUrl.toString())
 
   return loginUrl.toString()
+}
+// ---------------------------------------------------------------------------
+// WordPress auth API
+// ---------------------------------------------------------------------------
+
+/**
+ * POST to a WordPress auth endpoint (/wp-json/sysblok/v1/...).
+ * Automatically includes the shared secret in the request body.
+ */
+export async function wordpressAuthFetch(
+  path: string,
+  body: Record<string, unknown>,
+): Promise<Response> {
+  const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+  return fetch(`${wpBaseUrl}/wp-json/sysblok/v1${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...body, secret: authSharedSecret }),
+    cache: 'no-store',
+  })
 }

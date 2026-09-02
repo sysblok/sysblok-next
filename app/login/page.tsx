@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
-import { cookies } from 'next/headers'
 import { Section, Container } from '@/components/craft'
-import { getCurrentUser, buildLoginUrl } from '@/lib/auth'
+import { getCurrentUser, createAuthState, buildLoginUrl } from '@/lib/auth'
 
 import type { Metadata } from 'next'
 
@@ -25,17 +24,7 @@ export default async function LoginPage({
 
   async function loginAction() {
     'use server'
-    // Generate CSRF state and store in cookie
-    const state = crypto.randomUUID()
-    const cookieStore = await cookies()
-    cookieStore.set('auth_state', state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 600, // 10 minutes — enough time to complete login + 2FA
-      path: '/',
-    })
-
+    const state = await createAuthState()
     const loginUrl = buildLoginUrl(state, return_to)
     redirect(loginUrl)
   }
