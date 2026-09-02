@@ -14,10 +14,10 @@ export async function AuthBar() {
   }
 
   return (
-    <div className="auth-bar">
-      <div className="container-fluid container-fluid-with-max-width">
-        <div className="auth-bar-inner">
-          <span className="auth-bar-user">{user.displayName}</span>
+    <div className="bg-neutral-100 border-b border-neutral-200 text-xs">
+      <div className="w-full px-4 mx-auto lg:max-w-[1170px]">
+        <div className="flex items-center justify-end gap-4 py-1">
+          <span className="text-neutral-500">{user.displayName}</span>
           <LogoutButton />
         </div>
       </div>
