@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { getIronSession } from 'iron-session'
-import { getSessionOptions, authSharedSecret, type SessionData } from '@/lib/auth'
+import { getSession, authSharedSecret } from '@/lib/auth'
 
 const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
 
@@ -48,7 +47,7 @@ export async function GET(request: NextRequest) {
     const data = await verifyResponse.json()
 
     // Create the encrypted session cookie
-    const session = await getIronSession<SessionData>(cookieStore, getSessionOptions())
+    const session = await getSession()
     session.user = {
       id: data.user.id,
       displayName: data.user.display_name,
