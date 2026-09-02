@@ -1,7 +1,7 @@
 // Session management for headless WordPress authentication
 // Uses iron-session for encrypted cookie-based sessions
 
-import { getIronSession, type SessionOptions } from 'iron-session'
+import { getIronSession, type IronSession, type SessionOptions } from 'iron-session'
 import { cookies } from 'next/headers'
 
 // ---------------------------------------------------------------------------
@@ -53,27 +53,25 @@ export interface SessionData {
 // Session
 // ---------------------------------------------------------------------------
 
-export function getSessionOptions(): SessionOptions {
-  return {
-    password: sessionSecret,
-    cookieName: 'sysblok_session',
-    cookieOptions: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
-      maxAge: 60 * 60 * 24, // 24 hours (matches WP token TTL)
-      path: '/',
-    },
-  }
+const sessionOptions: SessionOptions = {
+  password: sessionSecret,
+  cookieName: 'sysblok_session',
+  cookieOptions: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
+    maxAge: 60 * 60 * 24, // 24 hours (matches WP token TTL)
+    path: '/',
+  },
 }
 
 /**
  * Get the current session from cookies.
  * Returns session data (may be empty if not logged in).
  */
-export async function getSession(): Promise<SessionData> {
+export async function getSession(): Promise<IronSession<SessionData>> {
   const cookieStore = await cookies()
-  return getIronSession<SessionData>(cookieStore, getSessionOptions())
+  return getIronSession<SessionData>(cookieStore, sessionOptions)
 }
 
 /**

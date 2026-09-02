@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { getIronSession } from 'iron-session'
-import { getSessionOptions, authSharedSecret, type SessionData } from '@/lib/auth'
+import { getSession, authSharedSecret } from '@/lib/auth'
 
 const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
 
@@ -11,8 +9,7 @@ const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
  * Destroys the Next.js session and invalidates the token on WordPress side.
  */
 export async function POST() {
-  const cookieStore = await cookies()
-  const session = await getIronSession<SessionData>(cookieStore, getSessionOptions())
+  const session = await getSession()
 
   // Invalidate the token on WordPress side
   if (session.token && wpBaseUrl) {
