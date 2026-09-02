@@ -4,6 +4,38 @@
 import { getIronSession, type SessionOptions } from 'iron-session'
 import { cookies } from 'next/headers'
 
+// ---------------------------------------------------------------------------
+// Environment variable checks (fail fast on startup if missing)
+// NEXT_PUBLIC_WORDPRESS_URL is already checked in wordpress.ts
+// ---------------------------------------------------------------------------
+
+const wpLoginSlug = process.env.WORDPRESS_LOGIN_SLUG
+if (!wpLoginSlug) {
+  throw new Error('WORDPRESS_LOGIN_SLUG environment variable is not defined')
+}
+
+const publicUrl = process.env.NEXT_PUBLIC_URL
+if (!publicUrl) {
+  throw new Error('NEXT_PUBLIC_URL environment variable is not defined')
+}
+
+const authSharedSecret = process.env.WP_AUTH_SHARED_SECRET
+if (!authSharedSecret) {
+  throw new Error('WP_AUTH_SHARED_SECRET environment variable is not defined')
+}
+
+if (!process.env.AUTH_SESSION_SECRET) {
+  throw new Error('AUTH_SESSION_SECRET environment variable is not defined')
+}
+const sessionSecret: string = process.env.AUTH_SESSION_SECRET
+
+/** Shared secret for WP auth code exchange and token invalidation */
+export { authSharedSecret }
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export interface SessionUser {
   id: number
   displayName: string
@@ -17,11 +49,11 @@ export interface SessionData {
   expiresAt?: number
 }
 
+// ---------------------------------------------------------------------------
+// Session
+// ---------------------------------------------------------------------------
+
 export function getSessionOptions(): SessionOptions {
-  const sessionSecret = process.env.AUTH_SESSION_SECRET
-  if (!sessionSecret) {
-    throw new Error('AUTH_SESSION_SECRET environment variable is not defined')
-  }
   return {
     password: sessionSecret,
     cookieName: 'sysblok_session',
@@ -66,28 +98,23 @@ export async function getAuthToken(): Promise<string | null> {
   return session.token
 }
 
+// ---------------------------------------------------------------------------
+// Login URL
+// ---------------------------------------------------------------------------
+
 /**
  * Build the WordPress login URL with proper redirect_to and CSRF state.
  * The state is stored in a short-lived cookie for verification on callback.
  */
 export function buildLoginUrl(state: string, returnTo?: string): string {
-  const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
-  const loginSlug = process.env.WORDPRESS_LOGIN_SLUG
-  const publicUrl = process.env.NEXT_PUBLIC_URL
-
-  if (!wpBaseUrl || !loginSlug || !publicUrl) {
-    throw new Error(
-      'NEXT_PUBLIC_WORDPRESS_URL, WORDPRESS_LOGIN_SLUG and NEXT_PUBLIC_URL must be defined',
-    )
-  }
-
   const callbackUrl = new URL('/api/auth/callback', publicUrl)
   callbackUrl.searchParams.set('state', state)
   if (returnTo) {
     callbackUrl.searchParams.set('return_to', returnTo)
   }
 
-  const loginUrl = new URL(`${wpBaseUrl}/${loginSlug}`)
+  const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+  const loginUrl = new URL(`${wpBaseUrl}/${wpLoginSlug}`)
   loginUrl.searchParams.set('redirect_to', callbackUrl.toString())
 
   return loginUrl.toString()
