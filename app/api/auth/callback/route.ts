@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { getIronSession } from 'iron-session'
-import { getSessionOptions, type SessionData } from '@/lib/auth'
+import { getSessionOptions, authSharedSecret, type SessionData } from '@/lib/auth'
 
 const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
-const authSecret = process.env.WP_AUTH_SHARED_SECRET
 
 /**
  * GET /api/auth/callback?code=...&state=...&return_to=...
@@ -31,17 +30,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/login?error=invalid_state', request.url))
   }
 
-  if (!wpBaseUrl || !authSecret) {
-    console.error('Missing WP_AUTH_SHARED_SECRET or NEXT_PUBLIC_WORDPRESS_URL')
-    return NextResponse.redirect(new URL('/login?error=config_error', request.url))
-  }
-
   try {
     // Exchange the auth code for a session token via WP REST API
     const verifyResponse = await fetch(`${wpBaseUrl}/wp-json/sysblok/v1/auth/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, secret: authSecret }),
+      body: JSON.stringify({ code, secret: authSharedSecret }),
       cache: 'no-store',
     })
 
