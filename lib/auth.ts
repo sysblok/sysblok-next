@@ -93,6 +93,41 @@ export async function getAuthToken(): Promise<string | null> {
   return session.token
 }
 
+/**
+ * Validate the current session by checking the token against WordPress.
+ * If the token is invalid (expired, revoked), destroys the session.
+ * Returns the user if valid, null if invalid or not logged in.
+ */
+export async function validateSession(): Promise<SessionUser | null> {
+  const session = await getSession()
+
+  if (!session.user || !session.token) {
+    return null
+  }
+
+  // Check if the token is still valid by calling WP REST API
+  const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+  try {
+    const response = await fetch(`${wpBaseUrl}/wp-json/wp/v2/users/me`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+      cache: 'no-store',
+    })
+
+    if (response.ok) {
+      return session.user
+    }
+  } catch {
+    // If WP is unreachable, keep the session (don't log out on network errors)
+    return session.user
+  }
+
+  // Token is invalid — destroy the session
+  session.destroy()
+  return null
+}
+
 // ---------------------------------------------------------------------------
 // Login
 // ---------------------------------------------------------------------------

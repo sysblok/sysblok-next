@@ -1,13 +1,14 @@
-import { getCurrentUser } from '@/lib/auth'
-import { LogoutButton } from './logout-button'
+import { validateSession } from '@/lib/auth'
+
+const wpAdminUrl = `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin/`
 
 /**
  * Thin bar displayed below the main nav when a user is logged in.
- * Shows the user's display name and a logout button.
  * Hidden when not authenticated.
+ * Validates the session token against WordPress on each render
  */
 export async function AuthBar() {
-  const user = await getCurrentUser()
+  const user = await validateSession()
 
   if (!user) {
     return null
@@ -18,7 +19,14 @@ export async function AuthBar() {
       <div className="w-full px-4 mx-auto lg:max-w-[1170px]">
         <div className="flex items-center justify-end gap-4 py-1">
           <span className="text-neutral-500">{user.displayName}</span>
-          <LogoutButton />
+          <a
+            href={wpAdminUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-neutral-500 underline hover:text-neutral-700 text-xs"
+          >
+            Админ-панель
+          </a>
         </div>
       </div>
     </div>
