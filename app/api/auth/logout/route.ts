@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSession, authSharedSecret } from '@/lib/auth'
-
-const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+import { getSession, wordpressAuthFetch } from '@/lib/auth'
 
 /**
  * POST /api/auth/logout
@@ -12,14 +10,9 @@ export async function POST() {
   const session = await getSession()
 
   // Invalidate the token on WordPress side
-  if (session.token && wpBaseUrl) {
+  if (session.token) {
     try {
-      await fetch(`${wpBaseUrl}/wp-json/sysblok/v1/auth/logout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: session.token, secret: authSharedSecret }),
-        cache: 'no-store',
-      })
+      await wordpressAuthFetch('/auth/logout', { token: session.token })
     } catch (error) {
       // Log but don't block logout if WP is unreachable
       console.error('Failed to invalidate token on WordPress:', error)

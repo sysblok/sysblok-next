@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { getSession, authSharedSecret } from '@/lib/auth'
-
-const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
+import { getSession, wordpressAuthFetch } from '@/lib/auth'
 
 /**
  * GET /api/auth/callback?code=...&state=...&return_to=...
@@ -31,12 +29,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // Exchange the auth code for a session token via WP REST API
-    const verifyResponse = await fetch(`${wpBaseUrl}/wp-json/sysblok/v1/auth/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, secret: authSharedSecret }),
-      cache: 'no-store',
-    })
+    const verifyResponse = await wordpressAuthFetch('/auth/verify', { code })
 
     if (!verifyResponse.ok) {
       const error = await verifyResponse.json().catch(() => ({}))
