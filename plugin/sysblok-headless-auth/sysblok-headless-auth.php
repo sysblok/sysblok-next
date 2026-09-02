@@ -35,9 +35,10 @@ class Sysblok_Headless_Auth {
         // Login redirect hook — fires after successful WP login (including 2FA)
         add_filter('login_redirect', array($this, 'handle_login_redirect'), 10, 3);
 
-        // Security: invalidate tokens on password reset/change
+        // Security: invalidate tokens on password reset/change/logout
         add_action('after_password_reset', array($this, 'invalidate_user_sessions'), 10, 1);
         add_action('profile_update', array($this, 'on_profile_update'), 10, 2);
+        add_action('wp_logout', array($this, 'on_user_logout'), 10, 1);
     }
 
     public function init() {
@@ -463,6 +464,13 @@ class Sysblok_Headless_Auth {
         if ($user && $old_user_data && $user->user_pass !== $old_user_data->user_pass) {
             $this->invalidate_user_sessions($user);
         }
+    }
+
+    /**
+     * On WordPress logout, invalidate all session tokens for the user.
+     */
+    public function on_user_logout($user_id) {
+        $this->invalidate_user_sessions($user_id);
     }
 }
 
