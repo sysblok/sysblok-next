@@ -12,16 +12,31 @@ If the Next.js Revalidation plugin is also active, the settings page appears und
 
 ## Configuration
 
-### 1. WordPress Plugin Settings
+### 1. Docker / Environment Auto-Configuration
 
-After activating:
+The plugin reads default values from environment variables, so it works out of the box when deployed via Docker. Add these to your Docker `.env` or `env.template`:
+
+```bash
+# Headless Auth (used by sysblok-headless-auth plugin as defaults)
+export NEXT_PUBLIC_URL=http://localhost:3000
+export WP_AUTH_SHARED_SECRET=FIXME
+# export WP_AUTH_TOKEN_TTL=86400
+```
+
+With these set, the plugin requires no manual configuration in the admin panel.
+
+### 2. WordPress Plugin Settings (optional override)
+
+Admin panel values take precedence over environment variables. To override:
 
 1. Go to **Headless Auth** (or **Next.js > Auth**) in the WordPress admin
 2. Set **Allowed Redirect Origin** to your Next.js frontend URL (e.g., `https://next.sysblok.team` or `http://localhost:3000` for local dev)
 3. Set **Auth Shared Secret** -- must match `WP_AUTH_SHARED_SECRET` in Next.js
 4. Optionally adjust **Session Token TTL** (default: 86400 = 24 hours)
 
-### 2. Next.js Environment Variables
+The admin form shows which environment defaults are active for each field.
+
+### 3. Next.js Environment Variables
 
 Add to your `.env.local`:
 
@@ -50,6 +65,6 @@ Generate secrets with: `openssl rand -base64 32`
 - Shared secret required for all API calls
 - CSRF protection via state parameter
 - Sliding token expiration (refreshed on each valid request)
-- Tokens invalidated on password reset/change
+- Tokens invalidated on password reset/change/logout
 - Redirect URL whitelist prevents open redirect attacks
 - Encrypted session cookies (httpOnly, secure, sameSite=lax)

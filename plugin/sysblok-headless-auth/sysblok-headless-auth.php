@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sysblok Headless Auth
  * Description: Authentication bridge for headless Next.js frontend. Handles login redirect, session tokens, and REST API authentication.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Sysblok
  * License: GPLv2 or later
  */
@@ -13,16 +13,16 @@ if (!defined('ABSPATH')) {
 }
 
 class Sysblok_Headless_Auth {
-    private $option_name = 'sysblok_headless_auth_settings';
-    private $options;
+    const OPTION_REDIRECT_ORIGIN = 'sysblok_auth_redirect_origin';
+    const OPTION_SHARED_SECRET   = 'sysblok_auth_shared_secret';
+    const OPTION_TOKEN_TTL       = 'sysblok_auth_token_ttl';
 
     // Transient prefixes
-    const AUTH_CODE_PREFIX = 'sysblok_auth_code_';
-    const SESSION_PREFIX = 'sysblok_session_';
-    const USER_SESSIONS_PREFIX = 'sysblok_user_sessions_';
+    const AUTH_CODE_PREFIX       = 'sysblok_auth_code_';
+    const SESSION_PREFIX         = 'sysblok_session_';
+    const USER_SESSIONS_PREFIX   = 'sysblok_user_sessions_';
 
     public function __construct() {
-        add_action('init', array($this, 'init'));
         add_action('admin_init', array($this, 'register_settings'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
 
@@ -41,8 +41,34 @@ class Sysblok_Headless_Auth {
         add_action('wp_logout', array($this, 'on_user_logout'), 10, 1);
     }
 
-    public function init() {
-        $this->options = get_option($this->option_name, array());
+    // -------------------------------------------------------------------------
+    // Helpers: get option with env var fallback
+    // -------------------------------------------------------------------------
+
+    /**
+     * Get the allowed redirect origin.
+     * Falls back to NEXT_PUBLIC_URL env var if not set in admin.
+     */
+    private function get_redirect_origin() {
+        return get_option(self::OPTION_REDIRECT_ORIGIN, getenv('NEXT_PUBLIC_URL') ?: '');
+    }
+
+    /**
+     * Get the shared secret for auth code exchange.
+     * Falls back to WP_AUTH_SHARED_SECRET env var if not set in admin.
+     */
+    private function get_shared_secret() {
+        return get_option(self::OPTION_SHARED_SECRET, getenv('WP_AUTH_SHARED_SECRET') ?: '');
+    }
+
+    /**
+     * Get the session token TTL in seconds.
+     * Falls back to WP_AUTH_TOKEN_TTL env var, then to 86400 (24 hours).
+     */
+    private function get_token_ttl() {
+        $env_ttl = getenv('WP_AUTH_TOKEN_TTL');
+        $default = $env_ttl ? intval($env_ttl) : 86400;
+        return intval(get_option(self::OPTION_TOKEN_TTL, $default));
     }
 
     // -------------------------------------------------------------------------
@@ -52,15 +78,41 @@ class Sysblok_Headless_Auth {
     public function register_settings() {
         register_setting(
             'sysblok_headless_auth_group',
-            $this->option_name,
-            array($this, 'sanitize_settings')
+            self::OPTION_REDIRECT_ORIGIN,
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => array($this, 'sanitize_redirect_origin'),
+                'default'           => getenv('NEXT_PUBLIC_URL') ?: '',
+            )
+        );
+
+        register_setting(
+            'sysblok_headless_auth_group',
+            self::OPTION_SHARED_SECRET,
+            array(
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'default'           => getenv('WP_AUTH_SHARED_SECRET') ?: '',
+            )
+        );
+
+        $env_ttl = getenv('WP_AUTH_TOKEN_TTL');
+        register_setting(
+            'sysblok_headless_auth_group',
+            self::OPTION_TOKEN_TTL,
+            array(
+                'type'              => 'integer',
+                'sanitize_callback' => array($this, 'sanitize_token_ttl'),
+                'default'           => $env_ttl ? intval($env_ttl) : 86400,
+            )
         );
 
         add_settings_section(
             'sysblok_headless_auth_section',
-            'Headless Auth Settings',
+            'Настройки авторизации',
             function () {
-                echo '<p>Configure authentication for the headless Next.js frontend.</p>';
+                echo '<p>Настройка авторизации для headless-фронтенда на Next.js. ';
+                echo 'Значения по умолчанию берутся из переменных окружения, если не заданы явно.</p>';
             },
             'sysblok-headless-auth'
         );
@@ -90,49 +142,46 @@ class Sysblok_Headless_Auth {
         );
     }
 
-    public function sanitize_settings($input) {
-        $new_input = array();
+    public function sanitize_redirect_origin($value) {
+        return esc_url_raw(rtrim(trim($value), '/'));
+    }
 
-        if (isset($input['allowed_redirect_origin'])) {
-            $new_input['allowed_redirect_origin'] = esc_url_raw(
-                rtrim(trim($input['allowed_redirect_origin']), '/')
-            );
-        }
-
-        if (isset($input['auth_shared_secret'])) {
-            $new_input['auth_shared_secret'] = sanitize_text_field($input['auth_shared_secret']);
-        }
-
-        if (isset($input['token_ttl'])) {
-            $ttl = intval($input['token_ttl']);
-            $new_input['token_ttl'] = max(300, min(604800, $ttl)); // 5 min to 7 days
-        }
-
-        return $new_input;
+    public function sanitize_token_ttl($value) {
+        $ttl = intval($value);
+        return max(300, min(604800, $ttl)); // 5 min to 7 days
     }
 
     public function field_allowed_redirect_origin() {
-        $value = isset($this->options['allowed_redirect_origin'])
-            ? esc_attr($this->options['allowed_redirect_origin'])
-            : '';
-        echo '<input type="url" name="' . $this->option_name . '[allowed_redirect_origin]" value="' . $value . '" class="regular-text" placeholder="https://next.sysblok.team" />';
-        echo '<p class="description">The origin URL of your Next.js frontend (no trailing slash). Only this origin will be allowed as a redirect target after login.</p>';
+        $value = esc_attr($this->get_redirect_origin());
+        $env_value = getenv('NEXT_PUBLIC_URL') ?: '';
+        echo '<input type="url" name="' . self::OPTION_REDIRECT_ORIGIN . '" value="' . $value . '" class="regular-text" placeholder="https://next.sysblok.team" />';
+        echo '<p class="description">URL фронтенда Next.js (без завершающего слеша). Только этот источник будет разрешён для редиректа после входа.';
+        if ($env_value) {
+            echo ' <br><em>Значение из окружения (NEXT_PUBLIC_URL): <code>' . esc_html($env_value) . '</code></em>';
+        }
+        echo '</p>';
     }
 
     public function field_auth_shared_secret() {
-        $value = isset($this->options['auth_shared_secret'])
-            ? esc_attr($this->options['auth_shared_secret'])
-            : '';
-        echo '<input type="text" name="' . $this->option_name . '[auth_shared_secret]" value="' . $value . '" class="regular-text" />';
-        echo '<p class="description">Must match WP_AUTH_SHARED_SECRET in the Next.js environment. Generate with: <code>openssl rand -base64 32</code></p>';
+        $value = esc_attr($this->get_shared_secret());
+        $has_env = (bool) getenv('WP_AUTH_SHARED_SECRET');
+        echo '<input type="text" name="' . self::OPTION_SHARED_SECRET . '" value="' . $value . '" class="regular-text" />';
+        echo '<p class="description">Должен совпадать с WP_AUTH_SHARED_SECRET в окружении Next.js. Сгенерировать: <code>openssl rand -base64 32</code>';
+        if ($has_env) {
+            echo ' <br><em>Значение из окружения (WP_AUTH_SHARED_SECRET) задано.</em>';
+        }
+        echo '</p>';
     }
 
     public function field_token_ttl() {
-        $value = isset($this->options['token_ttl'])
-            ? intval($this->options['token_ttl'])
-            : 86400;
-        echo '<input type="number" min="300" max="604800" name="' . $this->option_name . '[token_ttl]" value="' . $value . '" class="small-text" />';
-        echo '<p class="description">How long session tokens remain valid (default: 86400 = 24 hours). Token TTL is refreshed on each valid API request (sliding expiration).</p>';
+        $value = intval($this->get_token_ttl());
+        $env_value = getenv('WP_AUTH_TOKEN_TTL');
+        echo '<input type="number" min="300" max="604800" name="' . self::OPTION_TOKEN_TTL . '" value="' . $value . '" class="small-text" />';
+        echo '<p class="description">Как долго токены сессии остаются действительными (по умолчанию: 86400 = 24 часа). TTL обновляется при каждом валидном запросе (скользящий срок действия).';
+        if ($env_value) {
+            echo ' <br><em>Значение из окружения (WP_AUTH_TOKEN_TTL): <code>' . esc_html($env_value) . '</code></em>';
+        }
+        echo '</p>';
     }
 
     public function add_admin_menu() {
@@ -166,12 +215,12 @@ class Sysblok_Headless_Auth {
     public function admin_page() {
         ?>
         <div class="wrap">
-            <h1>Headless Auth Settings</h1>
+            <h1>Настройки авторизации</h1>
             <form method="post" action="options.php">
                 <?php
                 settings_fields('sysblok_headless_auth_group');
                 do_settings_sections('sysblok-headless-auth');
-                submit_button('Save Settings');
+                submit_button('Сохранить настройки');
                 ?>
             </form>
         </div>
@@ -192,9 +241,7 @@ class Sysblok_Headless_Auth {
             return $redirect_to;
         }
 
-        $allowed_origin = isset($this->options['allowed_redirect_origin'])
-            ? $this->options['allowed_redirect_origin']
-            : '';
+        $allowed_origin = $this->get_redirect_origin();
 
         if (empty($allowed_origin)) {
             return $redirect_to;
@@ -261,9 +308,7 @@ class Sysblok_Headless_Auth {
         $secret = sanitize_text_field($request->get_param('secret'));
 
         // Validate shared secret
-        $expected_secret = isset($this->options['auth_shared_secret'])
-            ? $this->options['auth_shared_secret']
-            : '';
+        $expected_secret = $this->get_shared_secret();
 
         if (empty($expected_secret) || !hash_equals($expected_secret, $secret)) {
             return new WP_REST_Response(
@@ -303,7 +348,7 @@ class Sysblok_Headless_Auth {
 
         // Generate session token
         $token = bin2hex(random_bytes(32));
-        $ttl = isset($this->options['token_ttl']) ? intval($this->options['token_ttl']) : 86400;
+        $ttl = $this->get_token_ttl();
 
         // Store session: token → user_id
         set_transient(self::SESSION_PREFIX . $token, $user_id, $ttl);
@@ -332,9 +377,7 @@ class Sysblok_Headless_Auth {
         $secret = sanitize_text_field($request->get_param('secret'));
 
         // Validate shared secret
-        $expected_secret = isset($this->options['auth_shared_secret'])
-            ? $this->options['auth_shared_secret']
-            : '';
+        $expected_secret = $this->get_shared_secret();
 
         if (empty($expected_secret) || !hash_equals($expected_secret, $secret)) {
             return new WP_REST_Response(
@@ -400,7 +443,7 @@ class Sysblok_Headless_Auth {
         }
 
         // Sliding expiration: refresh the TTL
-        $ttl = isset($this->options['token_ttl']) ? intval($this->options['token_ttl']) : 86400;
+        $ttl = $this->get_token_ttl();
         set_transient(self::SESSION_PREFIX . $token, $stored_user_id, $ttl);
 
         return intval($stored_user_id);
@@ -420,7 +463,7 @@ class Sysblok_Headless_Auth {
         }
         $sessions[] = $token;
         // Store for slightly longer than token TTL to ensure cleanup
-        $ttl = isset($this->options['token_ttl']) ? intval($this->options['token_ttl']) : 86400;
+        $ttl = $this->get_token_ttl();
         set_transient(self::USER_SESSIONS_PREFIX . $user_id, $sessions, $ttl + 3600);
     }
 
@@ -435,13 +478,13 @@ class Sysblok_Headless_Auth {
         $sessions = array_filter($sessions, function ($t) use ($token) {
             return $t !== $token;
         });
-        $ttl = isset($this->options['token_ttl']) ? intval($this->options['token_ttl']) : 86400;
+        $ttl = $this->get_token_ttl();
         set_transient(self::USER_SESSIONS_PREFIX . $user_id, array_values($sessions), $ttl + 3600);
     }
 
     /**
      * Invalidate all session tokens for a user.
-     * Called on password reset and password change.
+     * Called on password reset, password change, and logout.
      */
     public function invalidate_user_sessions($user) {
         $user_id = ($user instanceof WP_User) ? $user->ID : intval($user);
