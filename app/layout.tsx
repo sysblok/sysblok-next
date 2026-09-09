@@ -4,7 +4,6 @@ import { Section, Container } from '@/components/craft'
 import { Inter as FontSans } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { AuthBar } from '@/components/nav/auth-bar'
 
 import { Analytics } from '@vercel/analytics/react'
 
@@ -40,7 +39,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={cn('min-h-screen font-sans antialiased', font.variable)}>
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
           <SiteNav />
-          <AuthBar />
           {children}
           <Footer />
         </ThemeProvider>
