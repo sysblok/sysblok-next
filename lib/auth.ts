@@ -82,76 +82,12 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   return session.user
 }
 
-/**
- * Get the WP session token for authenticated API calls, or null if not logged in.
- */
-export async function getAuthToken(): Promise<string | null> {
-  const session = await getSession()
-  if (!session.token) {
-    return null
-  }
-  return session.token
-}
-
-/**
- * Validate the current session by checking the token against WordPress.
- * If the token is invalid (expired, revoked), destroys the session.
- * Returns the user if valid, null if invalid or not logged in.
- */
-export async function validateSession(): Promise<SessionUser | null> {
-  const session = await getSession()
-
-  if (!session.user || !session.token) {
-    return null
-  }
-
-  // Check if the token is still valid by calling WP REST API
-  const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
-  try {
-    const response = await fetch(`${wpBaseUrl}/wp-json/wp/v2/users/me`, {
-      headers: {
-        Authorization: `Bearer ${session.token}`,
-      },
-      cache: 'no-store',
-    })
-
-    if (response.ok) {
-      return session.user
-    }
-  } catch {
-    // If WP is unreachable, keep the session (don't log out on network errors)
-    return session.user
-  }
-
-  // Token is invalid — destroy the session
-  session.destroy()
-  return null
-}
-
 // ---------------------------------------------------------------------------
 // Login
 // ---------------------------------------------------------------------------
 
 /**
- * Generate a CSRF state parameter and store it in a cookie.
- * Returns the state string for use in the login URL.
- */
-export async function createAuthState(): Promise<string> {
-  const state = crypto.randomUUID()
-  const cookieStore = await cookies()
-  cookieStore.set('auth_state', state, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 600, // 10 minutes — enough time to complete login + 2FA
-    path: '/',
-  })
-  return state
-}
-
-/**
  * Build the WordPress login URL with proper redirect_to and CSRF state.
- * The state is stored in a short-lived cookie for verification on callback.
  */
 export function buildLoginUrl(state: string, returnTo?: string): string {
   const callbackUrl = new URL('/api/auth/callback', publicUrl)
