@@ -1,3 +1,5 @@
+@import '../public/fonts/fontello/css/fontello.css';
+
 @font-face {
   font-family: 'Georgia';
   src: url('/fonts/subset-Georgia-Bold.eot');
@@ -57,11 +59,26 @@
   font-display: fallback;
 }
 
+@font-face {
+  font-family: 'x-twitter';
+  src:
+    url('../public/fonts/fontello/x-twitter.woff2') format('woff2'),
+    url('../public/fonts/fontello/x-twitter.woff') format('woff'),
+    url('../public/fonts/fontello/x-twitter.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icon-x-twitter:before {
+  font-family: 'x-twitter';
+
+  content: '\f8d8';
+  display: inline-block;
+}
+
 :root {
   --vk-color: #5186bd;
-
   --telegram-color: #08c;
-
   --twitter-color: #0e1011;
 }
 
@@ -461,6 +478,104 @@
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+/* =========================================
+   Typography — Headings
+   ========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.no-auto-hyphenation,
+table {
+  -webkit-hyphens: manual;
+  -moz-hyphens: manual;
+  hyphens: manual;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  font-family: var(--font-narrator);
+  position: relative;
+  line-height: 1.2;
+  letter-spacing: -0.009em;
+}
+
+h4 {
+  margin: 3rem 0 2rem;
+  font-size: 20px;
+}
+
+.section-footer h4 {
+  margin: 0 0 1rem;
+  font-size: 20px;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #231f20;
+}
+
+/* =========================================
+   Footer — background
+   ========================================= */
+
+.section-footer {
+  background-color: #f5f5f5;
+}
+
+/* =========================================
+   Footer — About area (intro text) — 18px Georgia
+   ========================================= */
+
+.footer-about-area {
+  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 18px;
+}
+
+/* =========================================
+   Footer — Links (ТЕГИ/ТЕМЫ) — 15px Verdana
+   ========================================= */
+
+.footer-links {
+  font-family: Verdana, Arial, Georgia, 'Cormorant Garamond', sans-serif;
+  font-size: 15px;
+}
+
+.section-footer a,
+.section-footer address {
+  color: #5b5b5b;
+}
+
+.section-footer address {
+  font-style: normal;
+}
+/* Ссылки и адрес — везде 15px Verdana, независимо от контейнера */
+.footer-about-area a,
+.footer-links a,
+.footer-about-area address {
+  font-family: Verdana, Arial, Georgia, 'Cormorant Garamond', sans-serif;
+  font-size: 15px;
+
+  text-decoration: none;
+}
+
+.footer-about-area a:hover,
+.footer-links a:hover {
+  color: #141414;
+  text-decoration: underline;
 }
 
 /* =========================================
