@@ -9,7 +9,7 @@ export function AboutArea({ html, className }: { html: string; className?: strin
   const isHome = pathname === '/'
 
   const finalHtml = isHome
-    ? html.replace(/<\/h4>/i, `</h4><p class="mb-4">${HOME_PHRASE}</p>`)
+    ? html.replace(/<\/h4>/i, `</h4><h1 class="mb-4">${HOME_PHRASE}</h1>`)
     : html
 
   return <div className={className} dangerouslySetInnerHTML={{ __html: finalHtml }} />
