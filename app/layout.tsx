@@ -1,22 +1,15 @@
 import './globals.css'
 
-import { Inter as FontSans } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 
 import { Analytics } from '@vercel/analytics/react'
 
 import { siteConfig } from '@/site.config'
-import { cn } from '@/lib/utils'
 
 import { SiteNav } from '@/components/nav/site-nav'
 
 import type { Metadata } from 'next'
 import Footer from '@/components/footer'
-
-const font = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
 
 export const metadata: Metadata = {
   title:
@@ -32,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" suppressHydrationWarning>
       <head />
-      <body className={cn('min-h-screen font-sans antialiased', font.variable)}>
+      <body className="min-h-screen antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
           <SiteNav />
           {children}
