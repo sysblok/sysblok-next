@@ -152,6 +152,7 @@ function transformPost(wpPost: WPPost): Post {
           break
         case 'post_tag':
           tags = terms as Tag[]
+          break
         case 'author':
           authorSlugs = terms.map(({ name }) => name)
         default:
