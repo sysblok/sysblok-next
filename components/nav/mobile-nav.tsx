@@ -27,16 +27,14 @@ export function MobileNav({ items }: MobileNavProps) {
     <>
       {/* Кнопка бургер-меню — переключается в крестик */}
       <button
-        onClick={() => setOpen((v) => !v)}
+        // onClick={() => setOpen((v) => !v)}
+        onClick={() => (open ? closeMenu() : setOpen(true))}
         className="menu-toggle-btn"
         aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
         aria-expanded={open}
       >
         {open ? <X size={24} /> : <Menu size={24} />}
       </button>
-
-      {/* Прозрачный кликовый перехватчик для закрытия по клику вне меню */}
-      {open && <div className="mobile-menu-overlay" onClick={closeMenu} />}
 
       {/* Выпадающая панель на всю ширину под хедером */}
       <div className={cn('mobile-menu-dropdown', open && 'mobile-menu-dropdown-open')}>
