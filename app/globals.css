@@ -331,6 +331,17 @@
   color: var(--telegram-color);
 }
 
+.header-social-links {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header-social-links .social-button-link svg {
+  width: 20px;
+  height: 20px;
+}
+
 /* Dropdown */
 .dropdown-menu {
   display: none;

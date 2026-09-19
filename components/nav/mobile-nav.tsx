@@ -40,53 +40,57 @@ export function MobileNav({ items }: MobileNavProps) {
       {/* Выпадающая панель на всю ширину под хедером */}
       <div className={cn('mobile-menu-dropdown', open && 'mobile-menu-dropdown-open')}>
         <nav className="mobile-menu-nav">
-          {items.map((item) => {
-            const hasChildren = item.children && item.children.length > 0
-            const isOpen = openAccordion === item.label
+          <ul>
+            {items.map((item) => {
+              const hasChildren = item.children && item.children.length > 0
+              const isOpen = openAccordion === item.label
 
-            if (hasChildren) {
+              if (hasChildren) {
+                return (
+                  <li key={item.label} className="side-menu-item has-children">
+                    <button
+                      onClick={() => toggleAccordion(item.label)}
+                      className="side-menu-link side-menu-link-parent"
+                      aria-expanded={isOpen}
+                    >
+                      <span>{item.label}</span>
+                      <ChevronDown
+                        className={cn('side-menu-arrow', isOpen && 'side-menu-arrow-open')}
+                        size={18}
+                      />
+                    </button>
+                    {isOpen && (
+                      <ul className="side-menu-children">
+                        {item.children!.map((child) => (
+                          <li key={child.label}>
+                            <Link
+                              href={child.href || '#'}
+                              className="side-menu-link side-menu-link-child"
+                              onClick={toggleMenu}
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                )
+              }
+
               return (
-                <div key={item.label} className="side-menu-item has-children">
-                  <button
-                    onClick={() => toggleAccordion(item.label)}
+                <li key={item.label} className="side-menu-item">
+                  <Link
+                    href={item.href || '#'}
                     className="side-menu-link side-menu-link-parent"
+                    onClick={toggleMenu}
                   >
-                    <span>{item.label}</span>
-                    <ChevronDown
-                      className={cn('side-menu-arrow', isOpen && 'side-menu-arrow-open')}
-                      size={18}
-                    />
-                  </button>
-                  {isOpen && (
-                    <div className="side-menu-children">
-                      {item.children!.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href || '#'}
-                          className="side-menu-link side-menu-link-child"
-                          onClick={toggleMenu}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                    {item.label}
+                  </Link>
+                </li>
               )
-            }
-
-            return (
-              <div key={item.label} className="side-menu-item">
-                <Link
-                  href={item.href || '#'}
-                  className="side-menu-link side-menu-link-parent"
-                  onClick={toggleMenu}
-                >
-                  {item.label}
-                </Link>
-              </div>
-            )
-          })}
+            })}
+          </ul>
         </nav>
 
         <div className="side-menu-footer">
