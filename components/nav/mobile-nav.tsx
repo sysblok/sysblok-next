@@ -14,9 +14,9 @@ export function MobileNav({ items }: MobileNavProps) {
   const [open, setOpen] = React.useState(false)
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null)
 
-  const toggleAccordion = (label: string) => {
-    setOpenAccordion(openAccordion === label ? null : label)
-  }
+  const toggleAccordion = React.useCallback((label: string) => {
+    setOpenAccordion((prev) => (prev === label ? null : label))
+  }, [])
 
   const closeMenu = () => {
     setOpen(false)
