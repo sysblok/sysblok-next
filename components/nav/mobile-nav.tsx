@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import Link, { LinkProps } from 'next/link'
+import Link from 'next/link'
 import { Menu, X, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { NavItem } from '@/lib/wordpress.d'
@@ -60,14 +60,14 @@ export function MobileNav({ items }: MobileNavProps) {
                   {isOpen && (
                     <div className="side-menu-children">
                       {item.children!.map((child) => (
-                        <MobileLink
+                        <Link
                           key={child.label}
                           href={child.href || '#'}
                           className="side-menu-link side-menu-link-child"
-                          onOpenChange={toggleMenu}
+                          onClick={toggleMenu}
                         >
                           {child.label}
-                        </MobileLink>
+                        </Link>
                       ))}
                     </div>
                   )}
@@ -77,13 +77,13 @@ export function MobileNav({ items }: MobileNavProps) {
 
             return (
               <div key={item.label} className="side-menu-item">
-                <MobileLink
+                <Link
                   href={item.href || '#'}
                   className="side-menu-link side-menu-link-parent"
-                  onOpenChange={toggleMenu}
+                  onClick={toggleMenu}
                 >
                   {item.label}
-                </MobileLink>
+                </Link>
               </div>
             )
           })}
@@ -147,19 +147,5 @@ export function MobileNav({ items }: MobileNavProps) {
         </div>
       </div>
     </>
-  )
-}
-
-interface MobileLinkProps extends LinkProps {
-  onOpenChange?: () => void
-  children: React.ReactNode
-  className?: string
-}
-
-function MobileLink({ href, onOpenChange, className, children, ...props }: MobileLinkProps) {
-  return (
-    <Link href={href} onClick={() => onOpenChange?.()} className={className} {...props}>
-      {children}
-    </Link>
   )
 }
