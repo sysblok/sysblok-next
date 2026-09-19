@@ -205,6 +205,7 @@
 .section-menu-stripe {
   background-color: #ffffff;
   font-family: var(--font-narrator);
+  position: relative;
 }
 
 .menu-stripe-wrapper {
@@ -585,18 +586,22 @@ h4 {
 }
 
 .mobile-menu-dropdown {
-  position: fixed;
-  top: 60px;
+  position: absolute;
+  top: 100%;
   left: 0;
   right: 0;
-  width: 100%;
   max-height: 0;
   overflow: hidden;
   background: #ffffff;
-
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   z-index: 1000;
   transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* старый Edge */
+}
+
+.mobile-menu-dropdown::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
 .mobile-menu-dropdown-open {
