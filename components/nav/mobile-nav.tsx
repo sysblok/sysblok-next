@@ -18,17 +18,18 @@ export function MobileNav({ items }: MobileNavProps) {
     setOpenAccordion((prev) => (prev === label ? null : label))
   }, [])
 
-  const closeMenu = () => {
-    setOpen(false)
-    setOpenAccordion(null)
-  }
+  const toggleMenu = React.useCallback(() => {
+    if (open) {
+      setOpen(false)
+      setOpenAccordion(null)
+    } else setOpen(true)
+  }, [open])
 
   return (
     <>
       {/* Кнопка бургер-меню — переключается в крестик */}
       <button
-        // onClick={() => setOpen((v) => !v)}
-        onClick={() => (open ? closeMenu() : setOpen(true))}
+        onClick={toggleMenu}
         className="menu-toggle-btn"
         aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
         aria-expanded={open}
@@ -63,7 +64,7 @@ export function MobileNav({ items }: MobileNavProps) {
                           key={child.label}
                           href={child.href || '#'}
                           className="side-menu-link side-menu-link-child"
-                          onOpenChange={closeMenu}
+                          onOpenChange={toggleMenu}
                         >
                           {child.label}
                         </MobileLink>
@@ -79,7 +80,7 @@ export function MobileNav({ items }: MobileNavProps) {
                 <MobileLink
                   href={item.href || '#'}
                   className="side-menu-link side-menu-link-parent"
-                  onOpenChange={closeMenu}
+                  onOpenChange={toggleMenu}
                 >
                   {item.label}
                 </MobileLink>
