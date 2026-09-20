@@ -6,6 +6,7 @@ import { PostCard } from '@/components/posts/post-card'
 import { News } from '@/components/carousel/news'
 import { Blogs } from '@/components/sections/blogs'
 import { Projects } from '@/components/sections/projects'
+import { DataStories } from '@/components/sections/data-stories'
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
@@ -32,6 +33,7 @@ export default async function Home() {
         </div>
       )}
       <Projects />
+      <DataStories />
       <News categoryId={newsCategory.id} />
       <Blogs />
       {posts.length > 0 ? (
