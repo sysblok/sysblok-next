@@ -654,3 +654,50 @@ export const getMenu = (name: string) =>
 // --- Footer ---
 export const getFooter = () =>
   wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
+
+// Добавить в wordpress.ts (рядом с getAllPages / getPageBySlug).
+// Проекты на проде — это страницы (pages), а не записи, поэтому запрос идёт в /pages.
+
+// Поля карточки: без content, чтобы не тянуть тело страницы.
+// guid, modified, status, parent, menu_order, template и meta нужны transformPage,
+// без guid он падает (обращается к guid.rendered). context: 'embed' здесь использовать нельзя:
+// в нём нет guid.
+const pageCardFields: Array<keyof WPPage> = [
+  'id',
+  'date',
+  'modified',
+  'slug',
+  'status',
+  'link',
+  'guid',
+  'title',
+  'excerpt',
+  'author',
+  'featured_media',
+  'parent',
+  'menu_order',
+  'template',
+  'meta',
+  '_links',
+  '_embedded',
+]
+
+export async function getPagesByCategory(
+  categoryId: number,
+  perPage: number = 3,
+): Promise<CardPost[]> {
+  const { data } = await wordpressFetchWithPagination<WPPage[]>(
+    '/wp-json/wp/v2/pages',
+    {
+      _fields: pageCardFields,
+      _embed: true,
+      categories: categoryId,
+      per_page: perPage,
+      orderby: 'date',
+      order: 'desc',
+    },
+    ['pages', `posts-category-${categoryId}`],
+  )
+
+  return data.map(transformPage)
+}

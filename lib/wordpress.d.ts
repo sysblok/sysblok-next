@@ -376,6 +376,7 @@ export interface PageQuery extends EntityQuery<WPPage> {
   menu_order?: number // Limit result set to posts with a specific menu_order value.
   meta_key?: string // для фильтрации по кастомным мета-полям
   meta_value?: string
+  categories?: number | string | Array<number | string> // рубрики, подключённые к страницам
 }
 
 export interface MediaQuery extends EntityQuery<WPMedia> {

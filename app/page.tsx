@@ -5,6 +5,7 @@ import { getCategoryBySlug, getPostsPaginated, getStickyPost } from '@/lib/wordp
 import { PostCard } from '@/components/posts/post-card'
 import { News } from '@/components/carousel/news'
 import { Blogs } from '@/components/sections/blogs'
+import { Projects } from '@/components/sections/projects'
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
@@ -30,7 +31,7 @@ export default async function Home() {
           <PostCard post={stickyPost} />
         </div>
       )}
-
+      <Projects />
       <News categoryId={newsCategory.id} />
       <Blogs />
       {posts.length > 0 ? (
