@@ -10,17 +10,17 @@ export async function DataStories() {
   if (!dataStoriesCategory) return null
 
   // Как и проекты, дата-истории на проде лежат в страницах (pages), а не в записях.
-  // На проде их 4.
-  const stories = await getPagesByCategory(dataStoriesCategory.id, 4)
+  // На проде их 3.
+  const stories = await getPagesByCategory(dataStoriesCategory.id, 3)
 
   if (stories.length === 0) return null
 
   return (
     <section className="mb-12">
       <h2 className="text-3xl font-serif mb-6">Дата-истории</h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
         {stories.map((story) => (
-          <PostCard key={story.id} post={story} showAuthor />
+          <PostCard key={story.id} post={story} />
         ))}
       </div>
       <div className="mt-6 text-right">

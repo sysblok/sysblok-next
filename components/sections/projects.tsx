@@ -19,7 +19,7 @@ export async function Projects() {
       <h2 className="text-3xl font-serif mb-6">Проекты</h2>
       <div className="grid md:grid-cols-3 gap-6">
         {projects.map((project) => (
-          <PostCard key={project.id} post={project} showAuthor />
+          <PostCard key={project.id} post={project} />
         ))}
       </div>
       <div className="mt-6 text-right">
