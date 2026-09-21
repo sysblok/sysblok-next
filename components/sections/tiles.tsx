@@ -10,7 +10,6 @@ const TILES = [
   { slug: 'glossary', label: 'Глоссарий' },
 ] as const
 
-// Поправь, если ссылки на записи у тебя строятся иначе (см. PostCard)
 const tileHref = (post: CardPost) => `/posts/${post.slug}`
 
 // Последняя запись рубрики. Если рубрики нет, возвращаем null, а не любой пост:
@@ -24,7 +23,6 @@ async function getLatestPost(slug: string): Promise<CardPost | null> {
 }
 
 export async function Tiles() {
-  // Плитки без записи отбрасываем сразу, чтобы дальше post был CardPost, а не CardPost | null
   const tiles = (
     await Promise.all(
       TILES.map(async ({ slug, label }) => {

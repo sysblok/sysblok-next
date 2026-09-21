@@ -9,7 +9,6 @@ export async function Projects() {
   // не применится и вместо проектов придут любые страницы
   if (!projectsCategory) return null
 
-  // Проекты на проде — это страницы (pages), а не записи
   const projects = await getPagesByCategory(projectsCategory.id, 3)
 
   if (projects.length === 0) return null

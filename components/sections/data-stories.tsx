@@ -9,8 +9,6 @@ export async function DataStories() {
   // не применится и вместо дата-историй придут любые страницы
   if (!dataStoriesCategory) return null
 
-  // Как и проекты, дата-истории на проде лежат в страницах (pages), а не в записях.
-  // На проде их 3.
   const stories = await getPagesByCategory(dataStoriesCategory.id, 3)
 
   if (stories.length === 0) return null
