@@ -654,3 +654,43 @@ export const getMenu = (name: string) =>
 // --- Footer ---
 export const getFooter = () =>
   wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
+
+const pageCardFields: Array<keyof WPPage> = [
+  'id',
+  'date',
+  'modified',
+  'slug',
+  'status',
+  'link',
+  'guid',
+  'title',
+  'excerpt',
+  'author',
+  'featured_media',
+  'parent',
+  'menu_order',
+  'template',
+  'meta',
+  '_links',
+  '_embedded',
+]
+
+export async function getPagesByCategory(
+  categoryId: number,
+  perPage: number = 3,
+): Promise<CardPost[]> {
+  const { data } = await wordpressFetchWithPagination<WPPage[]>(
+    '/wp-json/wp/v2/pages',
+    {
+      _fields: pageCardFields,
+      _embed: true,
+      categories: categoryId,
+      per_page: perPage,
+      orderby: 'date',
+      order: 'desc',
+    },
+    ['pages', `posts-category-${categoryId}`],
+  )
+
+  return data.map(transformPage)
+}
