@@ -28,7 +28,7 @@ export function HeaderSocialLinks() {
           className={`social-button-link social-button-link--${modifier}`}
           aria-label={platform}
         >
-          <Icon aria-label={platform} />
+          <Icon aria-hidden="true" />
         </Link>
       ))}
     </div>
