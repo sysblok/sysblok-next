@@ -86,34 +86,16 @@ export interface BoxProps extends BaseProps {
 const styles = {
   typography: {
     base: [
-      'font-sans antialiased',
-      // Headings (without spacing)
-      '[&_h1]:text-4xl [&_h1]:font-medium [&_h1]:tracking-tight',
-      '[&_h2]:text-3xl [&_h2]:font-medium [&_h2]:tracking-tight',
-      '[&_h3]:text-2xl [&_h3]:font-medium [&_h3]:tracking-tight',
-      '[&_h4]:text-xl [&_h4]:font-medium [&_h4]:tracking-tight',
-      '[&_h5]:text-lg [&_h5]:font-medium [&_h5]:tracking-tight',
-      '[&_h6]:text-base [&_h6]:font-medium [&_h6]:tracking-tight',
+      // Heading and paragraph sizes/margins come from globals.css (WP production values)
       // Text elements
-      '[&_p]:text-base [&_p]:leading-7 [&_p]:mb-4',
       '[&_strong]:font-semibold',
       '[&_em]:italic',
       '[&_del]:line-through',
       '[&_small]:text-sm [&_small]:font-medium [&_small]:leading-none',
       '[&_sub]:text-sm [&_sup]:text-sm',
     ],
-    headerSpacing: [
-      '[&_h1]:mt-8 [&_h1]:mb-4',
-      '[&_h2]:mt-8 [&_h2]:mb-4',
-      '[&_h3]:mt-6 [&_h3]:mb-3',
-      '[&_h4]:mt-6 [&_h4]:mb-3',
-      '[&_h5]:mt-4 [&_h5]:mb-2',
-      '[&_h6]:mt-4 [&_h6]:mb-2',
-    ],
-    links: [
-      '[&_a]:underline [&_a]:underline-offset-4 [&_a]:decoration-primary/50 [&_a]:transition-colors',
-      'hover:[&_a]:decoration-primary hover:[&_a]:text-primary',
-    ],
+    // headerSpacing: removed — heading margins come from globals.css (WP production values)
+    // links: removed — link colors come from globals.css (WP production values)
     lists: [
       // Unordered lists
       '[&_ul]:pl-0 [&_ul]:list-none [&_ul]:space-y-2',
@@ -161,8 +143,7 @@ const styles = {
       '[&_figure_figcaption]:text-sm [&_figure_figcaption]:mt-2 [&_figure_figcaption]:text-muted-foreground',
     ],
     misc: [
-      '[&_blockquote]:border-l-4 [&_blockquote]:border-primary/20 [&_blockquote]:pl-4 [&_blockquote]:py-1 [&_blockquote]:my-4 [&_blockquote]:text-muted-foreground',
-      '[&_blockquote_blockquote]:mt-4',
+      // blockquote: removed — blockquote styles come from globals.css (WP production values)
       '[&_hr]:my-8 [&_hr]:border-t-2 [&_hr]:border-muted',
       '[&_abbr]:cursor-help [&_abbr]:underline [&_abbr]:underline-dotted [&_abbr]:underline-offset-4',
       '[&_details]:rounded-lg [&_details]:border [&_details]:px-4 [&_details]:py-2 [&_details]:my-4',
@@ -186,9 +167,9 @@ const styles = {
 }
 
 // Combine all typography styles
+// Note: heading sizes/margins, link colors, and blockquote styles come from globals.css (WP production)
 const baseTypographyStyles = [
   ...styles.typography.base,
-  ...styles.typography.links,
   ...styles.typography.lists,
   ...styles.typography.code,
   ...styles.typography.tables,
@@ -196,7 +177,7 @@ const baseTypographyStyles = [
   ...styles.typography.misc,
 ]
 
-const articleTypographyStyles = [...baseTypographyStyles, ...styles.typography.headerSpacing]
+const articleTypographyStyles = [...baseTypographyStyles]
 
 // Components
 export const Layout = ({ children, className }: BaseProps) => (
