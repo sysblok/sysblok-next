@@ -145,13 +145,13 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         className={cn(
           'post-card big',
           'group not-prose flex flex-col overflow-hidden rounded-lg bg-accent/30',
-          'md:flex-row md:items-stretch',
+          'md:flex-row md:items-center',
           'hover:bg-accent/50 transition-all',
         )}
       >
         {/* Текстовая часть */}
-        <div className="flex flex-col justify-center gap-4 p-8 md:w-[45%] text-center md:text-left">
-          <div className="entry-meta flex justify-center md:justify-start gap-2">
+        <div className="flex flex-col justify-center gap-4 p-8 md:w-[45%] text-left">
+          <div className="entry-meta flex justify-start gap-2">
             {categories && categories.length > 0 && (
               <span className="entry-cats">
                 {categories.map((cat, i) => (
@@ -182,9 +182,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
           </Link>
 
           {post.excerpt && (
-            <p className="text-sm text-muted-foreground">
-              {post.excerpt.split(' ').slice(0, 40).join(' ').trim()}...
-            </p>
+            <p className="entry-excerpt">{post.excerpt.split(' ').slice(0, 63).join(' ').trim()}</p>
           )}
 
           {author && (
@@ -207,7 +205,10 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
         {/* Фото — растянуто на всю оставшуюся ширину/высоту блока */}
         {media?.sourceUrl && (
-          <Link href={href} className="relative block w-full min-h-[280px] md:min-h-0 md:w-[55%]">
+          <Link
+            href={href}
+            className="relative block w-full aspect-[3/2] md:w-[75%] md:aspect-[3/2]"
+          >
             <Image
               src={media.sourceUrl}
               alt={media.altText || post.title || 'Post thumbnail'}
@@ -229,6 +230,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
     <Link
       href={href}
       className={cn(
+        !showAuthor && 'post-card small',
         'border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
         'hover:bg-accent/75 transition-all',
       )}
@@ -291,7 +293,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         />
 
         {/* Превью текста */}
-        <div className="text-sm text-muted-foreground">
+        <div className={cn(!showAuthor && 'entry-excerpt', 'text-sm text-muted-foreground')}>
           {post.excerpt
             ? post.excerpt
                 .split(' ')
