@@ -1,5 +1,5 @@
 // Craft Imports
-import { Container, Prose } from '@/components/craft'
+import { Container } from '@/components/craft'
 
 import { getCategoryBySlug, getPostsPaginated, getStickyPost } from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
@@ -23,14 +23,10 @@ export default async function Home() {
 
   return (
     <Container>
-      <Prose>
-        <h1>Системный Блокъ</h1>
-      </Prose>
-
       {/* Закрепленный пост */}
       {stickyPost && (
         <div className="mb-8">
-          <PostCard post={stickyPost} />
+          <PostCard post={stickyPost} featured />
         </div>
       )}
       <Projects />
