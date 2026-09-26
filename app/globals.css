@@ -187,6 +187,7 @@
    ========================================= */
 
 .container-fluid-with-max-width {
+  margin: 0 auto;
   max-width: 1388px;
   padding: 0 44px;
 }
@@ -233,8 +234,11 @@
 }
 
 .menu-stripe-right {
-  flex-shrink: 0;
-  gap: 45px;
+  display: flex;
+  justify-content: space-between;
+  max-width: 250px;
+  padding-left: 0px;
+  flex-grow: 1;
 }
 
 /* Logo */
@@ -392,8 +396,9 @@
 /* Social & Search */
 .header-social-links {
   display: flex;
-  align-items: center;
-  gap: 55px;
+  justify-content: space-between;
+  flex-grow: 1;
+  padding-right: 25px;
 }
 
 .header-search-link {
