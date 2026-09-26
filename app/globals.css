@@ -187,14 +187,13 @@
    ========================================= */
 
 .container-fluid-with-max-width {
-  width: 100%;
-
-  margin: 0 auto;
+  max-width: 1388px;
+  padding: 0 44px;
 }
 
-@media (min-width: 992px) {
+@media (max-width: 600px) {
   .container-fluid-with-max-width {
-    max-width: 1388px;
+    padding: 0 22px;
   }
 }
 
