@@ -19,9 +19,7 @@ export async function Blogs() {
   const posts: CardPost[] = data.map((post) => {
     if (!('categories' in post)) return post
 
-    const categories = [...post.categories].sort(
-      (a, b) => Number(childIds.has(b.id)) - Number(childIds.has(a.id)),
-    )
+    const categories = [post.categories.find(({ id }) => childIds.has(id))]
     return { ...post, categories }
   })
 
