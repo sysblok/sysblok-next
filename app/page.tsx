@@ -1,10 +1,13 @@
 // Craft Imports
-import { Container, Prose } from '@/components/craft'
+import { Container } from '@/components/craft'
 
 import { getCategoryBySlug, getPostsPaginated, getStickyPost } from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
 import { News } from '@/components/carousel/news'
 import { Blogs } from '@/components/sections/blogs'
+import { Projects } from '@/components/sections/projects'
+import { DataStories } from '@/components/sections/data-stories'
+import { Tiles } from '@/components/sections/tiles'
 
 // This page is using the craft.tsx component and design system
 export default async function Home() {
@@ -20,18 +23,17 @@ export default async function Home() {
 
   return (
     <Container>
-      <Prose>
-        <h1>Системный Блокъ</h1>
-      </Prose>
-
       {/* Закрепленный пост */}
       {stickyPost && (
         <div className="mb-8">
-          <PostCard post={stickyPost} />
+          <PostCard post={stickyPost} featured />
         </div>
       )}
-
+      <Projects />
+      <DataStories />
       <News categoryId={newsCategory.id} />
+      <Tiles />
+
       <Blogs />
       {posts.length > 0 ? (
         <div className="grid md:grid-cols-3 gap-4">
