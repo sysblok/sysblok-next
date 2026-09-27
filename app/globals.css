@@ -430,6 +430,10 @@
     justify-content: center;
   }
 
+  .menu-stripe-right {
+    flex-grow: 0;
+  }
+
   /* прячем только соцсети справа; в панели они остаются */
   .menu-stripe-right .header-social-links {
     display: none;
