@@ -368,7 +368,7 @@
   font-size: 12px;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1100px) {
   .navbar-nav > li:hover > .dropdown-menu {
     display: block;
   }
@@ -425,7 +425,7 @@
 }
 
 /* Mobile adjustments */
-@media (max-width: 991px) {
+@media (max-width: 1100px) {
   .menu-stripe-center {
     justify-content: center;
   }
@@ -551,7 +551,7 @@
 }
 
 /* Соцсети в панели не нужны на десктопе */
-@media (min-width: 992px) {
+@media (min-width: 1100px) {
   .sysblok-navbar .side-menu-footer {
     display: none;
   }
@@ -583,7 +583,7 @@
 }
 
 /* Бургер — скрыть на десктопе */
-@media (min-width: 992px) {
+@media (min-width: 1100px) {
   .menu-toggle-btn {
     display: none;
   }
