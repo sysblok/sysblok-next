@@ -607,6 +607,19 @@ export async function getPostsFromSubcategories(
 // Function specifically for generateStaticParams - fetches ALL post slugs
 export const getAllPostSlugs = () => getAllPosts({ _fields: ['slug'] })
 
+export async function getAllPostSlugsWithCategories() {
+  const categories = await getAllCategories({ _fields: ['id', 'slug'] })
+  const categoryMap = new Map(categories.map(({ id, slug }) => [id, slug]))
+  const posts = await getAllPosts({ _fields: ['slug', 'categories'] })
+  return posts.flatMap(({ slug, categories }) =>
+    categories.flatMap((id) => {
+      const category = categoryMap.get(id)
+      if (!category) return []
+      return [{ category, slug }]
+    }),
+  )
+}
+
 export async function getPostData(slug: string) {
   const post = await getPostBySlug(slug)
   if (!post) return null

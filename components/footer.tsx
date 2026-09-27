@@ -8,6 +8,17 @@ const FOOTER_LINKS = (['telegram', 'vk', 'x', 'youtube'] as (keyof typeof SOCIAL
   (p) => SOCIAL_LINKS[p],
 )
 
+const siteDomain = process.env.NEXT_PUBLIC_URL
+const wordpressDomain = process.env.NEXT_PUBLIC_WORDPRESS_URL
+
+if (!wordpressDomain) {
+  throw new Error('NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined')
+}
+
+if (!siteDomain) {
+  throw new Error('NEXT_PUBLIC_URL environment variable is not defined')
+}
+
 const headingClasses =
   '[&_h1]:!text-base [&_h1]:!font-normal [&_h1]:!normal-case [&_h1]:!mb-6 [&_h1]:!mt-0 ' +
   '[&_h1]:!leading-relaxed [&_h1]:text-foreground ' +
@@ -26,7 +37,9 @@ const inlineLinksClasses = headingClasses
 
 const Footer = async () => {
   const areas = await getFooter()
-  const areaMap = Object.fromEntries(areas.map((a) => [a.id, a.html]))
+  const areaMap = Object.fromEntries(
+    areas.map((a) => [a.id, a.html.replaceAll(wordpressDomain, siteDomain)]),
+  )
 
   return (
     <footer className="section-footer">
