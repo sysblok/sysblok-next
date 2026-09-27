@@ -6,6 +6,17 @@ import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { NavItem } from '@/lib/wordpress.d'
 
+const siteDomain = process.env.NEXT_PUBLIC_URL as string
+const wordpressDomain = process.env.NEXT_PUBLIC_WORDPRESS_URL as string
+
+if (!wordpressDomain) {
+  throw new Error('NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined')
+}
+
+if (!siteDomain) {
+  throw new Error('NEXT_PUBLIC_URL environment variable is not defined')
+}
+
 interface MenuContextValue {
   open: boolean
   openId: string | null
@@ -98,7 +109,11 @@ export function SiteMenu({ items, children }: { items: NavItem[]; children?: Rea
                 <ul className="dropdown-menu">
                   {item.children!.map((child) => (
                     <li key={child.label}>
-                      <Link href={child.href || '#'} className="dropdown-item" onClick={close}>
+                      <Link
+                        href={child.href?.replace(wordpressDomain, siteDomain) || '#'}
+                        className="dropdown-item"
+                        onClick={close}
+                      >
                         {child.label}
                       </Link>
                     </li>
@@ -110,7 +125,11 @@ export function SiteMenu({ items, children }: { items: NavItem[]; children?: Rea
 
           return (
             <li key={itemId}>
-              <Link href={item.href || '#'} className="nav-link" onClick={close}>
+              <Link
+                href={item.href?.replace(wordpressDomain, siteDomain) || '#'}
+                className="nav-link"
+                onClick={close}
+              >
                 {item.label}
               </Link>
             </li>
