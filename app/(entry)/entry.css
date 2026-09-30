@@ -1,0 +1,241 @@
+/* =========================================
+   Entry — Article/Page content layout
+   (from WP style.css, rem*10 converted to px)
+   ========================================= */
+
+/* Entry full — main content wrapper */
+.entry-full {
+  padding-top: 0;
+}
+
+@media (max-width: 991px) {
+  .entry-full {
+    padding-bottom: 0;
+  }
+}
+
+/* Upper elements column */
+.upper-elements-col {
+  padding-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  float: none;
+}
+
+/* Entry column widths — replaces Bootstrap col-xs-12/col-sm-10/col-md-8 */
+.entry-header-col,
+.entry-content-col {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .entry-header-col,
+  .entry-content-col {
+    width: 83.33%;
+  }
+  .entry-content-col {
+    margin-left: 8.33%;
+  }
+}
+
+@media (min-width: 992px) {
+  .entry-header-col,
+  .entry-content-col {
+    width: 66.67%;
+  }
+  .entry-content-col {
+    margin-left: 16.67%;
+  }
+}
+
+/* Post header — wraps meta+title+lead and featured image */
+.post-header {
+  padding-bottom: 20px;
+  padding-top: 10px;
+}
+
+/* Meta and title block */
+.post-meta-and-title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* Entry meta — category + date bar */
+.entry-meta {
+  color: var(--color-text-muted);
+}
+
+.entry-meta,
+.entry-meta a {
+  font-family: Arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  text-align: left;
+}
+
+.entry-full .entry-meta,
+.entry-full .entry-meta a {
+  font-size: 15px;
+}
+
+/* Entry title — post */
+.entry-full .entry-title {
+  margin: 15px 0 5px 0;
+  max-width: 740px;
+  font-size: 36px;
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .entry-full .entry-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 499px) {
+  .entry-full .entry-title {
+    font-size: 28px;
+  }
+}
+
+/* Entry title — page (40px, full width)
+   .entry-page is added to the wrapper in the page template */
+.entry-page .entry-full .entry-title {
+  margin-top: 35px;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+  max-width: none;
+  font-size: 40px;
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .entry-page .entry-full .entry-title {
+    font-size: 35px;
+    padding-bottom: 20px;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 499px) {
+  .entry-page .entry-full .entry-title {
+    font-size: 35px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+  }
+}
+
+/* Entry lead — excerpt/subtitle */
+.entry-lead {
+  margin-top: 16px;
+  padding-bottom: 0;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.36;
+}
+
+.entry-lead a {
+  color: var(--color-accent);
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .entry-lead {
+    margin-top: 19px;
+    font-size: 19px;
+    font-family: var(--font-narrator);
+  }
+}
+
+@media (max-width: 499px) {
+  .entry-lead {
+    margin-top: 16px;
+    font-size: 16px;
+    font-family: var(--font-narrator);
+  }
+}
+
+/* Entry thumb — featured image */
+.entry-full .entry-thumb {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.entry-page .entry-full .entry-thumb {
+  padding-top: 28px;
+}
+
+.entry-page .entry-title ~ .entry-thumb {
+  padding-top: 0;
+}
+
+/* Entry thumb caption */
+.entry-thumb-caption {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-family: Arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #6e6e6e;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+
+/* Entry content — article body */
+.entry-full .entry-content {
+  padding: 0;
+  font-size: 16px;
+}
+
+/* Entry cats — category link in meta bar */
+.entry-cats {
+  letter-spacing: 0.01em;
+}
+
+/* Decorative line after category, before date */
+.entry-cats:after {
+  display: inline-block;
+  position: relative;
+  bottom: 3px;
+  margin: 0 6px 0 10px;
+  content: '\A';
+  height: 1px;
+  width: 40px;
+  background-color: #8b8b8b;
+}
+
+.entry-full .entry-cats:before {
+  margin: 0 16px 0 9px;
+  width: 43px;
+}
+
+@media (max-width: 400px) {
+  .entry-cats:after {
+    width: 30px;
+  }
+}
+
+/* Entry tags — tag list at bottom of article */
+.entry-tags {
+  font-size: 16px !important;
+  text-transform: none;
+  font-weight: 400 !important;
+  padding: 0;
+}
+
+.entry-tags a {
+  text-transform: lowercase;
+}
+
+.entry-tags a:first-of-type {
+  margin-left: 6px;
+}
+
+@media (max-width: 991px) {
+  .entry-tags {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
