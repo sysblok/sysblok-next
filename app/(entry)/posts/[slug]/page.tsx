@@ -1,12 +1,7 @@
 import { getPostBySlug, getAllPostSlugs, getPostData } from '@/lib/wordpress'
-
-import { Section, Container, Article, Prose } from '@/components/craft'
-import { badgeVariants } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 import { siteConfig } from '@/site.config'
 
 import Link from 'next/link'
-import Balancer from 'react-wrap-balancer'
 
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -67,60 +62,68 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   if (!postData) notFound()
 
-  const { post, featuredMedia, authors, category } = postData
+  const { post, featuredMedia, category } = postData
 
-  const date = post.date.toLocaleDateString('en-US', {
-    month: 'long',
+  const date = post.date.toLocaleDateString('ru-RU', {
     day: 'numeric',
+    month: 'long',
     year: 'numeric',
   })
 
   return (
-    <Section>
-      <Container>
-        <Prose>
-          <h1>
-            <Balancer>
-              <span dangerouslySetInnerHTML={{ __html: post.title }}></span>
-            </Balancer>
-          </h1>
-          <div className="flex justify-between items-center gap-4 text-sm mb-4">
-            <h5>
-              Published {date}
-              {authors?.length > 0 && (
-                <>
-                  {' by '}
-                  {authors.map((author, i) => (
-                    <span key={author.id}>
-                      <Link href={`/posts/?author=${author.id}`}>{author.name}</Link>
-                      {i < authors.length - 1 ? ', ' : ''}
-                    </span>
-                  ))}
-                </>
-              )}
-            </h5>
+    <div className="entry-full">
+      {/* Header zone — meta, title, lead, image */}
+      <div className="entry-header-col upper-elements-col">
+        <div className="post-header">
+          <div className="post-meta-and-title">
+            <div className="entry-meta">
+              <span className="entry-cats">
+                <Link href={`/posts/?category=${category.id}`}>{category.name}</Link>
+              </span>
+              <time className="entry-date">{date}</time>
+            </div>
 
-            <Link
-              href={`/posts/?category=${category.id}`}
-              className={cn(badgeVariants({ variant: 'outline' }), '!no-underline')}
-            >
-              {category.name}
-            </Link>
+            <h1 className="entry-title" dangerouslySetInnerHTML={{ __html: post.title }} />
+
+            {post.excerpt && <p className="entry-lead">{post.excerpt}</p>}
           </div>
+
           {featuredMedia?.sourceUrl && (
-            <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
+            <div className="entry-thumb">
               {/* eslint-disable-next-line */}
               <img
-                className="w-full h-full object-cover"
                 src={featuredMedia.sourceUrl}
                 alt={featuredMedia.altText || post.title || 'Post thumbnail'}
               />
+              {featuredMedia.caption && (
+                <div
+                  className="entry-thumb-caption"
+                  dangerouslySetInnerHTML={{ __html: featuredMedia.caption }}
+                />
+              )}
             </div>
           )}
-        </Prose>
+        </div>
+      </div>
 
-        <Article dangerouslySetInnerHTML={{ __html: post.content }} />
-      </Container>
-    </Section>
+      {/* Content zone — article body + tags */}
+      <div className="entry-content-col upper-elements-col">
+        <article className="entry-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+        {post.tags.length > 0 && (
+          <div className="entry-tags">
+            <p>
+              Теги:
+              {post.tags.map((tag, i) => (
+                <span key={tag.id}>
+                  <Link href={`/posts/?tag=${tag.id}`}>{tag.name}</Link>
+                  {i < post.tags.length - 1 ? ', ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
