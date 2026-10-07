@@ -46,6 +46,7 @@ export function PostEntry({ post, featuredMedia, category, acf }: PostEntryProps
 
               {featuredMedia?.sourceUrl && (
                 <div className="entry-thumb">
+                  {/* TODO: replace <img> with next/image <Image> for optimization */}
                   {/* eslint-disable-next-line */}
                   <img
                     src={featuredMedia.sourceUrl}
@@ -84,6 +85,7 @@ export function PostEntry({ post, featuredMedia, category, acf }: PostEntryProps
               </div>
             )}
           </div>
+          {/* TODO: add Related Posts */}
         </div>
       </div>
     </section>

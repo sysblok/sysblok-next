@@ -17,6 +17,7 @@ export function PageEntry({ page, acf }: PageEntryProps) {
 
             {page.featuredMedia?.sourceUrl && (
               <div className="entry-thumb">
+                {/* TODO: replace <img> with next/image <Image> for optimization */}
                 {/* eslint-disable-next-line */}
                 <img
                   src={page.featuredMedia.sourceUrl}

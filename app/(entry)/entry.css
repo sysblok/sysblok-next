@@ -14,7 +14,6 @@
   }
 }
 
-/* Upper elements column */
 .upper-elements-col {
   padding-bottom: 0;
   margin-left: auto;
@@ -50,19 +49,16 @@
   }
 }
 
-/* Post header — wraps meta+title+lead and featured image */
 .post-header {
   padding-bottom: 20px;
   padding-top: 10px;
 }
 
-/* Meta and title block */
 .post-meta-and-title {
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-/* Entry meta — category + date bar */
 .entry-meta {
   color: var(--color-text-muted);
 }
@@ -82,7 +78,6 @@
   font-size: 15px;
 }
 
-/* Entry title — post */
 .entry-full .entry-title {
   margin: 15px 0 5px 0;
   max-width: 740px;
@@ -127,7 +122,6 @@
   }
 }
 
-/* Entry lead — excerpt/subtitle */
 .entry-lead {
   margin-top: 16px;
   padding-bottom: 0;
@@ -157,13 +151,11 @@
   }
 }
 
-/* Editors note — yellow highlighted note after excerpt */
 .entry-editors-note {
   background-color: #fce588;
   padding: 16px;
 }
 
-/* Entry thumb — featured image */
 .entry-full .entry-thumb {
   padding-top: 0;
   padding-bottom: 0;
@@ -177,7 +169,6 @@
   padding-top: 0;
 }
 
-/* Entry thumb caption */
 .entry-thumb-caption {
   padding-top: 5px;
   padding-bottom: 5px;
@@ -189,13 +180,11 @@
   text-align: center;
 }
 
-/* Entry content — article body */
 .entry-full .entry-content {
   padding: 0;
   font-size: 16px;
 }
 
-/* Sharing buttons */
 .sharing-list {
   list-style: none;
   margin: 0 0 12px 0;
@@ -219,17 +208,14 @@
   opacity: 0.8;
 }
 
-/* Creators — author, editor, illustrator, curator links */
 .creators-post {
   font-size: 16px;
 }
 
-/* Entry cats — category link in meta bar */
 .entry-cats {
   letter-spacing: 0.01em;
 }
 
-/* Decorative line after category, before date */
 .entry-cats:after {
   display: inline-block;
   position: relative;
@@ -252,7 +238,6 @@
   }
 }
 
-/* Entry tags — tag list at bottom of article */
 .entry-tags {
   font-size: 16px !important;
   text-transform: none;
