@@ -1,5 +1,6 @@
-import { getPageBySlug, getAllPages } from '@/lib/wordpress'
+import { getPageBySlug, getAllPages, getPostAcf } from '@/lib/wordpress'
 import { siteConfig } from '@/site.config'
+import { PostCreators } from '../../components/creators'
 
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -67,6 +68,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   if (!page) notFound()
 
+  const acf = await getPostAcf(page.id, ['creators'])
+
   return (
     <div className="entry-page entry-full">
       {/* Header zone — title + optional image */}
@@ -93,6 +96,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       {/* Content zone */}
       <div className="entry-content-col upper-elements-col">
         <article className="entry-content" dangerouslySetInnerHTML={{ __html: page.content }} />
+
+        {acf.creators && <PostCreators creators={acf.creators} />}
       </div>
     </div>
   )
