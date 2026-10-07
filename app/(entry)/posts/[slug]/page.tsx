@@ -1,6 +1,7 @@
 import { getPostBySlug, getAllPostSlugs, getPostData } from '@/lib/wordpress'
 import { siteConfig } from '@/site.config'
 import { PostCreators } from '../../components/creators'
+import { Sharing } from '../../components/sharing'
 
 import Link from 'next/link'
 
@@ -133,6 +134,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             </p>
           </div>
         )}
+
+        <Sharing title={post.title} slug={post.slug} />
       </div>
     </div>
   )
