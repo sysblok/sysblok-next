@@ -154,6 +154,7 @@ export interface Author {
   link: string
   slug: string
   avatar_urls?: Record<string, string>
+  acf?: { photo?: number | string | false }
   meta?: Record<string, unknown>
 }
 
@@ -409,6 +410,7 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
   capabilities?: string | Array<string> // Limit result set to users matching at least one specific capability provided.
   who?: boolean // Limit result set to users who are considered authors
   has_published_posts?: boolean // Limit result set to users who have published posts.
+  acf_format?: 'standard' | 'light'
 }
 
 type Flatten<T> = T extends readonly (infer U)[] ? U : T

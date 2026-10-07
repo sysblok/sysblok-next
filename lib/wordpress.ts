@@ -515,6 +515,13 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
 export const getAuthorById = (id: number) =>
   wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`])
 
+export const getAuthorPhotoById = (id: number) =>
+  wordpressFetch<Author>(
+    `/wp-json/wp/v2/users/${id}`,
+    { _fields: ['acf'], acf_format: 'standard' },
+    [`author-${id}`],
+  ).then(({ acf }) => (typeof acf?.photo === 'string' ? acf.photo : undefined))
+
 export const getAuthorBySlug = (slug: string) =>
   wordpressFetch<Author[]>('/wp-json/wp/v2/users', { slug, _fields: authorFields }, [
     'authors',

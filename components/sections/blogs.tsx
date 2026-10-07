@@ -1,4 +1,9 @@
-import { getCategoryBySlug, getChildCategories, getPostsPaginated } from '@/lib/wordpress'
+import {
+  getCategoryBySlug,
+  getChildCategories,
+  getPostsPaginated,
+  getAuthorPhotoById,
+} from '@/lib/wordpress'
 import type { CardPost } from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
 import Link from 'next/link'
@@ -8,28 +13,61 @@ export async function Blogs() {
 
   if (!blogCategory) return null
 
-  const children = await getChildCategories(blogCategory.id)
-  const childIds = new Set(children.map(({ id }) => id))
+  // У блога каждого автора своя дочерняя рубрика (blog_dmitrii_pronin и т. д.)
+  const blogs = await getChildCategories(blogCategory.id)
 
-  // 3 последние записи из всех блогов, как на проде
-  const { data } = await getPostsPaginated(1, 3, {
-    categories: [blogCategory.id, ...childIds],
-  })
+  // По одной последней записи из каждого блога
+  const latest = await Promise.all(
+    blogs.map(async (blog): Promise<CardPost[]> => {
+      const { data } = await getPostsPaginated(1, 1, { categories: blog.id })
+      const post = data[0]
 
-  const posts: CardPost[] = data.map((post) => {
-    if (!('categories' in post)) return post
+      if (!post) return []
+      if (!('categories' in post)) return [post]
 
-    const categories = [post.categories.find(({ id }) => childIds.has(id))]
-    return { ...post, categories }
-  })
+      // PostCard подписывает карточку первой рубрикой поста. Ставим первой рубрику блога,
+      // чтобы вместо родительской «Блоги» было название блога («Блог Дмитрия Пронина»).
+      const categories = [...post.categories].sort(
+        (a, b) => Number(b.id === blog.id) - Number(a.id === blog.id),
+      )
+      return [{ ...post, categories }]
+    }),
+  )
+
+  // Блоги с самыми свежими записями идут первыми, как на проде
+  const posts = latest
+    .flat()
+    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .slice(0, 3)
 
   if (posts.length === 0) return null
+
+  // Фото автора приходит в _embedded только как id (даже с acf_format=standard),
+  // поэтому url нужно получить отдельным запросом на автора. По одному автору
+  // на карточку, запросы кэшируются по author-${id}.
+  const postsWithPhotos = await Promise.all(
+    posts.map(async (post) => {
+      const photoId = post.author?.acf?.photo
+      if (typeof photoId !== 'number' || !post.author) return post
+
+      const photoUrl = await getAuthorPhotoById(post.author.id)
+      if (!photoUrl) return post
+
+      return {
+        ...post,
+        author: {
+          ...post.author,
+          acf: { ...post.author.acf, photo: photoUrl },
+        },
+      }
+    }),
+  )
 
   return (
     <section className="mb-12">
       <h2 className="text-3xl font-serif mb-6">Блоги</h2>
       <div className="grid md:grid-cols-3 gap-6">
-        {posts.map((post) => (
+        {postsWithPhotos.map((post) => (
           <PostCard key={post.id} post={post} showAuthor />
         ))}
       </div>
