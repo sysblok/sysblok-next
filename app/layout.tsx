@@ -1,4 +1,5 @@
 import './globals.css'
+import './(entry)/entry.css'
 
 import { ThemeProvider } from '@/components/theme/theme-provider'
 
