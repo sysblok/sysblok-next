@@ -18,7 +18,7 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (isCustomSlug && (pathname === '/login' || pathname === '/login/error')) {
-    return NextResponse.json(null, { status: 404 })
+    return NextResponse.rewrite(new URL('/_not-found', request.url))
   }
 
   // Rewrite /{LOGIN_SLUG} → /login
