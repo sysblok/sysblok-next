@@ -1,5 +1,4 @@
 import { getPageBySlug, getAllPages } from '@/lib/wordpress'
-import { Section, Container, Prose } from '@/components/craft'
 import { siteConfig } from '@/site.config'
 
 import type { Metadata } from 'next'
@@ -69,13 +68,32 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   if (!page) notFound()
 
   return (
-    <Section>
-      <Container>
-        <Prose>
-          <h2>{page.title}</h2>
-          <div dangerouslySetInnerHTML={{ __html: page.content }} />
-        </Prose>
-      </Container>
-    </Section>
+    <div className="entry-page entry-full">
+      {/* Header zone — title + optional image */}
+      <div className="entry-header-col upper-elements-col">
+        <h1 className="entry-title" dangerouslySetInnerHTML={{ __html: page.title }} />
+
+        {page.featuredMedia?.sourceUrl && (
+          <div className="entry-thumb">
+            {/* eslint-disable-next-line */}
+            <img
+              src={page.featuredMedia.sourceUrl}
+              alt={page.featuredMedia.altText || page.title || 'Page image'}
+            />
+            {page.featuredMedia.caption && (
+              <div
+                className="entry-thumb-caption"
+                dangerouslySetInnerHTML={{ __html: page.featuredMedia.caption }}
+              />
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Content zone */}
+      <div className="entry-content-col upper-elements-col">
+        <article className="entry-content" dangerouslySetInnerHTML={{ __html: page.content }} />
+      </div>
+    </div>
   )
 }
