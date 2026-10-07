@@ -715,6 +715,37 @@ blockquote > p {
   }
 }
 
+/* Code (Bootstrap base + theme) */
+code,
+kbd,
+pre,
+samp {
+  font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Pre (Bootstrap base merged with theme overrides) */
+pre {
+  display: block;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.42857143;
+  border: 1px solid #e8e8e8;
+  background-color: #f6f6f6;
+  padding: 21px 19px;
+  margin: 0 0 28px;
+  color: #2f2f2f;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+pre.wp-block-verse {
+  box-sizing: border-box;
+  min-width: 1em;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .section-footer h4 {
   margin: 0 0 1rem;
   font-size: 20px;
