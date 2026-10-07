@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser, buildLoginUrl } from '@/lib/auth'
 
+const loginSlug = process.env.LOGIN_SLUG || 'login'
 const wpAdminUrl = `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin/`
 
 /**
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
 
   // If error param present, pass through to error page
   if (error) {
-    const errorUrl = new URL('/login/error', request.url)
+    const errorUrl = new URL(`/${loginSlug}/error`, request.url)
     errorUrl.searchParams.set('error', error)
     return NextResponse.redirect(errorUrl)
   }

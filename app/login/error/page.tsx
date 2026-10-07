@@ -34,7 +34,7 @@ export default async function LoginErrorPage({
           </div>
 
           <Link
-            href="/login"
+            href="../"
             className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-700 h-11 px-8 w-full"
           >
             Попробовать снова

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { getSession, wordpressAuthFetch } from '@/lib/auth'
 
+const loginSlug = process.env.LOGIN_SLUG || 'login'
+
 /**
  * GET /api/auth/callback?code=...&state=...&return_to=...
  *
@@ -18,7 +20,7 @@ export async function GET(request: NextRequest) {
   const returnTo = searchParams.get('return_to') || wpAdminUrl
 
   if (!code) {
-    return NextResponse.redirect(new URL('/login/error?error=missing_code', request.url))
+    return NextResponse.redirect(new URL(`/${loginSlug}/error?error=missing_code`, request.url))
   }
 
   // CSRF: verify state parameter matches the cookie we set before login
@@ -26,7 +28,7 @@ export async function GET(request: NextRequest) {
   const storedState = cookieStore.get('auth_state')?.value
 
   if (!state || !storedState || state !== storedState) {
-    return NextResponse.redirect(new URL('/login/error?error=invalid_state', request.url))
+    return NextResponse.redirect(new URL(`/${loginSlug}/error?error=invalid_state`, request.url))
   }
 
   try {
@@ -36,7 +38,7 @@ export async function GET(request: NextRequest) {
     if (!verifyResponse.ok) {
       const error = await verifyResponse.json().catch(() => ({}))
       console.error('Auth verify failed:', verifyResponse.status, error)
-      return NextResponse.redirect(new URL('/login/error?error=auth_failed', request.url))
+      return NextResponse.redirect(new URL(`/${loginSlug}/error?error=auth_failed`, request.url))
     }
 
     const data = await verifyResponse.json()
@@ -64,6 +66,6 @@ export async function GET(request: NextRequest) {
     return response
   } catch (error) {
     console.error('Auth callback error:', error)
-    return NextResponse.redirect(new URL('/login/error?error=server_error', request.url))
+    return NextResponse.redirect(new URL(`/${loginSlug}/error?error=server_error`, request.url))
   }
 }
