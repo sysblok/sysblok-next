@@ -277,6 +277,24 @@ export interface Media extends Entity {
   authorID: number
 }
 
+export interface Creator {
+  name: string
+  link: string
+}
+
+export interface Creators {
+  authors: Creator[]
+  editors: Creator[]
+  illustrators: Creator[]
+  curators: Creator[]
+}
+
+export interface PostAcf {
+  creators?: Creators
+  editors_note?: string
+  post_lead?: string
+}
+
 interface PostMetaEntity extends Entity {
   content: string
   excerpt: string

@@ -1,5 +1,6 @@
 import { getPostBySlug, getAllPostSlugs, getPostData } from '@/lib/wordpress'
 import { siteConfig } from '@/site.config'
+import { PostCreators } from '../../components/creators'
 
 import Link from 'next/link'
 
@@ -62,7 +63,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   if (!postData) notFound()
 
-  const { post, featuredMedia, category } = postData
+  const { post, featuredMedia, category, acf } = postData
 
   const date = post.date.toLocaleDateString('ru-RU', {
     day: 'numeric',
@@ -86,6 +87,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <h1 className="entry-title" dangerouslySetInnerHTML={{ __html: post.title }} />
 
             {post.excerpt && <p className="entry-lead">{post.excerpt}</p>}
+
+            {acf.editors_note && (
+              <p
+                className="entry-lead entry-editors-note"
+                dangerouslySetInnerHTML={{ __html: acf.editors_note }}
+              />
+            )}
           </div>
 
           {featuredMedia?.sourceUrl && (
@@ -109,6 +117,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       {/* Content zone — article body + tags */}
       <div className="entry-content-col upper-elements-col">
         <article className="entry-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+
+        {acf.creators && <PostCreators creators={acf.creators} />}
 
         {post.tags.length > 0 && (
           <div className="entry-tags">

@@ -18,6 +18,7 @@ import type {
   Page,
   WPNavigation,
   FooterArea,
+  PostAcf,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 import type { NavItem } from './wordpress.d'
@@ -628,12 +629,9 @@ export async function getPostData(slug: string) {
   const { featuredMedia } = post
   const category = post.categories[0]
 
-  const authors =
-    post.authorSlugs.length === 1 && post.author
-      ? [post.author]
-      : await getAllAuthors({ slug: post.authorSlugs }) // TODO: Sort in the same order as authorSlugs
+  const acf = await getPostAcf(post.id, ['creators', 'editors_note'])
 
-  return { post, featuredMedia, category, authors }
+  return { post, featuredMedia, category, acf }
 }
 
 // --- Navigation ---
@@ -668,3 +666,11 @@ export const getMenu = (name: string) =>
 // --- Footer ---
 export const getFooter = () =>
   wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
+
+// --- Post ACF ---
+export const getPostAcf = (postId: number, groups: string[]) =>
+  wordpressFetch<PostAcf>(
+    `/wp-json/sysblock-api/v1/post-acf/${postId}?groups=${groups.join(',')}`,
+    undefined,
+    [`post-acf-${postId}`],
+  )

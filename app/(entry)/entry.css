@@ -157,6 +157,12 @@
   }
 }
 
+/* Editors note — yellow highlighted note after excerpt */
+.entry-editors-note {
+  background-color: #fce588;
+  padding: 16px;
+}
+
 /* Entry thumb — featured image */
 .entry-full .entry-thumb {
   padding-top: 0;
@@ -186,6 +192,11 @@
 /* Entry content — article body */
 .entry-full .entry-content {
   padding: 0;
+  font-size: 16px;
+}
+
+/* Creators — author, editor, illustrator, curator links */
+.creators-post {
   font-size: 16px;
 }
 
