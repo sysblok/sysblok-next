@@ -196,13 +196,17 @@
   padding: 0 44px;
 }
 
+/* Линия только у шапки, по ширине контента (1300px) */
+.section-menu-stripe .container-fluid-with-max-width {
+  background: linear-gradient(#e8e8e8, #e8e8e8) content-box no-repeat bottom / 100% 1px;
+}
+
 /* Layout */
 .section {
   max-width: 1388px;
   margin: 0 auto;
 }
 .section-menu-stripe {
-  border-bottom: 1px solid #e8e8e8;
   background-color: #ffffff;
   font-family: var(--font-narrator);
 }
