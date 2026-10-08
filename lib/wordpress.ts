@@ -343,7 +343,7 @@ export async function getPostsPaginated(
 
   return {
     headers: response.headers,
-    data: response.data.map(transformPost),
+    data: await withRealAuthorNames(response.data.map(transformPost)),
   }
 }
 
@@ -715,5 +715,22 @@ export async function getPagesByCategory(
     ['pages', `posts-category-${categoryId}`],
   )
 
-  return data.map(transformPage)
+  return withRealAuthorNames(data.map(transformPage))
+}
+
+async function withRealAuthorNames<T extends { coauthors: CardAuthor[] }>(
+  items: T[],
+): Promise<T[]> {
+  if (!items.some((i) => i.coauthors.length)) return items
+
+  const users = await getAllAuthors()
+  const nameBySlug = new Map(users.map((u) => [u.slug, u.name]))
+
+  return items.map((item) => ({
+    ...item,
+    coauthors: item.coauthors.map((a) => ({
+      ...a,
+      name: nameBySlug.get(a.slug) ?? a.name, // если пользователя нет, оставляем как есть
+    })),
+  }))
 }
