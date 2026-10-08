@@ -390,7 +390,7 @@
 .header-social-links {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 60px;
 }
 
 .header-search-link {
@@ -830,7 +830,7 @@ h4 {
 
 .menu-stripe-right {
   padding-right: 0;
-  gap: 15px;
+  gap: 55px;
 }
 
 /* Убираем отступ у поиска */
