@@ -131,14 +131,14 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
     <div
       className={cn(
         !showAuthor && 'post-card small',
-        'relative border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
-        'hover:bg-accent/75 transition-all',
+        'relative p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
+        'hover:bg-accent/75 transition-all blog-card',
       )}
     >
       <div className="flex flex-col gap-4">
         {/* Блок автора */}
         {showAuthor && author && (
-          <div className="flex items-start gap-3 pb-4 border-b">
+          <div className="author-block flex items-start gap-3 pb-4 ">
             {authorPhoto && (
               <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden rounded-full">
                 <Image
@@ -152,9 +152,17 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-base mb-1">{author.name}</h3>
+              <h2 className="author-block__name">
+                <Link href={`/author/${author.slug}`} className="relative z-10">
+                  {author.name}
+                </Link>
+              </h2>
               {author.description && (
-                <p className="text-xs text-muted-foreground line-clamp-2">{author.description}</p>
+                <p className="author-block__description">
+                  <Link href={`/author/${author.slug}`} className="relative z-10">
+                    {author.description}
+                  </Link>
+                </p>
               )}
             </div>
           </div>
@@ -162,16 +170,22 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
         {/* Мета-информация (для блогов - вместо изображения) */}
         {showAuthor && (
-          <div className="flex gap-2 text-xs text-muted-foreground">
-            <span className="text-right">{category?.name || 'блог'}</span>
-            <span>—</span>
+          <div className="entry-meta">
+            {category ? (
+              <Link href={`/posts?category=${category.slug}`} className="relative z-10 entry-cats">
+                {category.name}
+              </Link>
+            ) : (
+              <span>блог</span>
+            )}
+
             <span>{date}</span>
           </div>
         )}
 
         {/* Изображение поста (только для обычных карточек) */}
         {!showAuthor && media?.sourceUrl && (
-          <div className="h-48 w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
+          <div className="post-card h-48 w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
             <Image
               className="h-full w-full object-cover"
               src={media.sourceUrl}
@@ -190,21 +204,16 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         )}
 
         {/* Заголовок + растянутая ссылка на весь пост */}
-        <h2
-          className={cn(
-            'text-primary font-medium ',
-            showAuthor ? 'text-lg line-clamp-3' : 'text-xl',
-          )}
-        >
+        <h2 className="blog-entry__title">
           <Link
             href={href}
-            className="after:absolute after:inset-0"
+            className="blog-entry__title"
             dangerouslySetInnerHTML={{ __html: post.title || 'Untitled Post' }}
           />
         </h2>
 
         {/* Превью текста */}
-        <div className={cn(!showAuthor && 'entry-excerpt', 'text-sm text-muted-foreground')}>
+        <div className={cn(!showAuthor && 'entry-excerpt', 'author-block__description')}>
           {post.excerpt
             ? post.excerpt
                 .split(' ')

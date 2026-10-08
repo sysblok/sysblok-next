@@ -5,13 +5,14 @@
 .post-card.big {
   padding-bottom: 0;
   margin-top: 1.25rem; /* было 2rem */
+  background-color: #f5f5f5;
 }
 
 .entry-meta,
 .entry-meta a {
   font-family: arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 300;
-  font-size: 0.875rem; /* было 1.4rem → теперь реально 14px */
+  font-size: 14px;
   letter-spacing: 0.14em;
   text-transform: lowercase;
   text-align: left;
@@ -22,6 +23,7 @@
   font-size: 1.875rem; /* было 3rem → теперь реально 30px */
   margin-top: 2.5rem; /* было 4rem */
   margin-bottom: 1rem; /* было 1.6rem */
+  background-color: #f5f5f5;
 }
 
 .post-card.small .entry-excerpt,
@@ -145,4 +147,58 @@ h6 a {
   font-weight: 400;
   color: #3e859b;
   font-size: 18px;
+}
+
+.blog-card {
+  width: 412px;
+  height: 620px;
+}
+
+.author-block {
+  width: 100%;
+  display: grid;
+  grid-template-areas: 'photo text-content' 'photo text-content' '. text-content';
+  grid-template-columns: minmax(1px, 150px) 1fr;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  column-gap: 30px;
+  font-family: 'Georgia';
+  font-size: 20px;
+  height: 140px;
+  margin-top: 0px;
+  grid-template-columns: 74px auto;
+  margin-bottom: 0px;
+
+  overflow: hidden;
+}
+
+.author-block__name {
+  font-size: 20px;
+}
+
+.author-block__description {
+  font-size: 15px;
+  font-family: Georgia, serif;
+  color: grey;
+}
+
+.entry-cats:after {
+  display: inline-block;
+  position: relative;
+  bottom: 0.3rem;
+  margin: 0 0.6rem 0 1rem;
+  content: '\A';
+  height: 1px;
+  width: 4rem;
+  background-color: #8b8b8b;
+}
+
+.blog-entry__title {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+  position: relative;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.009em;
+  font-size: 20px;
 }
