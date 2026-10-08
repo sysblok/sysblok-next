@@ -22,10 +22,7 @@ export async function Projects() {
         ))}
       </div>
       <div className="mt-6 text-right">
-        <Link
-          href={`/posts?category=${projectsCategory.id}`}
-          className="text-sm text-blue-600 hover:underline"
-        >
+        <Link href={`/posts?category=${projectsCategory.id}`} className="text-right">
           Больше проектов →
         </Link>
       </div>

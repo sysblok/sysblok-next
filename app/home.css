@@ -15,6 +15,7 @@
   letter-spacing: 0.14em;
   text-transform: lowercase;
   text-align: left;
+  color: #8a8a8a;
 }
 
 .post-card.big .entry-title {
@@ -123,4 +124,25 @@ h6 a {
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: -0.009em;
+}
+
+.entry-authors {
+  display: inline-block;
+  font-family: arial, Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  padding-right: 13px;
+  font-size: 14px;
+  color: #3e859b;
+}
+
+.text-right {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  position: relative;
+  line-height: 1.2;
+  letter-spacing: -0.009em;
+  margin: 0;
+  font-weight: 400;
+  color: #3e859b;
+  font-size: 18px;
 }

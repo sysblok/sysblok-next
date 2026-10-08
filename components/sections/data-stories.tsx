@@ -22,10 +22,7 @@ export async function DataStories() {
         ))}
       </div>
       <div className="mt-6 text-right">
-        <Link
-          href={`/posts?category=${dataStoriesCategory.id}`}
-          className="text-sm text-blue-600 hover:underline"
-        >
+        <Link href={`/posts?category=${dataStoriesCategory.id}`} className="text-right">
           Больше дата-историй →
         </Link>
       </div>

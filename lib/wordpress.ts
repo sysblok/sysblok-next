@@ -718,19 +718,21 @@ export async function getPagesByCategory(
   return withRealAuthorNames(data.map(transformPage))
 }
 
+const norm = (s: string) => s.toLowerCase().replace(/[_\s]+/g, '-')
+
 async function withRealAuthorNames<T extends { coauthors: CardAuthor[] }>(
   items: T[],
 ): Promise<T[]> {
   if (!items.some((i) => i.coauthors.length)) return items
 
   const users = await getAllAuthors()
-  const nameBySlug = new Map(users.map((u) => [u.slug, u.name]))
+  const nameBySlug = new Map(users.map((u) => [norm(u.slug), u.name]))
 
   return items.map((item) => ({
     ...item,
     coauthors: item.coauthors.map((a) => ({
       ...a,
-      name: nameBySlug.get(a.slug) ?? a.name, // если пользователя нет, оставляем как есть
+      name: nameBySlug.get(norm(a.slug)) ?? a.name,
     })),
   }))
 }

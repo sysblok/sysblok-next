@@ -162,7 +162,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         {/* Мета-информация (для блогов - вместо изображения) */}
         {showAuthor && (
           <div className="flex gap-2 text-xs text-muted-foreground">
-            <span className="text-blue-600">{category?.name || 'блог'}</span>
+            <span className="text-right">{category?.name || 'блог'}</span>
             <span>—</span>
             <span>{date}</span>
           </div>
@@ -191,7 +191,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         {/* Заголовок + растянутая ссылка на весь пост */}
         <h2
           className={cn(
-            'text-primary font-medium group-hover:underline decoration-muted-foreground underline-offset-4 decoration-dotted transition-all',
+            'text-primary font-medium ',
             showAuthor ? 'text-lg line-clamp-3' : 'text-xl',
           )}
         >
