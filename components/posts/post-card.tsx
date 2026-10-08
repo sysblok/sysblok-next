@@ -140,12 +140,13 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         {showAuthor && author && (
           <div className="flex items-start gap-3 pb-4 border-b">
             {authorPhoto && (
-              <div className="relative w-16 h-16 flex-shrink-0">
+              <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden rounded-full">
                 <Image
                   src={authorPhoto}
                   alt={author.name}
                   width={64}
                   height={64}
+                  style={{ width: 64, height: 64 }}
                   className="rounded-full object-cover"
                 />
               </div>
