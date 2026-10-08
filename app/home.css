@@ -86,10 +86,41 @@ a,
   font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.entry-excerpt__sticky {
+  text-align: center;
+  font-size: 15px;
+  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  color: #696969;
+}
+
 .post-card .entry-excerpt {
   line-height: 1.5;
   letter-spacing: 0.02em;
   font-weight: 300;
   color: #696969;
-  text-align: center;
+  text-align: left;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+  position: relative;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.009em;
 }

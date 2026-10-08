@@ -456,3 +456,19 @@ export interface FooterArea {
   id: string
   html: string
 }
+
+export interface CardAuthor {
+  id: number
+  name: string
+  slug: string
+}
+
+export interface Post extends PostMetaEntity {
+  // ...
+  coauthors: CardAuthor[]
+}
+
+export interface Page extends PostMetaEntity {
+  // ...
+  coauthors: CardAuthor[]
+}

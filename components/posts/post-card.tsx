@@ -27,6 +27,13 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
   const href = 'categories' in post ? `/posts/${post.slug}` : `/pages/${post.slug}`
 
+  const authors =
+    post.coauthors.length > 0
+      ? post.coauthors
+      : author
+        ? [{ id: author.id, name: author.name, slug: author.slug }]
+        : []
+
   // ------------------------------------------------------------------
   // Featured / sticky-post вариант — широкий блок: текст слева, фото справа
   // ------------------------------------------------------------------
@@ -73,7 +80,9 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
           </Link>
 
           {post.excerpt && (
-            <p className="entry-excerpt">{post.excerpt.split(' ').slice(0, 63).join(' ').trim()}</p>
+            <p className="entry-excerpt__sticky">
+              {post.excerpt.split(' ').slice(0, 63).join(' ').trim()}
+            </p>
           )}
 
           {author && (
@@ -117,12 +126,12 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
   // ------------------------------------------------------------------
   // Обычная карточка (как было) — используется в сетках/списках постов
   // ------------------------------------------------------------------
+
   return (
-    <Link
-      href={href}
+    <div
       className={cn(
         !showAuthor && 'post-card small',
-        'border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
+        'relative border p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
         'hover:bg-accent/75 transition-all',
       )}
     >
@@ -172,39 +181,56 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
           </div>
         )}
 
-        {/* Заголовок */}
-        <div
-          dangerouslySetInnerHTML={{
-            __html: post.title || 'Untitled Post',
-          }}
+        {/* Дата над заголовком */}
+        {!showAuthor && (
+          <time className="entry-meta text-sm" dateTime={post.date.toISOString()}>
+            {date}
+          </time>
+        )}
+
+        {/* Заголовок + растянутая ссылка на весь пост */}
+        <h2
           className={cn(
             'text-primary font-medium group-hover:underline decoration-muted-foreground underline-offset-4 decoration-dotted transition-all',
             showAuthor ? 'text-lg line-clamp-3' : 'text-xl',
           )}
-        />
+        >
+          <Link
+            href={href}
+            className="after:absolute after:inset-0"
+            dangerouslySetInnerHTML={{ __html: post.title || 'Untitled Post' }}
+          />
+        </h2>
 
         {/* Превью текста */}
         <div className={cn(!showAuthor && 'entry-excerpt', 'text-sm text-muted-foreground')}>
           {post.excerpt
             ? post.excerpt
                 .split(' ')
-                .slice(0, showAuthor ? 30 : 24)
+                .slice(0, showAuthor ? 30 : 50)
                 .join(' ')
                 .trim() + '...'
             : 'No excerpt available'}
         </div>
       </div>
 
-      {/* Футер карточки (только для обычных постов) */}
-      {!showAuthor && (
-        <div className="flex flex-col gap-4">
-          <hr />
-          <div className="flex justify-between items-center text-xs">
-            <p>{category?.name || 'Uncategorized'}</p>
-            <p>{date}</p>
-          </div>
+      {/* Авторы вместо футера */}
+      {!showAuthor && authors.length > 0 && (
+        <div className="entry-authors text-sm">
+          {authors.map((a, i) => (
+            <span key={a.id ?? a.slug}>
+              {i > 0 && ', '}
+              <Link
+                href={`/author/${a.slug}`}
+                rel="author"
+                className="relative z-10 hover:underline"
+              >
+                {a.name}
+              </Link>
+            </span>
+          ))}
         </div>
       )}
-    </Link>
+    </div>
   )
 }

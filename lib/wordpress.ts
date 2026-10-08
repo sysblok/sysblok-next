@@ -18,6 +18,8 @@ import type {
   Page,
   WPNavigation,
   FooterArea,
+  Coauthor,
+  CardAuthor,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 import type { NavItem } from './wordpress.d'
@@ -138,27 +140,22 @@ function transformPost(wpPost: WPPost): Post {
   if (!wpPost._embedded) {
     throw Error("Can't transform WPPost without embedded data")
   }
-
   let categories: Category[] = [],
-    tags: Tag[] = [],
-    authorSlugs: string[] = []
+    tags: Tag[] = []
 
-  if (wpPost._embedded['wp:term']) {
-    for (let terms of wpPost._embedded['wp:term']) {
-      if (!terms.length) continue
-      switch (terms[0].taxonomy) {
-        case 'category':
-          categories = terms as Category[]
-          break
-        case 'post_tag':
-          tags = terms as Tag[]
-        case 'author':
-          authorSlugs = terms.map(({ name }) => name)
-        default:
-          break
-      }
+  for (const terms of wpPost._embedded['wp:term'] ?? []) {
+    if (!terms.length) continue
+    switch (terms[0].taxonomy) {
+      case 'category':
+        categories = terms as Category[]
+        break
+      case 'post_tag':
+        tags = terms as Tag[]
+        break
     }
   }
+
+  const coauthors = extractCoauthors(wpPost._embedded['wp:term'] as unknown[][])
 
   return {
     id: wpPost.id,
@@ -178,7 +175,9 @@ function transformPost(wpPost: WPPost): Post {
     meta: wpPost.meta,
     author:
       wpPost._embedded['author'][0]?.id !== undefined ? wpPost._embedded['author'][0] : undefined,
-    authorSlugs,
+
+    authorSlugs: coauthors.map((a) => a.slug),
+    coauthors,
     featuredMedia:
       wpPost._embedded['wp:featuredmedia'] &&
       transformMedia(wpPost._embedded['wp:featuredmedia'][0]),
@@ -207,6 +206,7 @@ function transformPage(wpPage: WPPage): Page {
     menuOrder: wpPage.menu_order,
     template: wpPage.template,
     meta: wpPage.meta,
+    coauthors: extractCoauthors(wpPage._embedded['wp:term']),
     author:
       wpPage._embedded['author'][0]?.id !== undefined ? wpPage._embedded['author'][0] : undefined,
     featuredMedia:
@@ -268,11 +268,15 @@ export type CardPost =
       | 'title'
       | 'excerpt'
       | 'author'
+      | 'coauthors'
       | 'featuredMedia'
       | 'categories'
       | 'tags'
     >
-  | Pick<Page, 'id' | 'date' | 'slug' | 'title' | 'excerpt' | 'author' | 'featuredMedia'>
+  | Pick<
+      Page,
+      'id' | 'date' | 'slug' | 'title' | 'excerpt' | 'author' | 'coauthors' | 'featuredMedia'
+    >
 
 // New function for paginated posts
 export async function getPostsPaginated(
@@ -511,6 +515,18 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
     },
     ['authors'],
   )
+
+function extractCoauthors(terms: unknown[][] | undefined): CardAuthor[] {
+  return (terms ?? [])
+    .flat()
+    .filter((t): t is Coauthor => (t as Coauthor).taxonomy === 'author')
+    .map(({ id, name, slug }) => ({
+      id,
+      name,
+
+      slug: slug.replace(/^cap-/, ''),
+    }))
+}
 
 export const getAuthorById = (id: number) =>
   wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`])
