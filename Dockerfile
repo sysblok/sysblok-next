@@ -19,10 +19,10 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
 # Copy package related files
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Enable pnpm
-RUN corepack enable pnpm
+# Install pnpm
+RUN npm install -g pnpm@12.6.0
 
 # Install dependencies 
 RUN pnpm i --frozen-lockfile

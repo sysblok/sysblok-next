@@ -4,6 +4,21 @@ import Link from 'next/link'
 import { SOCIAL_LINKS } from '@/lib/social-links'
 import { AboutArea } from '@/components/aboutArea'
 
+const FOOTER_LINKS = (['telegram', 'vk', 'x', 'youtube'] as (keyof typeof SOCIAL_LINKS)[]).map(
+  (p) => SOCIAL_LINKS[p],
+)
+
+const siteDomain = process.env.NEXT_PUBLIC_URL
+const wordpressDomain = process.env.NEXT_PUBLIC_WORDPRESS_URL
+
+if (!wordpressDomain) {
+  throw new Error('NEXT_PUBLIC_WORDPRESS_URL environment variable is not defined')
+}
+
+if (!siteDomain) {
+  throw new Error('NEXT_PUBLIC_URL environment variable is not defined')
+}
+
 const headingClasses =
   '[&_h1]:!text-base [&_h1]:!font-normal [&_h1]:!normal-case [&_h1]:!mb-6 [&_h1]:!mt-0 ' +
   '[&_h1]:!leading-relaxed [&_h1]:text-foreground ' +
@@ -22,7 +37,9 @@ const inlineLinksClasses = headingClasses
 
 const Footer = async () => {
   const areas = await getFooter()
-  const areaMap = Object.fromEntries(areas.map((a) => [a.id, a.html]))
+  const areaMap = Object.fromEntries(
+    areas.map((a) => [a.id, a.html.replaceAll(wordpressDomain, siteDomain)]),
+  )
 
   return (
     <footer className="section-footer">
@@ -36,11 +53,11 @@ const Footer = async () => {
               />
             )}
 
-            {SOCIAL_LINKS.length > 0 && (
+            {FOOTER_LINKS.length > 0 && (
               <div>
                 <h4>Соцсети</h4>
                 <div className="flex gap-4">
-                  {SOCIAL_LINKS.map(({ href, platform, icon: Icon }) => (
+                  {FOOTER_LINKS.map(({ href, platform, icon: Icon }) => (
                     <Link
                       key={href}
                       href={href}
