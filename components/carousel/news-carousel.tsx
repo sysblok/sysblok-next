@@ -1,11 +1,13 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 export interface NewsCarouselItem {
   id: number
+  url: string
   title: string
   description: string
   date: string // для отображения: 29.09.2026
@@ -64,13 +66,13 @@ export function NewsCarousel({ items }: { items: NewsCarouselItem[] }) {
               role="group"
               aria-roledescription="slide"
             >
-              <article className="news-slider__card">
+              <Link href={item.url} className="news-slider__card" draggable={false}>
                 <h3 className="news-slider__title">{item.title}</h3>
                 <p className="news-slider__excerpt">{item.description}</p>
                 <time className="news-slider__date" dateTime={item.dateISO}>
                   {item.date}
                 </time>
-              </article>
+              </Link>
             </div>
           ))}
         </div>

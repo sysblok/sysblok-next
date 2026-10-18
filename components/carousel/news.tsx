@@ -25,6 +25,7 @@ export async function News({
 
   const items = newsPosts.map((post) => ({
     id: post.id,
+    url: `/posts/${post.slug}`,
     title: post.title || 'Untitled Post',
     description: post.excerpt || '',
     date: post.date.toLocaleDateString('ru-RU'), // 29.09.2026
