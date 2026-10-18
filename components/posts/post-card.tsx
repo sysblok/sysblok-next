@@ -131,7 +131,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
     <div
       className={cn(
         !showAuthor && 'post-card small',
-        'relative p-4 bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
+        'relative bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
         'hover:bg-accent/75 transition-all blog-card',
       )}
     >
@@ -185,13 +185,13 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
         {/* Изображение поста (только для обычных карточек) */}
         {!showAuthor && media?.sourceUrl && (
-          <div className="post-card h-48 w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
+          <div className="post-card w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
             <Image
               className="h-full w-full object-cover"
               src={media.sourceUrl}
               alt={media.altText || post.title || 'Post thumbnail'}
-              width={400}
-              height={200}
+              width={412}
+              height={216}
             />
           </div>
         )}
