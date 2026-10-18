@@ -44,7 +44,6 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
           'post-card big',
           'group not-prose flex flex-col overflow-hidden rounded-lg bg-accent/30',
           'md:flex-row md:items-center',
-          'hover:bg-accent/50 transition-all',
         )}
       >
         {/* Текстовая часть */}
@@ -132,7 +131,6 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
       className={cn(
         !showAuthor && 'post-card small',
         'relative bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
-        'hover:bg-accent/75 transition-all blog-card ',
       )}
     >
       <div className="flex flex-col gap-4 p-[10px]">
