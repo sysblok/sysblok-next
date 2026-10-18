@@ -395,3 +395,12 @@ a.news-slider__card {
   white-space: nowrap;
   border: 0;
 }
+
+/* Картинка: светлеет при наведении */
+.post-card-img img {
+  transition: opacity 0.3s ease-out;
+}
+
+.post-card-img:hover img {
+  opacity: 0.8;
+}

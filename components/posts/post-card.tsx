@@ -106,7 +106,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         {media?.sourceUrl && (
           <Link
             href={href}
-            className="relative block w-full aspect-[3/2] md:w-[75%] md:aspect-[3/2]"
+            className="post-card-img relative block w-full aspect-[3/2] overflow-hidden bg-white md:w-[75%] md:aspect-[3/2]"
           >
             <Image
               src={media.sourceUrl}
@@ -180,7 +180,11 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
         {/* Изображение поста (только для обычных карточек) */}
         {!showAuthor && media?.sourceUrl && (
-          <div className="post-card w-full overflow-hidden relative rounded-md border flex items-center justify-center bg-muted">
+          <Link
+            href={href}
+            aria-label={post.title || 'Открыть пост'}
+            className="post-card post-card-img relative z-10 block w-full overflow-hidden rounded-md border bg-white"
+          >
             <Image
               className="h-full w-full object-cover"
               src={media.sourceUrl}
@@ -188,7 +192,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
               width={412}
               height={216}
             />
-          </div>
+          </Link>
         )}
 
         {/* Дата над заголовком */}

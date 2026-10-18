@@ -44,19 +44,21 @@ export async function Tiles() {
         {tiles.map(({ label, post }) => (
           <Link key={label} href={tileHref(post)} className="group block text-center">
             {post.featuredMedia ? (
-              <Image
-                src={post.featuredMedia.sourceUrl}
-                alt={post.featuredMedia.altText || post.title}
-                width={412}
-                height={412}
-                className="w-full h-auto aspect-square object-cover"
-              />
+              <div className="overflow-hidden bg-white">
+                <Image
+                  src={post.featuredMedia.sourceUrl}
+                  alt={post.featuredMedia.altText || post.title}
+                  width={412}
+                  height={412}
+                  className="w-full h-auto aspect-square object-cover transition-opacity duration-300 group-hover:opacity-80"
+                />
+              </div>
             ) : (
-              <div className="aspect-square bg-accent/25 flex items-center justify-center p-4">
+              <div className="aspect-square bg-accent/25 flex items-center justify-center p-4 transition-opacity duration-300 group-hover:opacity-80">
                 {post.title}
               </div>
             )}
-            <span className="mt-3 block font-serif text-lg group-hover:underline">{label}</span>
+            <h3 className="mt-3 block font-serif text-[#141414]">{label}</h3>
           </Link>
         ))}
       </div>
