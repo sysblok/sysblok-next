@@ -180,6 +180,7 @@ h6 a {
   font-size: 15px;
   font-family: Georgia, serif;
   color: grey;
+  margin: 0;
 }
 
 .entry-cats:after {
@@ -207,7 +208,7 @@ h6 a {
   font-weight: 500;
   letter-spacing: -0.009em;
   font-size: 20px;
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .news {
