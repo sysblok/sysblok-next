@@ -2,9 +2,7 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-const Card = ({ ...props }: React.ComponentPropsWithRef<'div'>) => (
-  <div className="news-card" {...props} />
-)
+const Card = ({ ...props }: React.ComponentPropsWithRef<'div'>) => <div {...props} />
 Card.displayName = 'Card'
 
 const CardTitle = ({ ...props }: React.ComponentPropsWithRef<'div'>) => (
