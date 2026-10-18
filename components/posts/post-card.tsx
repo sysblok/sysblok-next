@@ -132,13 +132,18 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
       className={cn(
         !showAuthor && 'post-card small',
         'relative bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
-        'hover:bg-accent/75 transition-all blog-card',
+        'hover:bg-accent/75 transition-all blog-card ',
       )}
     >
-      <div className="flex flex-col gap-4">
-        {/* Блок автора */}
+      <div className="flex flex-col gap-4 p-[10px]">
+        {/* Блок автора — целиком кликабельный */}
         {showAuthor && author && (
-          <div className="author-block flex items-start gap-3 pb-4 ">
+          <Link
+            href={`/author/${author.slug}`}
+            title={`Записи автора ${author.name}`}
+            rel="author"
+            className="author-block flex gap-3 pb-4 relative z-10"
+          >
             {authorPhoto && (
               <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden rounded-full">
                 <Image
@@ -152,20 +157,12 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <h2 className="author-block__name">
-                <Link href={`/author/${author.slug}`} className="relative z-10">
-                  {author.name}
-                </Link>
-              </h2>
+              <h2 className="author-block__name">{author.name}</h2>
               {author.description && (
-                <p className="author-block__description">
-                  <Link href={`/author/${author.slug}`} className="relative z-10">
-                    {author.description}
-                  </Link>
-                </p>
+                <p className="author-block__description">{author.description}</p>
               )}
             </div>
-          </div>
+          </Link>
         )}
 
         {/* Мета-информация (для блогов - вместо изображения) */}
@@ -179,7 +176,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
               <span>блог</span>
             )}
 
-            <span>{date}</span>
+            <span className="entry-date">{date}</span>
           </div>
         )}
 
@@ -217,7 +214,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
           {post.excerpt
             ? post.excerpt
                 .split(' ')
-                .slice(0, showAuthor ? 30 : 50)
+                .slice(0, showAuthor ? 40 : 50)
                 .join(' ')
                 .trim() + '...'
             : 'No excerpt available'}
