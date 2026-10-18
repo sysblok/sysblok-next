@@ -156,7 +156,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
                 />
               </div>
             )}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 line-clamp-4">
               <h2 className="author-block__name">{author.name}</h2>
               {author.description && (
                 <p className="author-block__description">{author.description}</p>
