@@ -12,21 +12,25 @@ const TILES = [
 
 const tileHref = (post: CardPost) => `/posts/${post.slug}`
 
-// Последняя запись рубрики. Если рубрики нет, возвращаем null, а не любой пост:
-// иначе фильтр по рубрике не применится
-async function getLatestPost(slug: string): Promise<CardPost | null> {
-  const category = await getCategoryBySlug(slug)
+// Последняя запись рубрики по её slug.
+// Если рубрики нет, возвращаем null, а не любой пост:
+// иначе фильтр по рубрике не применится.
+async function getLatestCategoryPost(categorySlug: string): Promise<CardPost | null> {
+  const category = await getCategoryBySlug(categorySlug)
   if (!category) return null
 
-  const { data } = await getPostsPaginated(1, 1, { categories: category.id })
+  const { data } = await getPostsPaginated(1, 1, {
+    categories: category.id,
+  })
+
   return data[0] ?? null
 }
 
 export async function Tiles() {
   const tiles = (
     await Promise.all(
-      TILES.map(async ({ slug, label }) => {
-        const post = await getLatestPost(slug)
+      TILES.map(async ({ slug: categorySlug, label }) => {
+        const post = await getLatestCategoryPost(categorySlug)
         return post ? [{ label, post }] : []
       }),
     )
