@@ -5,8 +5,9 @@ import { getCategoryBySlug, getPostsPaginated, getStickyPost } from '@/lib/wordp
 import { PostCard } from '@/components/posts/post-card'
 import { News } from '@/components/carousel/news'
 import { Blogs } from '@/components/sections/blogs'
-import { Projects } from '@/components/sections/projects'
-import { DataStories } from '@/components/sections/data-stories'
+
+import { CategorySection } from '@/components/sections/category-section'
+
 import { Tiles } from '@/components/sections/tiles'
 
 // This page is using the craft.tsx component and design system
@@ -29,8 +30,8 @@ export default async function Home() {
           <PostCard post={stickyPost} featured />
         </div>
       )}
-      <Projects />
-      <DataStories />
+      <CategorySection slug="portaly" title="Проекты" moreLabel="Больше проектов" />
+      <CategorySection slug="data-istorii" title="Дата-истории" moreLabel="Больше дата-историй" />
       <News categoryId={newsCategory.id} />
       <Tiles />
 
