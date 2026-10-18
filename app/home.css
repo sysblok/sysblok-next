@@ -173,6 +173,7 @@ h6 a {
 
 .author-block__name {
   font-size: 20px;
+  margin: 0;
 }
 
 .author-block__description {
