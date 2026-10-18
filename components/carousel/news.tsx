@@ -6,8 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import { Card, CardDescription, CardFooter, CardTitle } from '@/components/ui/card'
-import Link from 'next/link'
+import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 
 interface NewsCarouselProps {
   categoryId?: number
@@ -22,7 +21,7 @@ export async function News({
   categorySlug = 'news',
   limit = 10,
   className,
-  title = 'Последние новости',
+  title = 'Новости',
 }: NewsCarouselProps) {
   // Если categoryId не передан, получаем его через slug
   const newsCategoryId = categoryId || (await getCategoryBySlug(categorySlug)).id
@@ -51,7 +50,7 @@ export async function News({
 
   return (
     <div className="my-12">
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
+      <h2>{title}</h2>
       <div className="w-full max-w-6xl mx-auto px-4">
         <Carousel
           opts={{
@@ -65,31 +64,19 @@ export async function News({
               <CarouselItem key={item.id} className="md:basis-1/2 lg:basis-1/3">
                 <Card className="h-full">
                   <CardTitle className="line-clamp-2">{item.title}</CardTitle>
-                  <time dateTime={item.date} className="text-sm text-muted-foreground px-6">
-                    {item.date}
-                  </time>
 
                   <CardDescription className="line-clamp-3 m-6 mt-3">
                     {item.description}
                   </CardDescription>
-                  <CardFooter>
-                    {item.url && (
-                      <Link
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary hover:underline"
-                      >
-                        Читать далее →
-                      </Link>
-                    )}
-                  </CardFooter>
+                  <time dateTime={item.date} className="news-excerpt">
+                    {item.date}
+                  </time>
                 </Card>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious variant="ghost" className="rounded-none border-0" />
+          <CarouselNext variant="ghost" className="rounded-none border-0" />
         </Carousel>
       </div>
     </div>

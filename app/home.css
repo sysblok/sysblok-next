@@ -202,3 +202,34 @@ h6 a {
   letter-spacing: -0.009em;
   font-size: 20px;
 }
+
+.news {
+  display: flex;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.news-card {
+  width: 206px;
+  height: 165px;
+  display: flex;
+  flex: 0 0 100%;
+  padding: 0 1.5rem 1rem;
+  background-color: #f5f5f5;
+  flex-direction: column;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.news-title {
+  font-size: 16px;
+}
+
+.news-excerpt {
+  font-size: 14px;
+
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+}
