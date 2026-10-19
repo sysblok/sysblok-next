@@ -42,7 +42,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
       <div
         className={cn(
           'post-card big',
-          'group not-prose flex flex-col overflow-hidden rounded-lg bg-accent/30',
+          'group not-prose flex flex-col overflow-hidden rounded-lg',
           'md:flex-row md:items-center',
         )}
       >
@@ -130,7 +130,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
     <div
       className={cn(
         !showAuthor && 'post-card small',
-        'relative bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
+        'relative  rounded-lg group flex justify-between flex-col not-prose gap-8',
         showAuthor && 'p-[10px]',
       )}
     >
@@ -201,13 +201,13 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
         {/* Дата над заголовком */}
         {!showAuthor && (
-          <time className="entry-meta text-sm" dateTime={post.date.toISOString()}>
+          <time className="entry-meta text-sm p-[10px]" dateTime={post.date.toISOString()}>
             {date}
           </time>
         )}
 
         {/* Заголовок + растянутая ссылка на весь пост */}
-        <h2 className="blog-entry__title">
+        <h2 className="blog-entry__title p-[10px]">
           <Link
             href={href}
             className="blog-entry__title"
@@ -216,7 +216,9 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         </h2>
 
         {/* Превью текста */}
-        <div className={cn(!showAuthor && 'entry-excerpt', 'author-block__description')}>
+        <div
+          className={cn(!showAuthor && 'entry-excerpt', 'author-block__description', 'p-[10px]')}
+        >
           {post.excerpt
             ? post.excerpt
                 .split(' ')
@@ -229,7 +231,7 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
 
       {/* Авторы вместо футера */}
       {!showAuthor && authors.length > 0 && (
-        <div className="entry-authors text-sm">
+        <div className="entry-authors text-sm p-[10px]">
           {authors.map((a, i) => (
             <span key={a.id ?? a.slug}>
               {i > 0 && ', '}
