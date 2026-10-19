@@ -131,16 +131,17 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
       className={cn(
         !showAuthor && 'post-card small',
         'relative bg-accent/30 rounded-lg group flex justify-between flex-col not-prose gap-8',
+        showAuthor && 'p-[10px]',
       )}
     >
-      <div className="flex flex-col gap-4 p-[10px]">
+      <div className="flex flex-col gap-4">
         {/* Блок автора — целиком кликабельный */}
         {showAuthor && author && (
           <Link
             href={`/author/${author.slug}`}
             title={`Записи автора ${author.name}`}
             rel="author"
-            className="author-block flex gap-3 pb-4 relative z-10"
+            className="author-block flex gap-3 pb-4 relative z-10 p-[10px]"
           >
             {authorPhoto && (
               <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden rounded-full">
@@ -167,7 +168,10 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         {showAuthor && (
           <div className="entry-meta">
             {category ? (
-              <Link href={`/posts?category=${category.slug}`} className="relative z-10 entry-cats">
+              <Link
+                href={`/posts?category=${category.slug}`}
+                className="relative z-10 entry-cats p-[10px]"
+              >
                 {category.name}
               </Link>
             ) : (
