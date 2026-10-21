@@ -1,16 +1,14 @@
 import Link from 'next/link'
-import type { Post, Media, Category, PostAcf } from '@/lib/wordpress.d'
+import type { Post, PostAcf } from '@/lib/wordpress.d'
 import { PostCreators } from './creators'
 import { Sharing } from './sharing'
 
 interface PostEntryProps {
   post: Post
-  featuredMedia?: Media
-  category: Category
   acf: PostAcf
 }
 
-export function PostEntry({ post, featuredMedia, category, acf }: PostEntryProps) {
+export function PostEntry({ post, acf }: PostEntryProps) {
   const date = post.date.toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'long',
@@ -27,7 +25,12 @@ export function PostEntry({ post, featuredMedia, category, acf }: PostEntryProps
               <div className="post-meta-and-title">
                 <div className="entry-meta">
                   <span className="entry-cats">
-                    <Link href={`/posts/?category=${category.id}`}>{category.name}</Link>
+                    {post.categories.map((cat, i) => (
+                      <span key={cat.id}>
+                        <Link href={`/posts/?category=${cat.id}`}>{cat.name}</Link>
+                        {i < post.categories.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
                   </span>
                   <time className="entry-date">{date}</time>
                 </div>
@@ -44,18 +47,18 @@ export function PostEntry({ post, featuredMedia, category, acf }: PostEntryProps
                 )}
               </div>
 
-              {featuredMedia?.sourceUrl && (
+              {post.featuredMedia?.sourceUrl && (
                 <div className="entry-thumb">
                   {/* TODO: replace <img> with next/image <Image> for optimization */}
                   {/* eslint-disable-next-line */}
                   <img
-                    src={featuredMedia.sourceUrl}
-                    alt={featuredMedia.altText || post.title || 'Post thumbnail'}
+                    src={post.featuredMedia.sourceUrl}
+                    alt={post.featuredMedia.altText || post.title || 'Post thumbnail'}
                   />
-                  {featuredMedia.caption && (
+                  {post.featuredMedia.caption && (
                     <div
                       className="entry-thumb-caption"
-                      dangerouslySetInnerHTML={{ __html: featuredMedia.caption }}
+                      dangerouslySetInnerHTML={{ __html: post.featuredMedia.caption }}
                     />
                   )}
                 </div>

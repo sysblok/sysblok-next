@@ -11,10 +11,7 @@ export default async function CatchAllPage({ params }: { params: Promise<{ slug:
   const post = await getPostBySlug(lastSlug)
   if (post) {
     const acf = await getPostAcf(post.id, ['creators', 'editors_note'])
-    const category = post.categories[0]
-    return (
-      <PostEntry post={post} featuredMedia={post.featuredMedia} category={category} acf={acf} />
-    )
+    return <PostEntry post={post} acf={acf} />
   }
 
   // Try page
