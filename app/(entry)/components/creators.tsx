@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import type { Creator, Creators } from '@/lib/wordpress.d'
 
-export function PostCreators({ creators }: { creators: Creators }) {
+export function EntryCreators({ creators }: { creators: Creators }) {
   const hasAny =
     creators.authors.length > 0 ||
     creators.editors.length > 0 ||

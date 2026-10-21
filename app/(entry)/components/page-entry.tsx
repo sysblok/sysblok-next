@@ -1,5 +1,5 @@
 import type { Page, PostAcf } from '@/lib/wordpress.d'
-import { PostCreators } from './creators'
+import { EntryCreators } from './creators'
 
 interface PageEntryProps {
   page: Page
@@ -37,7 +37,7 @@ export default function PageEntry({ page, acf }: PageEntryProps) {
           <div className="entry-content-col upper-elements-col">
             <article className="entry-content" dangerouslySetInnerHTML={{ __html: page.content }} />
 
-            {acf.creators && <PostCreators creators={acf.creators} />}
+            {acf.creators && <EntryCreators creators={acf.creators} />}
           </div>
         </div>
       </div>

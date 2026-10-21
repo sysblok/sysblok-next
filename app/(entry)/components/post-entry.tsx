@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'
-import { PostCreators } from './creators'
+import { EntryCreators } from './creators'
 import { Sharing } from './sharing'
 
 interface PostEntryProps {
@@ -72,7 +72,7 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
 
             <Sharing title={post.title} slug={post.slug} />
 
-            {acf.creators && <PostCreators creators={acf.creators} />}
+            {acf.creators && <EntryCreators creators={acf.creators} />}
 
             {post.tags.length > 0 && (
               <div className="entry-tags">
