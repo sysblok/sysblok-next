@@ -1,7 +1,9 @@
+import dynamic from 'next/dynamic'
 import { getPostBySlug, getPageBySlug, getPostAcf } from '@/lib/wordpress'
-import { PostEntry } from '@/app/(entry)/components/post-entry'
-import { PageEntry } from '@/app/(entry)/components/page-entry'
 import { notFound } from 'next/navigation'
+
+const PostEntry = dynamic(() => import('@/app/(entry)/components/post-entry'))
+const PageEntry = dynamic(() => import('@/app/(entry)/components/page-entry'))
 
 export default async function CatchAllPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params

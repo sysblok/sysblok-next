@@ -6,7 +6,7 @@ interface PageEntryProps {
   acf: PostAcf
 }
 
-export function PageEntry({ page, acf }: PageEntryProps) {
+export default function PageEntry({ page, acf }: PageEntryProps) {
   return (
     <section className="section-main-content">
       <div className="container-fluid container-fluid-with-max-width">

@@ -8,7 +8,7 @@ interface PostEntryProps {
   acf: PostAcf
 }
 
-export function PostEntry({ post, acf }: PostEntryProps) {
+export default function PostEntry({ post, acf }: PostEntryProps) {
   const date = post.date.toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'long',
