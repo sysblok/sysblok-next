@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import type { Creator, Creators } from '@/lib/wordpress.d'
 
-export function EntryCreators({ creators }: { creators: Creators }) {
+export function EntryCreators({ creators }: { creators?: Creators }) {
   const hasAny =
-    creators.authors.length > 0 ||
-    creators.editors.length > 0 ||
-    creators.illustrators.length > 0 ||
-    creators.curators.length > 0
+    creators &&
+    (creators.authors.length > 0 ||
+      creators.editors.length > 0 ||
+      creators.illustrators.length > 0 ||
+      creators.curators.length > 0)
 
   if (!hasAny) return null
 

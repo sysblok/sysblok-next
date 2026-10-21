@@ -37,7 +37,7 @@ export default function PageEntry({ page, acf }: PageEntryProps) {
           <div className="entry-content-col upper-elements-col">
             <article className="entry-content" dangerouslySetInnerHTML={{ __html: page.content }} />
 
-            {acf.creators && <EntryCreators creators={acf.creators} />}
+            <EntryCreators creators={acf.creators} />
           </div>
         </div>
       </div>

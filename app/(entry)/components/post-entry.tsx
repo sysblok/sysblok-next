@@ -72,7 +72,7 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
 
             <Sharing title={post.title} slug={post.slug} />
 
-            {acf.creators && <EntryCreators creators={acf.creators} />}
+            <EntryCreators creators={acf.creators} />
 
             {post.tags.length > 0 && (
               <div className="entry-tags">
