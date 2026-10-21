@@ -622,18 +622,6 @@ export async function getAllPostSlugsWithCategories() {
   )
 }
 
-export async function getPostData(slug: string) {
-  const post = await getPostBySlug(slug)
-  if (!post) return null
-
-  const { featuredMedia } = post
-  const category = post.categories[0]
-
-  const acf = await getPostAcf(post.id, ['creators', 'editors_note'])
-
-  return { post, featuredMedia, category, acf }
-}
-
 // --- Navigation ---
 
 const navigationFields: Array<keyof WPNavigation> = [

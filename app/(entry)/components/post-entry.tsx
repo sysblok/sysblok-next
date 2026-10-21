@@ -1,3 +1,4 @@
+import '../entry.css'
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
@@ -66,11 +67,9 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
             </div>
           </div>
 
-          {/* Content zone — article body + sharing + creators + tags */}
+          {/* Content zone — article body + creators + tags + sharing */}
           <div className="entry-content-col upper-elements-col">
             <article className="entry-content" dangerouslySetInnerHTML={{ __html: post.content }} />
-
-            <Sharing title={post.title} slug={post.slug} />
 
             <EntryCreators creators={acf.creators} />
 
@@ -87,6 +86,8 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
                 </p>
               </div>
             )}
+
+            <Sharing title={post.title} slug={post.slug} />
           </div>
           {/* TODO: add Related Posts */}
         </div>
