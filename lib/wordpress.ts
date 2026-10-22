@@ -513,7 +513,7 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
       _fields: authorFields,
       ...queryParams,
     },
-    ['authors'],
+    queryParams?.slug ? ['authors', `authors-${cacheTagSegment(queryParams.slug)}`] : ['authors'],
   )
 
 function extractCoauthors(terms: unknown[][] | undefined): CardAuthor[] {
@@ -738,7 +738,8 @@ async function withRealAuthorNames<T extends { coauthors: CardAuthor[] }>(
 ): Promise<T[]> {
   if (!items.some((i) => i.coauthors.length)) return items
 
-  const users = await getAllAuthors()
+  const coauthorsSlugs = [...new Set(items.flatMap((i) => i.coauthors.map((a) => a.slug)))].sort()
+  const users = await getAllAuthors({ slug: coauthorsSlugs })
   const nameBySlug = new Map(users.map((u) => [norm(u.slug), u.name]))
 
   return items.map((item) => ({
