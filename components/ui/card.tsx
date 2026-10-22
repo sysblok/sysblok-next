@@ -2,27 +2,16 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-const Card = ({ className, ...props }: React.ComponentPropsWithRef<'div'>) => (
-  <div
-    className={cn(
-      'flex flex-col rounded-lg border bg-card text-card-foreground shadow-sm',
-      className,
-    )}
-    {...props}
-  />
-)
+const Card = ({ ...props }: React.ComponentPropsWithRef<'div'>) => <div {...props} />
 Card.displayName = 'Card'
 
-const CardTitle = ({ className, ...props }: React.ComponentPropsWithRef<'div'>) => (
-  <h3
-    className={cn('text-2xl font-semibold leading-none tracking-tight p-6 pb-0', className)}
-    {...props}
-  />
+const CardTitle = ({ ...props }: React.ComponentPropsWithRef<'div'>) => (
+  <h2 className="news-title" {...props} />
 )
 CardTitle.displayName = 'CardTitle'
 
-const CardDescription = ({ className, ...props }: React.ComponentPropsWithRef<'p'>) => (
-  <p className={cn('text-sm text-muted-foreground ', className)} {...props} />
+const CardDescription = ({ ...props }: React.ComponentPropsWithRef<'p'>) => (
+  <p className="news-excerpt" {...props} />
 )
 CardDescription.displayName = 'CardDescription'
 

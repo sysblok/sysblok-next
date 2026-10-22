@@ -1,3 +1,4 @@
+@import './home.css';
 @import '../public/fonts/fontello/css/fontello.css';
 
 @font-face {
@@ -198,15 +199,17 @@
 
 /* Container — matches WP production (style.css line ~316) */
 .container-fluid-with-max-width {
-  margin: 0 auto;
+  width: 100%;
+
+  margin-right: auto;
+  margin-left: auto;
   max-width: 1388px;
   padding: 0 44px;
 }
 
-@media (max-width: 600px) {
-  .container-fluid-with-max-width {
-    padding: 0 22px;
-  }
+/* Линия только у шапки, по ширине контента (1300px) */
+.section-menu-stripe .container-fluid-with-max-width {
+  background: linear-gradient(#e8e8e8, #e8e8e8) content-box no-repeat bottom / 100% 1px;
 }
 
 /* Layout */
@@ -407,9 +410,8 @@
 /* Social & Search */
 .header-social-links {
   display: flex;
-  justify-content: space-between;
-  flex-grow: 1;
-  padding-right: 25px;
+  align-items: center;
+  gap: 60px;
 }
 
 .header-search-link {
@@ -818,6 +820,27 @@ blockquote > p {
   .side-menu-footer {
     padding: 12px 20px 20px;
   }
+
+  .side-menu-socials {
+    gap: 16px;
+  }
+
+  .menu-toggle-label {
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   Исправление для правой части хедера
+   ========================================= */
+
+.menu-stripe-right {
+  padding-right: 0;
+}
+
+/* Убираем отступ у поиска */
+.header-search-link {
+  margin-left: 0;
 }
 
 /* =========================================

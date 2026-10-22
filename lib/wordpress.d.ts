@@ -154,6 +154,7 @@ export interface Author {
   link: string
   slug: string
   avatar_urls?: Record<string, string>
+  acf?: { photo?: number | string | false }
   meta?: Record<string, unknown>
 }
 
@@ -337,6 +338,7 @@ interface BaseQuery<T> {
   slug?: string | Array<string> // Limit result set to posts with one or more specific slugs.
   _fields?: keyof T | Array<keyof T> // Return only a subset of the fields in a response
   _embed?: boolean // Include embedded resources
+  acf_format?: 'standard' | 'light'
 }
 
 interface EntityQuery<T> extends BaseQuery<T> {
@@ -376,6 +378,7 @@ export interface PageQuery extends EntityQuery<WPPage> {
   menu_order?: number // Limit result set to posts with a specific menu_order value.
   meta_key?: string // для фильтрации по кастомным мета-полям
   meta_value?: string
+  categories?: number | string | Array<number | string> // рубрики, подключённые к страницам
 }
 
 export interface MediaQuery extends EntityQuery<WPMedia> {
@@ -439,6 +442,7 @@ export type CacheTag =
   | 'tags'
   | `tag-${number | string}`
   | 'authors'
+  | `authors-${string}`
   | `author-${number | string}`
   | 'media'
   | `media-${number | string}`
@@ -452,4 +456,20 @@ export type CacheTag =
 export interface FooterArea {
   id: string
   html: string
+}
+
+export interface CardAuthor {
+  id: number
+  name: string
+  slug: string
+}
+
+export interface Post extends PostMetaEntity {
+  // ...
+  coauthors: CardAuthor[]
+}
+
+export interface Page extends PostMetaEntity {
+  // ...
+  coauthors: CardAuthor[]
 }
