@@ -200,10 +200,27 @@ export function PostCard({ post, showAuthor = false, featured = false }: PostCar
         )}
 
         {/* Дата над заголовком */}
+        {/* Мета-информация: Категории и Дата (как на скрине) */}
         {!showAuthor && (
-          <time className="entry-meta text-sm p-[10px]" dateTime={post.date.toISOString()}>
-            {date}
-          </time>
+          <div className="entry-meta flex justify-start gap-2 text-sm p-[10px]">
+            {categories && categories.length > 0 && (
+              <span className="entry-cats">
+                {categories.map((cat, i) => (
+                  <span key={cat.id}>
+                    {i > 0 && ', '}
+                    <Link
+                      href={`/posts?category=${cat.slug}`}
+                      rel="category tag"
+                      className="relative z-10 hover:underline transition-colors"
+                    >
+                      {cat.name}
+                    </Link>
+                  </span>
+                ))}
+              </span>
+            )}
+            <time dateTime={post.date.toISOString()}>{date}</time>
+          </div>
         )}
 
         {/* Заголовок + растянутая ссылка на весь пост */}
