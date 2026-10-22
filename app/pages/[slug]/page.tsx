@@ -4,7 +4,6 @@ import { siteConfig } from '@/site.config'
 
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import '../public/fonts/fontello/css/fontello.css'
 
 // Revalidate pages every hour
 export const revalidate = 3600

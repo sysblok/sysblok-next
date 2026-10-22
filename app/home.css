@@ -1,113 +1,10 @@
-/* =========================================
-   Hero / закреплённый пост (post-card.big)
-   ========================================= */
-
-.post-card.big {
-  padding-bottom: 0;
-  margin-top: 1.25rem; /* было 2rem */
-}
-
-.post-card {
-  background-color: #f5f5f5;
-}
-
-.entry-meta,
-.entry-meta a {
-  font-family: arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  letter-spacing: 0.14em;
-  text-transform: lowercase;
-  text-align: left;
-}
-
-.post-card.big .entry-title {
-  font-size: 1.875rem; /* было 3rem → теперь реально 30px */
-  margin-top: 2.5rem; /* было 4rem */
-  margin-bottom: 1rem; /* было 1.6rem */
-  background-color: #f5f5f5;
-}
-
-.post-card.small .entry-excerpt,
-.post-card.big .entry-excerpt,
-.more-link-span {
-  font-size: 0.9375rem; /* было 1.5rem → теперь реально 15px */
-}
-
-.post-card.big .more-link-holder {
-  padding-top: 2.5625rem; /* было 4.1rem */
-  text-align: center;
-}
-
-.entry-cats a {
-  color: #3e859b;
-}
-
-.entry-title {
-  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #141414;
-  position: relative;
-  line-height: 1.2;
-  font-weight: 500;
-  letter-spacing: -0.009em;
-  text-align: center;
-}
-
-.post-card.big .entry-title {
-  font-size: 1.875rem;
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.post-card .entry-title {
-  margin: 1.25rem 0 0.6875rem;
-}
-
-.post-card.big .more-link-holder {
-  padding-top: 2.5625rem;
-  text-align: center;
-}
-
-.more-link-span {
-  display: inline-block;
-  font-family: arial, Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.14em;
-  padding-right: 13px;
-  font-size: 0.875rem;
-}
+@import './post-card.css';
 
 a,
 .author-link-span a {
   color: #3e859b;
   transition: all 0.1s linear;
   text-decoration: none;
-}
-
-.post-card.small .entry-excerpt,
-.post-card.big .entry-excerpt,
-.more-link-span {
-  font-size: 0.9375rem;
-  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-.entry-excerpt__sticky {
-  text-align: center;
-  font-size: 15px;
-  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  font-weight: 300;
-  color: #696969;
-}
-
-.post-card .entry-excerpt {
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  font-weight: 300;
-  color: #696969;
-  text-align: left;
 }
 
 h1,
@@ -128,6 +25,50 @@ h6 a {
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: -0.009em;
+}
+
+.entry-meta,
+.entry-meta a {
+  font-family: arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  text-align: left;
+}
+
+.entry-cats a {
+  color: #3e859b;
+}
+
+.entry-title {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+  position: relative;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.009em;
+  text-align: center;
+}
+
+.more-link-span {
+  display: inline-block;
+  font-family: arial, Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  padding-right: 13px;
+  font-size: 0.875rem;
+}
+
+.entry-excerpt__sticky {
+  text-align: center;
+  font-size: 15px;
+  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  color: #696969;
 }
 
 .entry-authors {
@@ -235,6 +176,7 @@ h6 a {
   cursor: pointer;
   margin-right: 30px;
 }
+
 .news-title {
   font-size: 16px;
 }
@@ -397,13 +339,4 @@ a.news-slider__card {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-/* Картинка: светлеет при наведении */
-.post-card-img img {
-  transition: opacity 0.3s ease-out;
-}
-
-.post-card-img:hover img {
-  opacity: 0.8;
 }
