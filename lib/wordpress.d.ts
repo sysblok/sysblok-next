@@ -338,6 +338,7 @@ interface BaseQuery<T> {
   slug?: string | Array<string> // Limit result set to posts with one or more specific slugs.
   _fields?: keyof T | Array<keyof T> // Return only a subset of the fields in a response
   _embed?: boolean // Include embedded resources
+  acf_format?: 'standard' | 'light'
 }
 
 interface EntityQuery<T> extends BaseQuery<T> {
@@ -410,7 +411,6 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
   capabilities?: string | Array<string> // Limit result set to users matching at least one specific capability provided.
   who?: boolean // Limit result set to users who are considered authors
   has_published_posts?: boolean // Limit result set to users who have published posts.
-  acf_format?: 'standard' | 'light'
 }
 
 type Flatten<T> = T extends readonly (infer U)[] ? U : T
