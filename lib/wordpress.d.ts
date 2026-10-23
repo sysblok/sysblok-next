@@ -428,8 +428,10 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
   has_published_posts?: boolean // Limit result set to users who have published posts.
 }
 
+export type PostAcfGroup = 'creators' | 'editors_note' | 'post_lead'
+
 interface PostAcfQuery {
-  groups: string[]
+  groups: PostAcfGroup[]
 }
 
 type Flatten<T> = T extends readonly (infer U)[] ? U : T

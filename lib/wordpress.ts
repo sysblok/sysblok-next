@@ -19,6 +19,7 @@ import type {
   WPNavigation,
   FooterArea,
   PostAcf,
+  PostAcfGroup,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 import type { NavItem } from './wordpress.d'
@@ -656,7 +657,7 @@ export const getFooter = () =>
   wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
 
 // --- Post ACF ---
-export const getPostAcf = (postId: number, groups: string[]) =>
+export const getPostAcf = (postId: number, groups: PostAcfGroup[]) =>
   wordpressFetch<PostAcf>(`/wp-json/sysblock-api/v1/post-acf/${postId}`, { groups }, [
     `post-acf-${postId}`,
   ])
