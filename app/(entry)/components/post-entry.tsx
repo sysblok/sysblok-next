@@ -2,6 +2,7 @@ import '../entry.css'
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
+import { EntryImage } from './entry-image'
 import { Sharing } from './sharing'
 
 interface PostEntryProps {
@@ -49,20 +50,10 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
               </div>
 
               {post.featuredMedia?.sourceUrl && (
-                <div className="entry-thumb">
-                  {/* TODO: replace <img> with next/image <Image> for optimization */}
-                  {/* eslint-disable-next-line */}
-                  <img
-                    src={post.featuredMedia.sourceUrl}
-                    alt={post.featuredMedia.altText || post.title || 'Post thumbnail'}
-                  />
-                  {post.featuredMedia.caption && (
-                    <div
-                      className="entry-thumb-caption"
-                      dangerouslySetInnerHTML={{ __html: post.featuredMedia.caption }}
-                    />
-                  )}
-                </div>
+                <EntryImage
+                  media={post.featuredMedia}
+                  alt={post.featuredMedia.altText || post.title || 'Post thumbnail'}
+                />
               )}
             </div>
           </div>

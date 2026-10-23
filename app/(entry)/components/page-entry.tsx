@@ -1,6 +1,7 @@
 import '../entry.css'
 import type { Page, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
+import { EntryImage } from './entry-image'
 
 interface PageEntryProps {
   page: Page
@@ -17,20 +18,10 @@ export default function PageEntry({ page, acf }: PageEntryProps) {
             <h1 className="entry-title" dangerouslySetInnerHTML={{ __html: page.title }} />
 
             {page.featuredMedia?.sourceUrl && (
-              <div className="entry-thumb">
-                {/* TODO: replace <img> with next/image <Image> for optimization */}
-                {/* eslint-disable-next-line */}
-                <img
-                  src={page.featuredMedia.sourceUrl}
-                  alt={page.featuredMedia.altText || page.title || 'Page image'}
-                />
-                {page.featuredMedia.caption && (
-                  <div
-                    className="entry-thumb-caption"
-                    dangerouslySetInnerHTML={{ __html: page.featuredMedia.caption }}
-                  />
-                )}
-              </div>
+              <EntryImage
+                media={page.featuredMedia}
+                alt={page.featuredMedia.altText || page.title || 'Page image'}
+              />
             )}
           </div>
 
