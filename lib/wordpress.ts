@@ -18,6 +18,7 @@ import type {
   Page,
   WPNavigation,
   FooterArea,
+  PostAcf,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 import type { NavItem } from './wordpress.d'
@@ -152,6 +153,7 @@ function transformPost(wpPost: WPPost): Post {
           break
         case 'post_tag':
           tags = terms as Tag[]
+          break
         case 'author':
           authorSlugs = terms.map(({ name }) => name)
         default:
@@ -620,21 +622,6 @@ export async function getAllPostSlugsWithCategories() {
   )
 }
 
-export async function getPostData(slug: string) {
-  const post = await getPostBySlug(slug)
-  if (!post) return null
-
-  const { featuredMedia } = post
-  const category = post.categories[0]
-
-  const authors =
-    post.authorSlugs.length === 1 && post.author
-      ? [post.author]
-      : await getAllAuthors({ slug: post.authorSlugs }) // TODO: Sort in the same order as authorSlugs
-
-  return { post, featuredMedia, category, authors }
-}
-
 // --- Navigation ---
 
 const navigationFields: Array<keyof WPNavigation> = [
@@ -667,3 +654,9 @@ export const getMenu = (name: string) =>
 // --- Footer ---
 export const getFooter = () =>
   wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
+
+// --- Post ACF ---
+export const getPostAcf = (postId: number, groups: string[]) =>
+  wordpressFetch<PostAcf>(`/wp-json/sysblock-api/v1/post-acf/${postId}`, { groups }, [
+    `post-acf-${postId}`,
+  ])
