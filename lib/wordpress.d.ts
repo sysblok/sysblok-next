@@ -428,22 +428,28 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
   has_published_posts?: boolean // Limit result set to users who have published posts.
 }
 
+interface PostAcfQuery {
+  groups: string[]
+}
+
 type Flatten<T> = T extends readonly (infer U)[] ? U : T
 
 export type WordPressQuery<T> =
-  Flatten<T> extends WPPost
-    ? PostQuery
-    : Flatten<T> extends WPPage
-      ? PageQuery
-      : Flatten<T> extends WPMedia
-        ? MediaQuery
-        : Flatten<T> extends Tag
-          ? TagQuery
-          : Flatten<T> extends Category
-            ? CategoryQuery
-            : Flatten<T> extends Author
-              ? AuthorQuery<Author>
-              : BaseQuery<Flatten<T>>
+  Flatten<T> extends PostAcf
+    ? PostAcfQuery
+    : Flatten<T> extends WPPost
+      ? PostQuery
+      : Flatten<T> extends WPPage
+        ? PageQuery
+        : Flatten<T> extends WPMedia
+          ? MediaQuery
+          : Flatten<T> extends Tag
+            ? TagQuery
+            : Flatten<T> extends Category
+              ? CategoryQuery
+              : Flatten<T> extends Author
+                ? AuthorQuery<Author>
+                : BaseQuery<Flatten<T>>
 
 export type CacheTag =
   | 'wordpress'
@@ -465,6 +471,7 @@ export type CacheTag =
   | 'navigation'
   | `navigation-${string}`
   | 'footer'
+  | `post-acf-${number | string}`
 
 // Footer types
 export interface FooterArea {

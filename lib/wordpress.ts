@@ -657,8 +657,6 @@ export const getFooter = () =>
 
 // --- Post ACF ---
 export const getPostAcf = (postId: number, groups: string[]) =>
-  wordpressFetch<PostAcf>(
-    `/wp-json/sysblock-api/v1/post-acf/${postId}?groups=${groups.join(',')}`,
-    undefined,
-    [`post-acf-${postId}`],
-  )
+  wordpressFetch<PostAcf>(`/wp-json/sysblock-api/v1/post-acf/${postId}`, { groups }, [
+    `post-acf-${postId}`,
+  ])
