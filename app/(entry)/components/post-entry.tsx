@@ -1,4 +1,5 @@
 import '../entry.css'
+import React from 'react'
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
@@ -69,10 +70,10 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
                 <p>
                   Теги:
                   {post.tags.map((tag, i) => (
-                    <span key={tag.id}>
+                    <React.Fragment key={tag.id}>
                       <Link href={`/posts/?tag=${tag.id}`}>{tag.name}</Link>
                       {i < post.tags.length - 1 ? ', ' : ''}
-                    </span>
+                    </React.Fragment>
                   ))}
                 </p>
               </div>

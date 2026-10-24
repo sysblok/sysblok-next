@@ -178,6 +178,11 @@
   color: #6e6e6e;
   letter-spacing: 0.14em;
   text-align: center;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.entry-thumb-caption p {
+  margin: 0;
 }
 
 .entry-full .entry-content {
@@ -251,11 +256,4 @@
 
 .entry-tags a:first-of-type {
   margin-left: 6px;
-}
-
-@media (max-width: 991px) {
-  .entry-tags {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
 }
