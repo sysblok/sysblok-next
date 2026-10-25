@@ -162,19 +162,26 @@ a.news-slider__card {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: 0;
-  border-radius: 0;
+  border-radius: 50%;
   background: transparent;
   color: inherit;
   cursor: pointer;
   transform: translateY(-50%);
+  transition: background-color 0.2s ease;
 }
 
-.news-slider__arrow:hover {
-  background: #f5f5f5;
+/* #f5f5f5 почти не отличался от фона страницы, поэтому подложка темнее */
+.news-slider__arrow:not(:disabled):hover,
+.news-slider__arrow:focus-visible {
+  background: #e8e8e8;
+}
+
+.news-slider__arrow:focus-visible {
+  outline: none;
 }
 
 .news-slider__arrow:disabled {
@@ -183,11 +190,11 @@ a.news-slider__card {
 }
 
 .news-slider__arrow--prev {
-  left: -40px;
+  left: -42px;
 }
 
 .news-slider__arrow--next {
-  right: -40px;
+  right: -42px;
 }
 
 /* Стрелки стоят в боковых полях контейнера (44px); на узких экранах поле 22px — только свайп и точки */

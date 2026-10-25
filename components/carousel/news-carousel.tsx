@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import useEmblaCarousel from 'embla-carousel-react'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export interface NewsCarouselItem {
   id: number
@@ -89,7 +89,7 @@ export function NewsCarousel({ items }: { items: NewsCarouselItem[] }) {
           onClick={scrollPrev}
           disabled={!canPrev}
         >
-          <ArrowLeft size={16} />
+          <ChevronLeft size={28} strokeWidth={1.25} />
           <span className="news-slider__sr-only">Previous slide</span>
         </button>
         <button
@@ -98,7 +98,7 @@ export function NewsCarousel({ items }: { items: NewsCarouselItem[] }) {
           onClick={scrollNext}
           disabled={!canNext}
         >
-          <ArrowRight size={16} />
+          <ChevronRight size={28} strokeWidth={1.25} />
           <span className="news-slider__sr-only">Next slide</span>
         </button>
       </div>
