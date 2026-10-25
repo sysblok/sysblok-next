@@ -1,15 +1,12 @@
 'use client'
 
-import { siteConfig } from '@/site.config'
-
 interface SharingProps {
   title: string
-  slug: string
+  /** Полный url записи */
+  url: string
 }
 
-export function Sharing({ title, slug }: SharingProps) {
-  const url = `${siteConfig.site_domain}/posts/${slug}`
-
+export function Sharing({ title, url }: SharingProps) {
   function share(shareUrl: string, width: number, height: number) {
     const left = window.innerWidth / 2 - width / 2
     const top = window.innerHeight / 2 - height / 2

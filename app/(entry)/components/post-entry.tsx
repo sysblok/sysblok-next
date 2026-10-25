@@ -2,6 +2,8 @@ import '../entry.css'
 import React from 'react'
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'
+import { postHref } from '@/lib/utils'
+import { siteConfig } from '@/site.config'
 import { EntryCreators } from './creators'
 import { EntryImage } from './entry-image'
 import { Sharing } from './sharing'
@@ -79,7 +81,7 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
               </div>
             )}
 
-            <Sharing title={post.title} slug={post.slug} />
+            <Sharing title={post.title} url={`${siteConfig.site_domain}${postHref(post)}`} />
           </div>
           {/* TODO: add Related Posts */}
         </div>
