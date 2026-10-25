@@ -516,16 +516,15 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
     queryParams?.slug ? ['authors', `authors-${cacheTagSegment(queryParams.slug)}`] : ['authors'],
   )
 
+// Co-Authors Plus хранит соавторов как термы таксономии author со slug `cap-<user slug>`
+// (например, cap-aleksei_bogdanov -> пользователь aleksei_bogdanov).
+const coauthorTermToUserSlug = (termSlug: string) => termSlug.replace(/^cap-/, '')
+
 function extractCoauthors(terms: unknown[][] | undefined): CardAuthor[] {
   return (terms ?? [])
     .flat()
     .filter((t): t is Coauthor => (t as Coauthor).taxonomy === 'author')
-    .map(({ id, name, slug }) => ({
-      id,
-      name,
-
-      slug: slug.replace(/^cap-/, ''),
-    }))
+    .map(({ id, name, slug }) => ({ id, name, slug: coauthorTermToUserSlug(slug) }))
 }
 
 export const getAuthorById = (id: number) =>
@@ -650,12 +649,20 @@ export async function getPostData(slug: string) {
   const { featuredMedia } = post
   const category = post.categories[0]
 
-  const authors =
-    post.authorSlugs.length === 1 && post.author
-      ? [post.author]
-      : await getAllAuthors({ slug: post.authorSlugs }) // TODO: Sort in the same order as authorSlugs
+  return { post, featuredMedia, category, authors: await getPostAuthors(post) }
+}
 
-  return { post, featuredMedia, category, authors }
+async function getPostAuthors(post: Post): Promise<Author[]> {
+  const { authorSlugs, author } = post
+
+  // Без соавторов getAllAuthors({ slug: [] }) вернул бы всех авторов сайта
+  if (authorSlugs.length === 0) return author ? [author] : []
+  if (authorSlugs.length === 1 && author) return [author]
+
+  const users = await getAllAuthors({ slug: authorSlugs })
+  const order = new Map(authorSlugs.map((slug, i) => [slug, i]))
+
+  return users.sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0))
 }
 
 // --- Navigation ---
@@ -731,8 +738,6 @@ export async function getPagesByCategory(
   return withRealAuthorNames(data.map(transformPage))
 }
 
-const norm = (s: string) => s.toLowerCase().replace(/[_\s]+/g, '-')
-
 async function withRealAuthorNames<T extends { coauthors: CardAuthor[] }>(
   items: T[],
 ): Promise<T[]> {
@@ -740,13 +745,13 @@ async function withRealAuthorNames<T extends { coauthors: CardAuthor[] }>(
 
   const coauthorsSlugs = [...new Set(items.flatMap((i) => i.coauthors.map((a) => a.slug)))].sort()
   const users = await getAllAuthors({ slug: coauthorsSlugs })
-  const nameBySlug = new Map(users.map((u) => [norm(u.slug), u.name]))
+  const nameBySlug = new Map(users.map((u) => [u.slug, u.name]))
 
   return items.map((item) => ({
     ...item,
     coauthors: item.coauthors.map((a) => ({
       ...a,
-      name: nameBySlug.get(norm(a.slug)) ?? a.name,
+      name: nameBySlug.get(a.slug) ?? a.name,
     })),
   }))
 }
