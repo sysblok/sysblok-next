@@ -14,7 +14,7 @@ export function FeaturedPostCard({ post }: { post: CardPost }) {
   const author = post.author
 
   return (
-    <div className="post-card big group not-prose flex flex-col overflow-hidden rounded-lg md:flex-row md:items-center">
+    <div className="post-card big group not-prose flex flex-col overflow-hidden md:flex-row md:items-center">
       <div className="flex flex-col justify-center gap-4 p-8 md:w-[45%] text-left">
         <div className="entry-meta flex justify-start gap-2">
           <CategoryLinks categories={post.categories} />
