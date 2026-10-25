@@ -1,4 +1,4 @@
-import '../entry.css'
+import './entry.css'
 import React from 'react'
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'

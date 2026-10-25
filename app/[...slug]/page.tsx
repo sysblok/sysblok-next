@@ -4,8 +4,8 @@ import { getPostBySlug, getPageBySlug, getPostAcf } from '@/lib/wordpress'
 import type { Page, Post } from '@/lib/wordpress.d'
 import { postHref } from '@/lib/utils'
 import { siteConfig } from '@/site.config'
-import PostEntry from '@/app/(entry)/components/post-entry'
-import PageEntry from '@/app/(entry)/components/page-entry'
+import PostEntry from '@/components/entry/post-entry'
+import PageEntry from '@/components/entry/page-entry'
 
 type Params = Promise<{ slug: string[] }>
 

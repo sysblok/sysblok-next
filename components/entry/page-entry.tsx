@@ -1,4 +1,4 @@
-import '../entry.css'
+import './entry.css'
 import type { Page, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
 import { EntryContent } from './entry-content'
