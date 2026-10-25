@@ -35,9 +35,20 @@
   text-align: left;
 }
 
-.post-card.big .more-link-holder {
-  padding-top: 2.5625rem;
+.post-card.big .entry-meta {
+  padding-top: 0;
   text-align: center;
+}
+
+.post-card.big .more-link-holder {
+  padding-top: 41px;
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  .post-card.big .more-link-holder {
+    padding-top: 22px;
+  }
 }
 
 /* Картинка: светлеет при наведении */
@@ -61,12 +72,10 @@
 }
 
 .entry-cats a,
-.author-link-span a,
 .more-link-span a {
   color: #3e859b;
 }
 
-.author-link-span a,
 .more-link-span a {
   transition: all 0.1s linear;
   text-decoration: none;
@@ -74,7 +83,6 @@
 
 /* Сохраняем hover из globals.css (a:hover), который раньше перебивал цвет выше */
 .entry-cats a:hover,
-.author-link-span a:hover,
 .more-link-span a:hover {
   color: var(--color-text);
 }

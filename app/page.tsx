@@ -29,14 +29,17 @@ export default async function Home() {
     categories_exclude: newsCategory.id,
     exclude: stickyPost ? [stickyPost.id] : undefined,
   })
-  const posts = await resolveCoauthorNames(data)
+  const [posts, [sticky]] = await Promise.all([
+    resolveCoauthorNames(data),
+    resolveCoauthorNames(stickyPost ? [stickyPost] : []),
+  ])
 
   return (
     <Container>
       {/* Закрепленный пост */}
-      {stickyPost && (
+      {sticky && (
         <div className="mb-8">
-          <FeaturedPostCard post={stickyPost} />
+          <FeaturedPostCard post={sticky} />
         </div>
       )}
       <CategorySection slug="portaly" title="Проекты" moreLabel="Больше проектов" />
