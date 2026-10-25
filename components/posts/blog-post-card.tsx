@@ -5,6 +5,8 @@ import { formatPostDate, postHref, truncateWords } from '@/lib/utils'
 import type { CardPost } from '@/lib/wordpress'
 import type { Category } from '@/lib/wordpress.d'
 
+import './post-card.css'
+
 interface BlogPostCardProps {
   post: CardPost
   /** Рубрика блога, в которой вышла запись («Блог Дмитрия Пронина») */

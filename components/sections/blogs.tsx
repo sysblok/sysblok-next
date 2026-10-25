@@ -59,8 +59,8 @@ export async function Blogs() {
           <BlogPostCard key={post.id} post={post} blog={blog} authorPhoto={photos[i]} />
         ))}
       </div>
-      <div className="mt-6 text-right">
-        <Link href="https://next.sysblok.team/posts?category=1773" className="text-right">
+      <div className="mt-6 text-right section-more-link">
+        <Link href="https://next.sysblok.team/posts?category=1773" className="section-more-link">
           Больше записей из блогов →
         </Link>
       </div>

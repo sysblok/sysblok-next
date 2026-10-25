@@ -34,7 +34,7 @@ export async function CategorySection({
           <PostCard key={item.id} post={item} />
         ))}
       </div>
-      <div className="mt-6 text-right">
+      <div className="mt-6 text-right section-more-link">
         <Link href={`/posts?category=${category.id}`}>{moreLabel} →</Link>
       </div>
     </section>

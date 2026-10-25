@@ -16,6 +16,8 @@ import { CategorySection } from '@/components/sections/category-section'
 
 import { Tiles } from '@/components/sections/tiles'
 
+import './home.css'
+
 // This page is using the craft.tsx component and design system
 export default async function Home() {
   // Получаем только id категории для исключения из основных постов

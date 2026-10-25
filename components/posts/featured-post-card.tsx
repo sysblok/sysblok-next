@@ -5,6 +5,8 @@ import { formatPostDate, postHref, truncateWords } from '@/lib/utils'
 import type { CardPost } from '@/lib/wordpress'
 import { CategoryLinks } from './category-links'
 
+import './post-card.css'
+
 // Большая карточка закреплённого поста: текст слева, фото справа
 export function FeaturedPostCard({ post }: { post: CardPost }) {
   const media = post.featuredMedia

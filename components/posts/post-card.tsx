@@ -5,6 +5,8 @@ import { formatPostDate, postHref, truncateWords } from '@/lib/utils'
 import type { CardPost } from '@/lib/wordpress'
 import { CategoryLinks } from './category-links'
 
+import './post-card.css'
+
 // Карточка поста для сеток и списков. Имена соавторов нужно заранее
 // подставить через resolveCoauthorNames, иначе выведутся логины.
 export function PostCard({ post }: { post: CardPost }) {
