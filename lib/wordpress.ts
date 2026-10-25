@@ -18,6 +18,8 @@ import type {
   Page,
   WPNavigation,
   FooterArea,
+  PostAcf,
+  PostAcfGroup,
   Coauthor,
   CardAuthor,
 } from './wordpress.d'
@@ -238,6 +240,7 @@ const postCardFields: Array<keyof WPPost> = [
   'id',
   'date',
   'slug',
+  'link',
   'title',
   'excerpt',
   'author',
@@ -255,6 +258,7 @@ export type CardPost =
       | 'type'
       | 'date'
       | 'slug'
+      | 'link'
       | 'title'
       | 'excerpt'
       | 'author'
@@ -269,6 +273,7 @@ export type CardPost =
       | 'type'
       | 'date'
       | 'slug'
+      | 'link'
       | 'title'
       | 'excerpt'
       | 'author'
@@ -649,29 +654,6 @@ export async function getAllPostSlugsWithCategories() {
   )
 }
 
-export async function getPostData(slug: string) {
-  const post = await getPostBySlug(slug)
-  if (!post) return null
-
-  const { featuredMedia } = post
-  const category = post.categories[0]
-
-  return { post, featuredMedia, category, authors: await getPostAuthors(post) }
-}
-
-async function getPostAuthors(post: Post): Promise<Author[]> {
-  const { authorSlugs, author } = post
-
-  // Без соавторов getAllAuthors({ slug: [] }) вернул бы всех авторов сайта
-  if (authorSlugs.length === 0) return author ? [author] : []
-  if (authorSlugs.length === 1 && author) return [author]
-
-  const users = await getAllAuthors({ slug: authorSlugs })
-  const order = new Map(authorSlugs.map((slug, i) => [slug, i]))
-
-  return users.sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0))
-}
-
 // --- Navigation ---
 
 const navigationFields: Array<keyof WPNavigation> = [
@@ -704,6 +686,12 @@ export const getMenu = (name: string) =>
 // --- Footer ---
 export const getFooter = () =>
   wordpressFetch<FooterArea[]>('/wp-json/sysblock-api/v1/footer', undefined, ['footer'])
+
+// --- Post ACF ---
+export const getPostAcf = (postId: number, groups: PostAcfGroup[]) =>
+  wordpressFetch<PostAcf>(`/wp-json/sysblock-api/v1/post-acf/${postId}`, { groups }, [
+    `post-acf-${postId}`,
+  ])
 
 const pageCardFields: Array<keyof WPPage> = [
   'id',

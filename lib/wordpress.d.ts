@@ -278,6 +278,24 @@ export interface Media extends Entity {
   authorID: number
 }
 
+export interface Creator {
+  name: string
+  link: string
+}
+
+export interface Creators {
+  authors: Creator[]
+  editors: Creator[]
+  illustrators: Creator[]
+  curators: Creator[]
+}
+
+export interface PostAcf {
+  creators?: Creators
+  editors_note?: string
+  post_lead?: string
+}
+
 interface PostMetaEntity extends Entity {
   content: string
   excerpt: string
@@ -415,22 +433,30 @@ interface AuthorQuery<T> extends BaseQuery<Author> {
   has_published_posts?: boolean // Limit result set to users who have published posts.
 }
 
+export type PostAcfGroup = 'creators' | 'editors_note' | 'post_lead'
+
+interface PostAcfQuery {
+  groups: PostAcfGroup[]
+}
+
 type Flatten<T> = T extends readonly (infer U)[] ? U : T
 
 export type WordPressQuery<T> =
-  Flatten<T> extends WPPost
-    ? PostQuery
-    : Flatten<T> extends WPPage
-      ? PageQuery
-      : Flatten<T> extends WPMedia
-        ? MediaQuery
-        : Flatten<T> extends Tag
-          ? TagQuery
-          : Flatten<T> extends Category
-            ? CategoryQuery
-            : Flatten<T> extends Author
-              ? AuthorQuery<Author>
-              : BaseQuery<Flatten<T>>
+  Flatten<T> extends PostAcf
+    ? PostAcfQuery
+    : Flatten<T> extends WPPost
+      ? PostQuery
+      : Flatten<T> extends WPPage
+        ? PageQuery
+        : Flatten<T> extends WPMedia
+          ? MediaQuery
+          : Flatten<T> extends Tag
+            ? TagQuery
+            : Flatten<T> extends Category
+              ? CategoryQuery
+              : Flatten<T> extends Author
+                ? AuthorQuery<Author>
+                : BaseQuery<Flatten<T>>
 
 export type CacheTag =
   | 'wordpress'
@@ -452,6 +478,7 @@ export type CacheTag =
   | 'navigation'
   | `navigation-${string}`
   | 'footer'
+  | `post-acf-${number | string}`
 
 // Footer types
 export interface FooterArea {

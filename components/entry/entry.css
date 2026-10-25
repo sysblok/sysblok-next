@@ -1,0 +1,368 @@
+/* =========================================
+   Entry — Article/Page content layout
+   (from WP style.css, rem*10 converted to px)
+   ========================================= */
+
+/* Entry full — main content wrapper */
+.entry-full {
+  padding-top: 0;
+}
+
+@media (max-width: 991px) {
+  .entry-full {
+    padding-bottom: 0;
+  }
+}
+
+.upper-elements-col {
+  padding-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  float: none;
+}
+
+/* Entry column widths — replaces Bootstrap col-xs-12/col-sm-10/col-md-8 */
+.entry-header-col,
+.entry-content-col {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .entry-header-col,
+  .entry-content-col {
+    width: 83.33%;
+  }
+  .entry-content-col {
+    margin-left: 8.33%;
+  }
+}
+
+@media (min-width: 992px) {
+  .entry-header-col,
+  .entry-content-col {
+    width: 66.67%;
+  }
+  .entry-content-col {
+    margin-left: 16.67%;
+  }
+}
+
+.post-header {
+  padding-bottom: 20px;
+  padding-top: 10px;
+}
+
+.post-meta-and-title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.entry-meta {
+  color: var(--color-text-muted);
+}
+
+.entry-meta,
+.entry-meta a {
+  font-family: Arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  text-align: left;
+}
+
+.entry-full .entry-meta,
+.entry-full .entry-meta a {
+  font-size: 15px;
+}
+
+.entry-full .entry-title {
+  margin: 15px 0 5px 0;
+  max-width: 740px;
+  font-size: 36px;
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .entry-full .entry-title {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 499px) {
+  .entry-full .entry-title {
+    font-size: 28px;
+  }
+}
+
+/* Entry title — page (40px, full width)
+   .entry-page is added to the wrapper in the page template */
+.entry-page.entry-full .entry-title {
+  margin-top: 35px;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+  max-width: none;
+  font-size: 40px;
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .entry-page.entry-full .entry-title {
+    font-size: 35px;
+    padding-bottom: 20px;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 499px) {
+  .entry-page.entry-full .entry-title {
+    font-size: 35px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+  }
+}
+
+.entry-lead {
+  margin-top: 16px;
+  padding-bottom: 0;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.36;
+}
+
+.entry-lead a {
+  color: var(--color-accent);
+}
+
+@media (min-width: 500px) and (max-width: 991px) {
+  .entry-lead {
+    margin-top: 19px;
+    font-size: 19px;
+    font-family: var(--font-narrator);
+  }
+}
+
+@media (max-width: 499px) {
+  .entry-lead {
+    margin-top: 16px;
+    font-size: 16px;
+    font-family: var(--font-narrator);
+  }
+}
+
+.entry-editors-note {
+  background-color: #fce588;
+  padding: 16px;
+}
+
+.entry-full .entry-thumb {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.entry-page.entry-full .entry-thumb {
+  padding-top: 28px;
+}
+
+.entry-page .entry-title ~ .entry-thumb {
+  padding-top: 0;
+}
+
+.entry-thumb-caption {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-family: Arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #6e6e6e;
+  letter-spacing: 0.14em;
+  text-align: center;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.entry-thumb-caption p {
+  margin: 0;
+}
+
+.entry-full .entry-content {
+  padding: 0;
+  font-size: 16px;
+}
+
+.sharing-list {
+  list-style: none;
+  margin: 0 0 12px 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+}
+
+.share-button {
+  border: 0;
+  outline: none;
+  background: #fff;
+  color: var(--color-accent);
+  font-size: 32px;
+  padding: 0 10px;
+  transition: opacity 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  opacity: 0.8;
+}
+
+.creators-post {
+  font-size: 16px;
+}
+
+.entry-cats {
+  letter-spacing: 0.01em;
+}
+
+.entry-cats:after {
+  display: inline-block;
+  position: relative;
+  bottom: 3px;
+  margin: 0 6px 0 10px;
+  content: '\A';
+  height: 1px;
+  width: 40px;
+  background-color: #8b8b8b;
+}
+
+.entry-full .entry-cats:before {
+  margin: 0 16px 0 9px;
+  width: 43px;
+}
+
+@media (max-width: 400px) {
+  .entry-cats:after {
+    width: 30px;
+  }
+}
+
+.entry-tags {
+  font-size: 16px !important;
+  text-transform: none;
+  font-weight: 400 !important;
+  padding: 0;
+}
+
+.entry-tags a {
+  text-transform: lowercase;
+}
+
+.entry-tags a:first-of-type {
+  margin-left: 6px;
+}
+
+/* Telegram button (WP components/telegram-button/telegram-button.css) — только на мобильных */
+.telegram-button {
+  --telegram-background-color: #40a7e3;
+
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px 0;
+  max-height: 44px;
+  background-color: var(--telegram-background-color);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  box-sizing: border-box;
+  text-align: center;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+  height: 44px;
+  contain: strict;
+}
+
+.telegram-button:hover {
+  color: white;
+}
+
+.telegram-button::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 20px;
+  background-image: url('/images/telegram-logo.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-right: 16px;
+}
+
+@media (min-width: 992px) {
+  .telegram-button {
+    display: none;
+  }
+}
+
+@media (max-width: 300px) {
+  .telegram-button span {
+    display: none;
+  }
+}
+
+/* Раскладка блоков Gutenberg (из WP global-styles, без пресетов) */
+:where(.is-layout-flex) {
+  gap: 0.5em;
+}
+:where(.is-layout-grid) {
+  gap: 0.5em;
+}
+body .is-layout-flex {
+  display: flex;
+}
+.is-layout-flex {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.is-layout-flex > :is(*, div) {
+  margin: 0;
+}
+body .is-layout-grid {
+  display: grid;
+}
+.is-layout-grid > :is(*, div) {
+  margin: 0;
+}
+:where(.wp-block-columns.is-layout-flex) {
+  gap: 2em;
+}
+:where(.wp-block-columns.is-layout-grid) {
+  gap: 2em;
+}
+
+/* Аккордеоны Advanced Gutenberg: закрытые панели скрыты (состояние ставит EntryContent).
+   До гидрации прячем то, что плагин закрыл бы сам: всё при data-collapsed, иначе всё кроме первой. */
+.advgb-accordion-header[aria-expanded='false'] + .advgb-accordion-body,
+.advgb-accordion-wrapper[data-collapsed='true']
+  > .advgb-accordion-item
+  > .advgb-accordion-header:not([aria-expanded])
+  + .advgb-accordion-body,
+.advgb-accordion-wrapper:not([data-collapsed='true']):not([data-expand-all='true'])
+  > .advgb-accordion-item:not(:first-child)
+  > .advgb-accordion-header:not([aria-expanded])
+  + .advgb-accordion-body {
+  display: none;
+}
+
+.advgb-accordion-header {
+  cursor: pointer;
+}
+
+/* Кнопки Gutenberg (из wp-includes/css/classic-themes.min.css) */
+.wp-block-button__link {
+  color: #fff;
+  background-color: #32373c;
+  border-radius: 9999px;
+  box-shadow: none;
+  text-decoration: none;
+  padding: calc(0.667em + 2px) calc(1.333em + 2px);
+  font-size: 1.125em;
+}

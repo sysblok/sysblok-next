@@ -1,4 +1,5 @@
 import { getCategoryBySlug, getPostsPaginated } from '@/lib/wordpress'
+import { postHref } from '@/lib/utils'
 
 import { NewsCarousel } from './news-carousel'
 
@@ -25,7 +26,7 @@ export async function News({
 
   const items = newsPosts.map((post) => ({
     id: post.id,
-    url: `/posts/${post.slug}`,
+    url: postHref(post),
     title: post.title || 'Untitled Post',
     description: post.excerpt || '',
     date: post.date.toLocaleDateString('ru-RU'), // 29.09.2026

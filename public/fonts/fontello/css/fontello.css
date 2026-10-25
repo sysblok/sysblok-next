@@ -65,3 +65,20 @@
 .icon-telegram:before {
   content: '\f2c6';
 } /* '' */
+
+/* X (Twitter) — отдельный шрифт, не из fontello; держать после [class^='icon-']:before */
+@font-face {
+  font-family: 'x-twitter';
+  src:
+    url('../x-twitter.woff2') format('woff2'),
+    url('../x-twitter.woff') format('woff'),
+    url('../x-twitter.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icon-x-twitter:before {
+  font-family: 'x-twitter';
+  content: '\f8d8';
+  display: inline-block;
+}
