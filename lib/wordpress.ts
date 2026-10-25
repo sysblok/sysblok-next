@@ -240,6 +240,7 @@ const postCardFields: Array<keyof WPPost> = [
   'id',
   'date',
   'slug',
+  'link',
   'title',
   'excerpt',
   'author',
@@ -257,6 +258,7 @@ export type CardPost =
       | 'type'
       | 'date'
       | 'slug'
+      | 'link'
       | 'title'
       | 'excerpt'
       | 'author'
@@ -271,6 +273,7 @@ export type CardPost =
       | 'type'
       | 'date'
       | 'slug'
+      | 'link'
       | 'title'
       | 'excerpt'
       | 'author'

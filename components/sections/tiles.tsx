@@ -2,6 +2,7 @@ import { getCategoryBySlug, getPostsPaginated } from '@/lib/wordpress'
 import type { CardPost } from '@/lib/wordpress'
 import Image from 'next/image'
 import Link from 'next/link'
+import { postHref } from '@/lib/utils'
 
 // Подпись плитки совпадает с названием рубрики
 const TILES = [
@@ -9,8 +10,6 @@ const TILES = [
   { slug: 'test', label: 'Тест' },
   { slug: 'glossary', label: 'Глоссарий' },
 ] as const
-
-const tileHref = (post: CardPost) => `/posts/${post.slug}`
 
 // Последняя запись рубрики по её slug.
 // Если рубрики нет, возвращаем null, а не любой пост:
@@ -42,7 +41,7 @@ export async function Tiles() {
     <section className="mb-12">
       <div className="grid sm:grid-cols-3 gap-6">
         {tiles.map(({ label, post }) => (
-          <Link key={label} href={tileHref(post)} className="group block text-center">
+          <Link key={label} href={postHref(post)} className="group block text-center">
             {post.featuredMedia ? (
               <div className="overflow-hidden bg-white">
                 <Image
