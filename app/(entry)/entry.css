@@ -98,7 +98,7 @@
 
 /* Entry title — page (40px, full width)
    .entry-page is added to the wrapper in the page template */
-.entry-page .entry-full .entry-title {
+.entry-page.entry-full .entry-title {
   margin-top: 35px;
   margin-bottom: 0;
   padding-bottom: 20px;
@@ -107,7 +107,7 @@
 }
 
 @media (min-width: 500px) and (max-width: 991px) {
-  .entry-page .entry-full .entry-title {
+  .entry-page.entry-full .entry-title {
     font-size: 35px;
     padding-bottom: 20px;
     margin-top: 30px;
@@ -115,7 +115,7 @@
 }
 
 @media (max-width: 499px) {
-  .entry-page .entry-full .entry-title {
+  .entry-page.entry-full .entry-title {
     font-size: 35px;
     padding-bottom: 10px;
     margin-top: 20px;
@@ -161,7 +161,7 @@
   padding-bottom: 0;
 }
 
-.entry-page .entry-full .entry-thumb {
+.entry-page.entry-full .entry-thumb {
   padding-top: 28px;
 }
 
