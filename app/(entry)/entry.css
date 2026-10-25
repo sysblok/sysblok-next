@@ -307,3 +307,33 @@
     display: none;
   }
 }
+
+/* Раскладка блоков Gutenberg (из WP global-styles, без пресетов) */
+:where(.is-layout-flex) {
+  gap: 0.5em;
+}
+:where(.is-layout-grid) {
+  gap: 0.5em;
+}
+body .is-layout-flex {
+  display: flex;
+}
+.is-layout-flex {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.is-layout-flex > :is(*, div) {
+  margin: 0;
+}
+body .is-layout-grid {
+  display: grid;
+}
+.is-layout-grid > :is(*, div) {
+  margin: 0;
+}
+:where(.wp-block-columns.is-layout-flex) {
+  gap: 2em;
+}
+:where(.wp-block-columns.is-layout-grid) {
+  gap: 2em;
+}

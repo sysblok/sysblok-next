@@ -2,6 +2,7 @@ import '../entry.css'
 import type { Page, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
 import { EntryImage } from './entry-image'
+import { WordPressStyles } from './wordpress-styles'
 
 interface PageEntryProps {
   page: Page
@@ -11,6 +12,7 @@ interface PageEntryProps {
 export default function PageEntry({ page, acf }: PageEntryProps) {
   return (
     <section className="section-main-content">
+      <WordPressStyles />
       <div className="container-fluid container-fluid-with-max-width">
         <div className="entry-page entry-full">
           {/* Header zone — title + optional image */}

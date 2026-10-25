@@ -6,6 +6,7 @@ import { formatPostDate, postHref } from '@/lib/utils'
 import { siteConfig } from '@/site.config'
 import { EntryCreators } from './creators'
 import { EntryImage } from './entry-image'
+import { WordPressStyles } from './wordpress-styles'
 import { Sharing } from './sharing'
 import { TelegramButton } from './telegram-button'
 
@@ -17,6 +18,7 @@ interface PostEntryProps {
 export default function PostEntry({ post, acf }: PostEntryProps) {
   return (
     <section className="section-main-content">
+      <WordPressStyles />
       <div className="container-fluid container-fluid-with-max-width">
         <TelegramButton utmContent="tg_button_single_post" />
         <div className="entry-full">
