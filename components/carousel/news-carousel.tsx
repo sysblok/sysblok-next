@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import useEmblaCarousel from 'embla-carousel-react'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 export interface NewsCarouselItem {
   id: number
@@ -18,6 +18,8 @@ export function NewsCarousel({ items }: { items: NewsCarouselItem[] }) {
   const [viewportRef, api] = useEmblaCarousel({ align: 'start', loop: true })
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(false)
+  const [snaps, setSnaps] = useState<number[]>([])
+  const [selected, setSelected] = useState(0)
 
   const scrollPrev = useCallback(() => api?.scrollPrev(), [api])
   const scrollNext = useCallback(() => api?.scrollNext(), [api])
@@ -28,6 +30,8 @@ export function NewsCarousel({ items }: { items: NewsCarouselItem[] }) {
     const update = () => {
       setCanPrev(api.canScrollPrev())
       setCanNext(api.canScrollNext())
+      setSnaps(api.scrollSnapList())
+      setSelected(api.selectedScrollSnap())
     }
 
     update()
@@ -57,45 +61,62 @@ export function NewsCarousel({ items }: { items: NewsCarouselItem[] }) {
       aria-roledescription="carousel"
       onKeyDownCapture={onKeyDown}
     >
-      <div className="news-slider__viewport" ref={viewportRef}>
-        <div className="news-slider__container">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="news-slider__slide"
-              role="group"
-              aria-roledescription="slide"
-            >
-              <Link href={item.url} className="news-slider__card" draggable={false}>
-                <h3 className="news-slider__title">{item.title}</h3>
-                <p className="news-slider__excerpt">{item.description}</p>
-                <time className="news-slider__date" dateTime={item.dateISO}>
-                  {item.date}
-                </time>
-              </Link>
-            </div>
-          ))}
+      <div className="news-slider__track">
+        <div className="news-slider__viewport" ref={viewportRef}>
+          <div className="news-slider__container">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="news-slider__slide"
+                role="group"
+                aria-roledescription="slide"
+              >
+                <Link href={item.url} className="news-slider__card" draggable={false}>
+                  <h3 className="news-slider__title">{item.title}</h3>
+                  <p className="news-slider__excerpt">{item.description}</p>
+                  <time className="news-slider__date" dateTime={item.dateISO}>
+                    {item.date}
+                  </time>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
+
+        <button
+          type="button"
+          className="news-slider__arrow news-slider__arrow--prev"
+          onClick={scrollPrev}
+          disabled={!canPrev}
+        >
+          <ChevronLeft size={28} strokeWidth={1.25} />
+          <span className="news-slider__sr-only">Previous slide</span>
+        </button>
+        <button
+          type="button"
+          className="news-slider__arrow news-slider__arrow--next"
+          onClick={scrollNext}
+          disabled={!canNext}
+        >
+          <ChevronRight size={28} strokeWidth={1.25} />
+          <span className="news-slider__sr-only">Next slide</span>
+        </button>
       </div>
 
-      <button
-        type="button"
-        className="news-slider__arrow news-slider__arrow--prev"
-        onClick={scrollPrev}
-        disabled={!canPrev}
-      >
-        <ArrowLeft size={16} />
-        <span className="news-slider__sr-only">Previous slide</span>
-      </button>
-      <button
-        type="button"
-        className="news-slider__arrow news-slider__arrow--next"
-        onClick={scrollNext}
-        disabled={!canNext}
-      >
-        <ArrowRight size={16} />
-        <span className="news-slider__sr-only">Next slide</span>
-      </button>
+      {snaps.length > 1 && (
+        <div className="news-slider__dots">
+          {snaps.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className="news-slider__dot"
+              aria-label={`Новость ${i + 1}`}
+              aria-current={i === selected}
+              onClick={() => api?.scrollTo(i)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

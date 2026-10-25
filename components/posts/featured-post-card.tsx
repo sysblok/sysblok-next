@@ -11,14 +11,22 @@ import './post-card.css'
 export function FeaturedPostCard({ post }: { post: CardPost }) {
   const media = post.featuredMedia
   const href = postHref(post)
-  const author = post.author
+  const authors =
+    post.coauthors.length > 0
+      ? post.coauthors
+      : post.author
+        ? [{ id: post.author.id, name: post.author.name, slug: post.author.slug }]
+        : []
 
   return (
-    <div className="post-card big group not-prose flex flex-col overflow-hidden rounded-lg md:flex-row md:items-center">
-      <div className="flex flex-col justify-center gap-4 p-8 md:w-[45%] text-left">
-        <div className="entry-meta flex justify-start gap-2">
+    <div className="post-card big group not-prose flex flex-col overflow-hidden md:flex-row md:items-center">
+      {/* Текстовая часть по центру, как .big-latest-textual-side на WP */}
+      <div className="flex flex-col justify-center gap-4 p-8 md:w-[45%] text-center">
+        <div className="entry-meta">
           <CategoryLinks categories={post.categories} />
-          <time dateTime={post.date.toISOString()}>{formatPostDate(post.date)}</time>
+          <time className="entry-date" dateTime={post.date.toISOString()}>
+            {formatPostDate(post.date)}
+          </time>
         </div>
 
         <Link href={href}>
@@ -30,18 +38,24 @@ export function FeaturedPostCard({ post }: { post: CardPost }) {
 
         {post.excerpt && <p className="entry-excerpt__sticky">{truncateWords(post.excerpt, 63)}</p>}
 
-        {author && (
+        {/* Все соавторы через запятую (coauthors_posts_links на WP) */}
+        {authors.length > 0 && (
           <div className="more-link-holder">
             <div className="more-link">
-              <div className="more-link-span author-link-span">
-                <Link
-                  href={`/author/${author.slug}`}
-                  title={`Записи автора ${author.name}`}
-                  rel="author"
-                  className="author url fn"
-                >
-                  {author.name}
-                </Link>
+              <div className="more-link-span">
+                {authors.map((a, i) => (
+                  <span key={a.id ?? a.slug}>
+                    {i > 0 && ', '}
+                    <Link
+                      href={`/author/${a.slug}`}
+                      title={`Записи автора ${a.name}`}
+                      rel="author"
+                      className="author url fn"
+                    >
+                      {a.name}
+                    </Link>
+                  </span>
+                ))}
               </div>
             </div>
           </div>

@@ -21,51 +21,89 @@
   margin: 0 0 16px;
 }
 
-/* Обёртка: по бокам место под стрелки */
+/* Слайдер на всю ширину контента, как .news на WP */
 .news-slider__root {
   position: relative;
-  padding: 0 56px;
+}
+
+/* Дорожка со стрелками: стрелки центрируются по карточкам, а не по блоку с точками */
+.news-slider__track {
+  position: relative;
 }
 
 .news-slider__viewport {
   overflow: hidden;
 }
 
-/* Отрицательный margin компенсирует padding-left у слайдов (это gap) */
+/* Отрицательный margin компенсирует padding-left у слайдов (это gap).
+   Количество карточек и отступы — как у .news-card на WP */
 .news-slider__container {
+  --news-gap: 16px;
+
   display: flex;
-  margin-left: -20px;
+  margin-left: calc(-1 * var(--news-gap));
 }
 
 .news-slider__slide {
   display: flex;
   flex: 0 0 100%;
   min-width: 0;
-  padding-left: 20px;
+  padding-left: var(--news-gap);
 }
 
-@media (min-width: 640px) {
+@media (min-width: 481px) {
   .news-slider__slide {
     flex-basis: 50%;
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 769px) {
+  .news-slider__container {
+    --news-gap: 24px;
+  }
+
   .news-slider__slide {
     flex-basis: 33.3333%;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1025px) {
+  .news-slider__slide {
+    flex-basis: 25%;
+  }
+}
+
+@media (min-width: 1281px) {
+  .news-slider__container {
+    --news-gap: 30px;
+  }
+
   .news-slider__slide {
     flex-basis: 20%;
   }
 }
 
-@media (max-width: 639px) {
-  .news-slider__root {
-    padding: 0 40px;
-  }
+/* Точки вместо полосы прокрутки WP: те же цвета (thumb #8a8a8a, track #f5f5f5) */
+.news-slider__dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.news-slider__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 92px;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.news-slider__dot[aria-current='true'] {
+  background: #8a8a8a;
 }
 
 /* Карточка */
@@ -124,19 +162,26 @@ a.news-slider__card {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   border: 0;
-  border-radius: 0;
+  border-radius: 50%;
   background: transparent;
   color: inherit;
   cursor: pointer;
   transform: translateY(-50%);
+  transition: background-color 0.2s ease;
 }
 
-.news-slider__arrow:hover {
-  background: #f5f5f5;
+/* #f5f5f5 почти не отличался от фона страницы, поэтому подложка темнее */
+.news-slider__arrow:not(:disabled):hover,
+.news-slider__arrow:focus-visible {
+  background: #e8e8e8;
+}
+
+.news-slider__arrow:focus-visible {
+  outline: none;
 }
 
 .news-slider__arrow:disabled {
@@ -145,11 +190,18 @@ a.news-slider__card {
 }
 
 .news-slider__arrow--prev {
-  left: 4px;
+  left: -42px;
 }
 
 .news-slider__arrow--next {
-  right: 4px;
+  right: -42px;
+}
+
+/* Стрелки стоят в боковых полях контейнера (44px); на узких экранах поле 22px — только свайп и точки */
+@media (max-width: 600px) {
+  .news-slider__arrow {
+    display: none;
+  }
 }
 
 .news-slider__sr-only {

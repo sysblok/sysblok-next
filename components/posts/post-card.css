@@ -35,9 +35,20 @@
   text-align: left;
 }
 
-.post-card.big .more-link-holder {
-  padding-top: 2.5625rem;
+.post-card.big .entry-meta {
+  padding-top: 0;
   text-align: center;
+}
+
+.post-card.big .more-link-holder {
+  padding-top: 41px;
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  .post-card.big .more-link-holder {
+    padding-top: 22px;
+  }
 }
 
 /* Картинка: светлеет при наведении */
@@ -61,18 +72,18 @@
 }
 
 .entry-cats a,
-.author-link-span a {
+.more-link-span a {
   color: #3e859b;
 }
 
-.author-link-span a {
+.more-link-span a {
   transition: all 0.1s linear;
   text-decoration: none;
 }
 
 /* Сохраняем hover из globals.css (a:hover), который раньше перебивал цвет выше */
 .entry-cats a:hover,
-.author-link-span a:hover {
+.more-link-span a:hover {
   color: var(--color-text);
 }
 
@@ -104,17 +115,6 @@
   text-align: center;
 }
 
-.blog-entry__title {
-  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #141414;
-  position: relative;
-  line-height: 1.2;
-  font-weight: 500;
-  letter-spacing: -0.009em;
-  font-size: 20px;
-  margin: 0;
-}
-
 /* Подпись автора у закреплённого поста */
 .more-link-span {
   display: inline-block;
@@ -135,35 +135,151 @@
   color: #696969;
 }
 
-/* Соавторы внизу карточки (padding задаёт p-[10px]) */
-.entry-authors {
-  display: inline-block;
-  font-family: arial, Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.14em;
-  font-size: 14px;
-  color: #3e859b;
+/* Обычная карточка (WP components/article + style.css .post-card.small) */
+.post-card.small {
+  height: 100%;
+  padding-bottom: 15px;
+  contain: content;
 }
 
-/* Блок автора в карточке блога (раскладку задают flex gap-3) */
-.author-block {
+.entry-thumb-link {
+  display: block;
+  position: relative;
+}
+
+.post-card:not(.big) .entry-thumb-link img {
+  display: block;
   width: 100%;
+  height: auto;
+  margin-bottom: -25px;
+}
+
+.post-card .entry-thumb-overlay {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background-color: #fff;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.post-card:not(.big) .entry-thumb-overlay {
+  bottom: -25px;
+}
+
+.post-card .entry-thumb-overlay:hover {
+  opacity: 0.14;
+}
+
+.post-card.small .entry-meta {
+  padding: 42px 24px 0 15px;
+}
+
+.post-card.small .entry-title {
+  margin: 18px 0 4px;
+  padding: 0 24px 0 15px;
+  font-size: 20px;
+  text-align: left;
+}
+
+.post-card.small .entry-excerpt {
+  padding: 0 24px 0 15px;
+}
+
+.post-card .entry-excerpt p {
   margin: 0;
+}
+
+.post-card.small .more-link-holder {
+  padding-top: 18px;
+  text-align: left;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .post-card.small .entry-title {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 440px) {
+  .post-card.small .entry-title,
+  .post-card.small .entry-excerpt {
+    padding-right: 16px;
+  }
+}
+
+/* Карточка блога (WP components/blog-preview-card, author-block с is_blog) */
+.blog.post-card {
+  padding-bottom: 36px;
+}
+
+.blog.post-card.small .blog__entry-meta {
+  padding-top: 15px;
+}
+
+.blog .author-block {
+  display: grid;
+  grid-template-areas: 'photo text-content' 'photo text-content' '. text-content';
+  grid-template-columns: 74px auto;
+  column-gap: 30px;
+  width: 100%;
+  height: 140px;
+  margin: 0;
+  padding: 15px 24px 0 15px;
+  overflow: hidden;
   font-family: 'Georgia';
   font-size: 20px;
-  height: 140px;
-  align-items: center;
-  overflow: hidden;
+  text-decoration: none;
 }
 
-.author-block__name {
+.blog .author-block__photo-wrapper {
+  grid-area: photo;
+  max-width: 150px;
+  margin-bottom: 20px;
+}
+
+.blog .author-block__photo {
+  width: 74px;
+  height: 74px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.blog .author-block__text-content {
+  grid-area: text-content;
+  font-size: 18px;
+}
+
+.blog .author-block__name {
+  margin: 0 0 0.2em;
   font-size: 20px;
-  margin: 0;
+  line-height: 1.2;
+  word-break: normal;
 }
 
-.author-block__description {
+.blog .author-block__description {
+  margin: 0.2em 0 0.5em;
   font-size: 15px;
-  font-family: Georgia, serif;
   color: grey;
-  margin: 0;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .blog .author-block__name {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog .author-block {
+    grid-template-areas: 'photo' 'text-content';
+    grid-template-columns: 1fr;
+    height: 200px;
+    font-size: 18px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .blog .author-block__text-content {
+    font-size: 16px;
+  }
 }
