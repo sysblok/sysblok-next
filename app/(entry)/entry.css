@@ -257,3 +257,53 @@
 .entry-tags a:first-of-type {
   margin-left: 6px;
 }
+
+/* Telegram button (WP components/telegram-button/telegram-button.css) — только на мобильных */
+.telegram-button {
+  --telegram-background-color: #40a7e3;
+
+  display: flex;
+  justify-content: center;
+  text-decoration: none;
+  width: 100%;
+  margin-top: 10px;
+  padding: 11px 0;
+  max-height: 44px;
+  background-color: var(--telegram-background-color);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  box-sizing: border-box;
+  text-align: center;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+  height: 44px;
+  contain: strict;
+}
+
+.telegram-button:hover {
+  color: white;
+}
+
+.telegram-button::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 20px;
+  background-image: url('/images/telegram-logo.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-right: 16px;
+}
+
+@media (min-width: 992px) {
+  .telegram-button {
+    display: none;
+  }
+}
+
+@media (max-width: 300px) {
+  .telegram-button span {
+    display: none;
+  }
+}

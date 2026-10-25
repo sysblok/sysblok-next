@@ -7,6 +7,7 @@ import { siteConfig } from '@/site.config'
 import { EntryCreators } from './creators'
 import { EntryImage } from './entry-image'
 import { Sharing } from './sharing'
+import { TelegramButton } from './telegram-button'
 
 interface PostEntryProps {
   post: Post
@@ -17,6 +18,7 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
   return (
     <section className="section-main-content">
       <div className="container-fluid container-fluid-with-max-width">
+        <TelegramButton utmContent="tg_button_single_post" />
         <div className="entry-full">
           {/* Header zone — meta, title, lead, image */}
           <div className="entry-header-col upper-elements-col">
