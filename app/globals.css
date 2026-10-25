@@ -59,23 +59,6 @@
   font-display: fallback;
 }
 
-@font-face {
-  font-family: 'x-twitter';
-  src:
-    url('../public/fonts/fontello/x-twitter.woff2') format('woff2'),
-    url('../public/fonts/fontello/x-twitter.woff') format('woff'),
-    url('../public/fonts/fontello/x-twitter.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-.icon-x-twitter:before {
-  font-family: 'x-twitter';
-
-  content: '\f8d8';
-  display: inline-block;
-}
-
 :root {
   --vk-color: #5186bd;
   --telegram-color: #08c;
