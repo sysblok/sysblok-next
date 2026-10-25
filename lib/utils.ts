@@ -19,3 +19,16 @@ export function extractExcerptText(excerpt: string): string {
   const matches = excerpt.match(/<p>([\s\S]*)<\/p>/)
   return matches ? stripHtmlTags(matches[1]).trim() : ''
 }
+
+// 29.09.2026
+export function formatPostDate(date: Date): string {
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
+export function postHref(post: { slug: string; type: string }): string {
+  return post.type === 'page' ? `/pages/${post.slug}` : `/posts/${post.slug}`
+}
+
+export function truncateWords(text: string, count: number): string {
+  return text.split(' ').slice(0, count).join(' ').trim()
+}

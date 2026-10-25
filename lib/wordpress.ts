@@ -20,6 +20,8 @@ import type {
   FooterArea,
   PostAcf,
   PostAcfGroup,
+  Coauthor,
+  CardAuthor,
 } from './wordpress.d'
 import { extractExcerptText } from './utils'
 import type { NavItem } from './wordpress.d'
@@ -140,28 +142,7 @@ function transformPost(wpPost: WPPost): Post {
   if (!wpPost._embedded) {
     throw Error("Can't transform WPPost without embedded data")
   }
-
-  let categories: Category[] = [],
-    tags: Tag[] = [],
-    authorSlugs: string[] = []
-
-  if (wpPost._embedded['wp:term']) {
-    for (let terms of wpPost._embedded['wp:term']) {
-      if (!terms.length) continue
-      switch (terms[0].taxonomy) {
-        case 'category':
-          categories = terms as Category[]
-          break
-        case 'post_tag':
-          tags = terms as Tag[]
-          break
-        case 'author':
-          authorSlugs = terms.map(({ name }) => name)
-        default:
-          break
-      }
-    }
-  }
+  const { categories, tags, coauthors } = extractTerms(wpPost._embedded['wp:term'])
 
   return {
     id: wpPost.id,
@@ -181,7 +162,9 @@ function transformPost(wpPost: WPPost): Post {
     meta: wpPost.meta,
     author:
       wpPost._embedded['author'][0]?.id !== undefined ? wpPost._embedded['author'][0] : undefined,
-    authorSlugs,
+
+    authorSlugs: coauthors.map((a) => a.slug),
+    coauthors,
     featuredMedia:
       wpPost._embedded['wp:featuredmedia'] &&
       transformMedia(wpPost._embedded['wp:featuredmedia'][0]),
@@ -194,6 +177,8 @@ function transformPage(wpPage: WPPage): Page {
   if (!wpPage._embedded) {
     throw Error("Can't transform WPPage without embedded data")
   }
+
+  const { categories, coauthors } = extractTerms(wpPage._embedded['wp:term'])
 
   return {
     id: wpPage.id,
@@ -210,6 +195,9 @@ function transformPage(wpPage: WPPage): Page {
     menuOrder: wpPage.menu_order,
     template: wpPage.template,
     meta: wpPage.meta,
+    type: 'page',
+    categories,
+    coauthors,
     author:
       wpPage._embedded['author'][0]?.id !== undefined ? wpPage._embedded['author'][0] : undefined,
     featuredMedia:
@@ -266,16 +254,30 @@ export type CardPost =
   | Pick<
       Post,
       | 'id'
+      | 'type'
       | 'date'
       | 'slug'
       | 'title'
       | 'excerpt'
       | 'author'
+      | 'coauthors'
       | 'featuredMedia'
       | 'categories'
       | 'tags'
     >
-  | Pick<Page, 'id' | 'date' | 'slug' | 'title' | 'excerpt' | 'author' | 'featuredMedia'>
+  | Pick<
+      Page,
+      | 'id'
+      | 'type'
+      | 'date'
+      | 'slug'
+      | 'title'
+      | 'excerpt'
+      | 'author'
+      | 'coauthors'
+      | 'featuredMedia'
+      | 'categories'
+    >
 
 // New function for paginated posts
 export async function getPostsPaginated(
@@ -515,8 +517,34 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
     ['authors'],
   )
 
+// Co-Authors Plus хранит соавторов как термы таксономии author со slug `cap-<user slug>`
+// (например, cap-aleksei_bogdanov -> пользователь aleksei_bogdanov).
+const coauthorTermToUserSlug = (termSlug: string) => termSlug.replace(/^cap-/, '')
+
+// Рубрики, метки и соавторы из _embedded['wp:term'] (одинаково для постов и страниц)
+function extractTerms(termGroups: unknown[][] | undefined) {
+  const terms = (termGroups ?? []).flat() as Array<Category | Tag | Coauthor>
+
+  return {
+    categories: terms.filter((t): t is Category => t.taxonomy === 'category'),
+    tags: terms.filter((t): t is Tag => t.taxonomy === 'post_tag'),
+    coauthors: terms
+      .filter((t): t is Coauthor => t.taxonomy === 'author')
+      .map(({ id, name, slug }): CardAuthor => ({ id, name, slug: coauthorTermToUserSlug(slug) })),
+  }
+}
+
 export const getAuthorById = (id: number) =>
   wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`])
+
+export const AUTHOR_PHOTO_PLACEHOLDER = `${baseUrl}/wp-content/themes/mauer-narrator/components/author-photo/assets/avatar-placeholder.png`
+
+export const getAuthorPhotoById = (id: number) =>
+  wordpressFetch<Author>(
+    `/wp-json/wp/v2/users/${id}`,
+    { _fields: ['acf'], acf_format: 'standard' },
+    [`author-${id}`],
+  ).then(({ acf }) => (typeof acf?.photo === 'string' ? acf.photo : undefined))
 
 export const getAuthorBySlug = (slug: string) =>
   wordpressFetch<Author[]>('/wp-json/wp/v2/users', { slug, _fields: authorFields }, [
@@ -661,3 +689,64 @@ export const getPostAcf = (postId: number, groups: PostAcfGroup[]) =>
   wordpressFetch<PostAcf>(`/wp-json/sysblock-api/v1/post-acf/${postId}`, { groups }, [
     `post-acf-${postId}`,
   ])
+
+const pageCardFields: Array<keyof WPPage> = [
+  'id',
+  'date',
+  'modified',
+  'slug',
+  'status',
+  'link',
+  'guid',
+  'title',
+  'excerpt',
+  'author',
+  'featured_media',
+  'parent',
+  'menu_order',
+  'template',
+  'meta',
+  '_links',
+  '_embedded',
+]
+
+export async function getPagesByCategory(
+  categoryId: number,
+  perPage: number = 3,
+): Promise<CardPost[]> {
+  const { data } = await wordpressFetchWithPagination<WPPage[]>(
+    '/wp-json/wp/v2/pages',
+    {
+      _fields: pageCardFields,
+      _embed: true,
+      categories: categoryId,
+      per_page: perPage,
+      orderby: 'date',
+      order: 'desc',
+    },
+    ['pages', `posts-category-${categoryId}`],
+  )
+
+  return data.map(transformPage)
+}
+
+// Термы соавторов содержат вместо имени логин (aleksei_bogdanov). Подставляем
+// отображаемые имена пользователей одним запросом на весь список.
+// Вызывать только там, где имена соавторов показываются (PostCard).
+export async function resolveCoauthorNames<T extends { coauthors: CardAuthor[] }>(
+  items: T[],
+): Promise<T[]> {
+  if (!items.some((i) => i.coauthors.length)) return items
+
+  const coauthorsSlugs = [...new Set(items.flatMap((i) => i.coauthors.map((a) => a.slug)))].sort()
+  const users = await getAllAuthors({ slug: coauthorsSlugs })
+  const nameBySlug = new Map(users.map((u) => [u.slug, u.name]))
+
+  return items.map((item) => ({
+    ...item,
+    coauthors: item.coauthors.map((a) => ({
+      ...a,
+      name: nameBySlug.get(a.slug) ?? a.name,
+    })),
+  }))
+}

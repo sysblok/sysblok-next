@@ -87,6 +87,33 @@
   --color-text-muted: #8a8a8a;
 }
 
+/* Базовые ссылки и заголовки (до Tailwind base, как и раньше) */
+a {
+  color: #3e859b;
+  transition: all 0.1s linear;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+  position: relative;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.009em;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -198,7 +225,10 @@
 
 /* Container — matches WP production (style.css line ~316) */
 .container-fluid-with-max-width {
-  margin: 0 auto;
+  width: 100%;
+
+  margin-right: auto;
+  margin-left: auto;
   max-width: 1388px;
   padding: 0 44px;
 }
@@ -207,6 +237,11 @@
   .container-fluid-with-max-width {
     padding: 0 22px;
   }
+}
+
+/* Линия только у шапки, по ширине контента (1300px) */
+.section-menu-stripe .container-fluid-with-max-width {
+  background: linear-gradient(#e8e8e8, #e8e8e8) content-box no-repeat bottom / 100% 1px;
 }
 
 /* Layout */
@@ -407,9 +442,8 @@
 /* Social & Search */
 .header-social-links {
   display: flex;
-  justify-content: space-between;
-  flex-grow: 1;
-  padding-right: 25px;
+  align-items: center;
+  gap: 60px;
 }
 
 .header-search-link {
@@ -849,6 +883,27 @@ pre.wp-block-verse {
   .side-menu-footer {
     padding: 12px 20px 20px;
   }
+
+  .side-menu-socials {
+    gap: 16px;
+  }
+
+  .menu-toggle-label {
+    font-size: 12px;
+  }
+}
+
+/* =========================================
+   Исправление для правой части хедера
+   ========================================= */
+
+.menu-stripe-right {
+  padding-right: 0;
+}
+
+/* Убираем отступ у поиска */
+.header-search-link {
+  margin-left: 0;
 }
 
 /* =========================================
