@@ -8,6 +8,7 @@ import {
   resolveCoauthorNames,
 } from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
+import { FeaturedPostCard } from '@/components/posts/featured-post-card'
 import { News } from '@/components/carousel/news'
 import { Blogs } from '@/components/sections/blogs'
 
@@ -33,7 +34,7 @@ export default async function Home() {
       {/* Закрепленный пост */}
       {stickyPost && (
         <div className="mb-8">
-          <PostCard post={stickyPost} featured />
+          <FeaturedPostCard post={stickyPost} />
         </div>
       )}
       <CategorySection slug="portaly" title="Проекты" moreLabel="Больше проектов" />
