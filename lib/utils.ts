@@ -34,3 +34,22 @@ export function postHref(post: { link: string }): string {
 export function truncateWords(text: string, count: number): string {
   return text.split(' ').slice(0, count).join(' ').trim()
 }
+
+const isWordChar = (ch: string | undefined) => !!ch && /[\p{L}\p{N}_]/u.test(ch)
+
+// Порт description_shortener из темы WP: обрезаем до max символов по границе слова,
+// убираем хвостовые « .,:;!?-_» и добавляем trimMarker.
+export function shortenDescription(text: string, max: number, trimMarker = '...'): string {
+  const chars = Array.from(text)
+  if (chars.length <= max) return text
+
+  let end = max
+  while (end > 0 && isWordChar(chars[end - 1]) === isWordChar(chars[end])) end--
+
+  return (
+    chars
+      .slice(0, end || max)
+      .join('')
+      .replace(/[ .,:;!?\-_]+$/, '') + trimMarker
+  )
+}
