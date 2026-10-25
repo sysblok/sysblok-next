@@ -31,7 +31,7 @@ export async function CategorySection({
       <h2 className="text-3xl font-serif mb-6">{title}</h2>
       <div className="grid md:grid-cols-3 gap-6">
         {items.map((item) => (
-          <PostCard key={item.id} post={item} />
+          <PostCard key={item.id} post={item} showCategories={false} />
         ))}
       </div>
       <div className="mt-6 text-right section-more-link">

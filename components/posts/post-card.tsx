@@ -7,9 +7,15 @@ import { CategoryLinks } from './category-links'
 
 import './post-card.css'
 
+interface PostCardProps {
+  post: CardPost
+  /** Показывать рубрики над заголовком (в секциях «Проекты», «Дата-истории» на WP их нет) */
+  showCategories?: boolean
+}
+
 // Карточка поста для сеток и списков. Имена соавторов нужно заранее
 // подставить через resolveCoauthorNames, иначе выведутся логины.
-export function PostCard({ post }: { post: CardPost }) {
+export function PostCard({ post, showCategories = true }: PostCardProps) {
   const media = post.featuredMedia
   const href = postHref(post)
 
@@ -40,7 +46,7 @@ export function PostCard({ post }: { post: CardPost }) {
         )}
 
         <div className="entry-meta flex justify-start gap-2 text-sm p-[10px]">
-          <CategoryLinks categories={post.categories} />
+          {showCategories && <CategoryLinks categories={post.categories} />}
           <time dateTime={post.date.toISOString()}>{formatPostDate(post.date)}</time>
         </div>
 
