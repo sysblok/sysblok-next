@@ -1,5 +1,5 @@
 // components/category-section.tsx
-import { getCategoryBySlug, getPagesByCategory } from '@/lib/wordpress'
+import { getCategoryBySlug, getPagesByCategory, resolveCoauthorNames } from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
 import Link from 'next/link'
 
@@ -22,7 +22,7 @@ export async function CategorySection({
   // не применится и вместо нужных материалов придут любые страницы
   if (!category) return null
 
-  const items = await getPagesByCategory(category.id, limit)
+  const items = await resolveCoauthorNames(await getPagesByCategory(category.id, limit))
 
   if (items.length === 0) return null
 

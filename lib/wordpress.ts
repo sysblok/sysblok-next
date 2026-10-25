@@ -343,7 +343,7 @@ export async function getPostsPaginated(
 
   return {
     headers: response.headers,
-    data: await withRealAuthorNames(response.data.map(transformPost)),
+    data: response.data.map(transformPost),
   }
 }
 
@@ -513,7 +513,7 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
       _fields: authorFields,
       ...queryParams,
     },
-    queryParams?.slug ? ['authors', `authors-${cacheTagSegment(queryParams.slug)}`] : ['authors'],
+    ['authors'],
   )
 
 // Co-Authors Plus хранит соавторов как термы таксономии author со slug `cap-<user slug>`
@@ -735,10 +735,13 @@ export async function getPagesByCategory(
     ['pages', `posts-category-${categoryId}`],
   )
 
-  return withRealAuthorNames(data.map(transformPage))
+  return data.map(transformPage)
 }
 
-async function withRealAuthorNames<T extends { coauthors: CardAuthor[] }>(
+// Термы соавторов содержат вместо имени логин (aleksei_bogdanov). Подставляем
+// отображаемые имена пользователей одним запросом на весь список.
+// Вызывать только там, где имена соавторов показываются (PostCard).
+export async function resolveCoauthorNames<T extends { coauthors: CardAuthor[] }>(
   items: T[],
 ): Promise<T[]> {
   if (!items.some((i) => i.coauthors.length)) return items

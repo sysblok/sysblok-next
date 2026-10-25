@@ -1,7 +1,12 @@
 // Craft Imports
 import { Container } from '@/components/craft'
 
-import { getCategoryBySlug, getPostsPaginated, getStickyPost } from '@/lib/wordpress'
+import {
+  getCategoryBySlug,
+  getPostsPaginated,
+  getStickyPost,
+  resolveCoauthorNames,
+} from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
 import { News } from '@/components/carousel/news'
 import { Blogs } from '@/components/sections/blogs'
@@ -17,10 +22,11 @@ export default async function Home() {
   // Получаем закрепленный пост
   const stickyPost = await getStickyPost()
 
-  const { data: posts } = await getPostsPaginated(1, 30, {
+  const { data } = await getPostsPaginated(1, 30, {
     categories_exclude: newsCategory.id,
     exclude: stickyPost ? [stickyPost.id] : undefined,
   })
+  const posts = await resolveCoauthorNames(data)
 
   return (
     <Container>
