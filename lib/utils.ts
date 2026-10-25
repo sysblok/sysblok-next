@@ -25,9 +25,8 @@ export function formatPostDate(date: Date): string {
   return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
-// У постов есть рубрики, у страниц нет
-export function postHref(post: { slug: string; categories?: unknown }): string {
-  return 'categories' in post ? `/posts/${post.slug}` : `/pages/${post.slug}`
+export function postHref(post: { slug: string; type: string }): string {
+  return post.type === 'page' ? `/pages/${post.slug}` : `/posts/${post.slug}`
 }
 
 export function truncateWords(text: string, count: number): string {

@@ -296,6 +296,8 @@ export interface Post extends PostMetaEntity {
 }
 
 export interface Page extends PostMetaEntity {
+  type: string // 'page'
+  categories: Category[]
   parent: number
   menuOrder: number
   template: string

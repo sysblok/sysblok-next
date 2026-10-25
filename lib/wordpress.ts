@@ -140,22 +140,7 @@ function transformPost(wpPost: WPPost): Post {
   if (!wpPost._embedded) {
     throw Error("Can't transform WPPost without embedded data")
   }
-  let categories: Category[] = [],
-    tags: Tag[] = []
-
-  for (const terms of wpPost._embedded['wp:term'] ?? []) {
-    if (!terms.length) continue
-    switch (terms[0].taxonomy) {
-      case 'category':
-        categories = terms as Category[]
-        break
-      case 'post_tag':
-        tags = terms as Tag[]
-        break
-    }
-  }
-
-  const coauthors = extractCoauthors(wpPost._embedded['wp:term'] as unknown[][])
+  const { categories, tags, coauthors } = extractTerms(wpPost._embedded['wp:term'])
 
   return {
     id: wpPost.id,
@@ -191,6 +176,8 @@ function transformPage(wpPage: WPPage): Page {
     throw Error("Can't transform WPPage without embedded data")
   }
 
+  const { categories, coauthors } = extractTerms(wpPage._embedded['wp:term'])
+
   return {
     id: wpPage.id,
     date: new Date(wpPage.date),
@@ -206,7 +193,9 @@ function transformPage(wpPage: WPPage): Page {
     menuOrder: wpPage.menu_order,
     template: wpPage.template,
     meta: wpPage.meta,
-    coauthors: extractCoauthors(wpPage._embedded['wp:term']),
+    type: 'page',
+    categories,
+    coauthors,
     author:
       wpPage._embedded['author'][0]?.id !== undefined ? wpPage._embedded['author'][0] : undefined,
     featuredMedia:
@@ -263,6 +252,7 @@ export type CardPost =
   | Pick<
       Post,
       | 'id'
+      | 'type'
       | 'date'
       | 'slug'
       | 'title'
@@ -275,7 +265,16 @@ export type CardPost =
     >
   | Pick<
       Page,
-      'id' | 'date' | 'slug' | 'title' | 'excerpt' | 'author' | 'coauthors' | 'featuredMedia'
+      | 'id'
+      | 'type'
+      | 'date'
+      | 'slug'
+      | 'title'
+      | 'excerpt'
+      | 'author'
+      | 'coauthors'
+      | 'featuredMedia'
+      | 'categories'
     >
 
 // New function for paginated posts
@@ -520,11 +519,17 @@ export const getAllAuthors = (queryParams?: WordPressQuery<Author>) =>
 // (например, cap-aleksei_bogdanov -> пользователь aleksei_bogdanov).
 const coauthorTermToUserSlug = (termSlug: string) => termSlug.replace(/^cap-/, '')
 
-function extractCoauthors(terms: unknown[][] | undefined): CardAuthor[] {
-  return (terms ?? [])
-    .flat()
-    .filter((t): t is Coauthor => (t as Coauthor).taxonomy === 'author')
-    .map(({ id, name, slug }) => ({ id, name, slug: coauthorTermToUserSlug(slug) }))
+// Рубрики, метки и соавторы из _embedded['wp:term'] (одинаково для постов и страниц)
+function extractTerms(termGroups: unknown[][] | undefined) {
+  const terms = (termGroups ?? []).flat() as Array<Category | Tag | Coauthor>
+
+  return {
+    categories: terms.filter((t): t is Category => t.taxonomy === 'category'),
+    tags: terms.filter((t): t is Tag => t.taxonomy === 'post_tag'),
+    coauthors: terms
+      .filter((t): t is Coauthor => t.taxonomy === 'author')
+      .map(({ id, name, slug }): CardAuthor => ({ id, name, slug: coauthorTermToUserSlug(slug) })),
+  }
 }
 
 export const getAuthorById = (id: number) =>

@@ -12,7 +12,6 @@ import './post-card.css'
 export function PostCard({ post }: { post: CardPost }) {
   const media = post.featuredMedia
   const href = postHref(post)
-  const categories = 'categories' in post ? post.categories : undefined
 
   const authors =
     post.coauthors.length > 0
@@ -41,7 +40,7 @@ export function PostCard({ post }: { post: CardPost }) {
         )}
 
         <div className="entry-meta flex justify-start gap-2 text-sm p-[10px]">
-          <CategoryLinks categories={categories} />
+          <CategoryLinks categories={post.categories} />
           <time dateTime={post.date.toISOString()}>{formatPostDate(post.date)}</time>
         </div>
 
