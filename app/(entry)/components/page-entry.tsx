@@ -1,6 +1,7 @@
 import '../entry.css'
 import type { Page, PostAcf } from '@/lib/wordpress.d'
 import { EntryCreators } from './creators'
+import { EntryContent } from './entry-content'
 import { EntryImage } from './entry-image'
 import { WordPressStyles } from './wordpress-styles'
 
@@ -29,7 +30,7 @@ export default function PageEntry({ page, acf }: PageEntryProps) {
 
           {/* Content zone */}
           <div className="entry-content-col upper-elements-col">
-            <article className="entry-content" dangerouslySetInnerHTML={{ __html: page.content }} />
+            <EntryContent html={page.content} />
 
             <EntryCreators creators={acf.creators} />
           </div>

@@ -337,3 +337,21 @@ body .is-layout-grid {
 :where(.wp-block-columns.is-layout-grid) {
   gap: 2em;
 }
+
+/* Аккордеоны Advanced Gutenberg: закрытые панели скрыты (состояние ставит EntryContent).
+   До гидрации прячем то, что плагин закрыл бы сам: всё при data-collapsed, иначе всё кроме первой. */
+.advgb-accordion-header[aria-expanded='false'] + .advgb-accordion-body,
+.advgb-accordion-wrapper[data-collapsed='true']
+  > .advgb-accordion-item
+  > .advgb-accordion-header:not([aria-expanded])
+  + .advgb-accordion-body,
+.advgb-accordion-wrapper:not([data-collapsed='true']):not([data-expand-all='true'])
+  > .advgb-accordion-item:not(:first-child)
+  > .advgb-accordion-header:not([aria-expanded])
+  + .advgb-accordion-body {
+  display: none;
+}
+
+.advgb-accordion-header {
+  cursor: pointer;
+}

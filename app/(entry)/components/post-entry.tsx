@@ -5,6 +5,7 @@ import type { Post, PostAcf } from '@/lib/wordpress.d'
 import { formatPostDate, postHref } from '@/lib/utils'
 import { siteConfig } from '@/site.config'
 import { EntryCreators } from './creators'
+import { EntryContent } from './entry-content'
 import { EntryImage } from './entry-image'
 import { WordPressStyles } from './wordpress-styles'
 import { Sharing } from './sharing'
@@ -63,7 +64,7 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
 
           {/* Content zone — article body + creators + tags + sharing */}
           <div className="entry-content-col upper-elements-col">
-            <article className="entry-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <EntryContent html={post.content} />
 
             <EntryCreators creators={acf.creators} />
 
