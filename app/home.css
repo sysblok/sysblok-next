@@ -1,0 +1,165 @@
+/* Стили секций главной страницы. Подключается из app/page.tsx. */
+
+/* Ссылка «Больше …» под секциями */
+.section-more-link {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  position: relative;
+  line-height: 1.2;
+  letter-spacing: -0.009em;
+  font-weight: 400;
+  color: #3e859b;
+  font-size: 18px;
+}
+
+/* news */
+
+.news-slider {
+  margin: 48px 0;
+}
+
+.news-slider__heading {
+  margin: 0 0 16px;
+}
+
+/* Обёртка: по бокам место под стрелки */
+.news-slider__root {
+  position: relative;
+  padding: 0 56px;
+}
+
+.news-slider__viewport {
+  overflow: hidden;
+}
+
+/* Отрицательный margin компенсирует padding-left у слайдов (это gap) */
+.news-slider__container {
+  display: flex;
+  margin-left: -20px;
+}
+
+.news-slider__slide {
+  display: flex;
+  flex: 0 0 100%;
+  min-width: 0;
+  padding-left: 20px;
+}
+
+@media (min-width: 640px) {
+  .news-slider__slide {
+    flex-basis: 50%;
+  }
+}
+
+@media (min-width: 900px) {
+  .news-slider__slide {
+    flex-basis: 33.3333%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .news-slider__slide {
+    flex-basis: 20%;
+  }
+}
+
+@media (max-width: 639px) {
+  .news-slider__root {
+    padding: 0 40px;
+  }
+}
+
+/* Карточка */
+.news-slider__card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px;
+  background: #f5f5f5;
+}
+
+a.news-slider__card {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.news-slider__title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #111;
+}
+
+.news-slider__excerpt {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.news-slider__title,
+.news-slider__excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  hyphens: auto;
+}
+
+.news-slider__date {
+  margin-top: auto;
+  padding-top: 12px;
+  font-size: 12px;
+  color: #888;
+}
+
+/* Стрелки */
+.news-slider__arrow {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.news-slider__arrow:hover {
+  background: #f5f5f5;
+}
+
+.news-slider__arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.news-slider__arrow--prev {
+  left: 4px;
+}
+
+.news-slider__arrow--next {
+  right: 4px;
+}
+
+.news-slider__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

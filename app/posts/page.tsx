@@ -1,4 +1,10 @@
-import { getPostsPaginated, getAllAuthors, getAllTags, getAllCategories } from '@/lib/wordpress'
+import {
+  getPostsPaginated,
+  getAllAuthors,
+  getAllTags,
+  getAllCategories,
+  resolveCoauthorNames,
+} from '@/lib/wordpress'
 
 import {
   Pagination,
@@ -55,7 +61,8 @@ export default async function Page({
     getAllCategories({ search }),
   ])
 
-  const { data: posts, headers } = postsResponse
+  const { headers } = postsResponse
+  const posts = await resolveCoauthorNames(postsResponse.data)
   const { total, totalPages } = headers
 
   // Create pagination URL helper

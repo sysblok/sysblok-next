@@ -1,0 +1,169 @@
+/* Стили карточек постов: PostCard, FeaturedPostCard, BlogPostCard.
+   Файл подключается из компонентов, поэтому идёт после Tailwind-утилит. */
+
+.post-card {
+  background-color: #f5f5f5;
+}
+
+.post-card.big {
+  padding-bottom: 0;
+  margin-top: 1.25rem;
+}
+
+.post-card .entry-title {
+  margin: 1.25rem 0 0.6875rem;
+}
+
+.post-card.big .entry-title {
+  font-size: 1.875rem; /* 30px */
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  background-color: #f5f5f5;
+}
+
+.post-card.small .entry-excerpt,
+.post-card.big .entry-excerpt {
+  font-size: 0.9375rem; /* 15px */
+  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.post-card .entry-excerpt {
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  color: #696969;
+  text-align: left;
+}
+
+.post-card.big .more-link-holder {
+  padding-top: 2.5625rem;
+  text-align: center;
+}
+
+/* Картинка: светлеет при наведении */
+.post-card-img img {
+  transition: opacity 0.3s ease-out;
+}
+
+.post-card-img:hover img {
+  opacity: 0.8;
+}
+
+/* Мета: рубрики и дата */
+.entry-meta,
+.entry-meta a {
+  font-family: arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  text-align: left;
+}
+
+.entry-cats a,
+.author-link-span a {
+  color: #3e859b;
+}
+
+.author-link-span a {
+  transition: all 0.1s linear;
+  text-decoration: none;
+}
+
+/* Сохраняем hover из globals.css (a:hover), который раньше перебивал цвет выше */
+.entry-cats a:hover,
+.author-link-span a:hover {
+  color: var(--color-text);
+}
+
+.entry-cats:after {
+  display: inline-block;
+  position: relative;
+  bottom: 0.3rem;
+  margin: 0 0.6rem 0 1rem;
+  content: '\A';
+  height: 1px;
+  width: 2.5rem;
+  background-color: #8b8b8b;
+}
+
+.entry-date {
+  font-family: arial, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #8a8a8a;
+}
+
+/* Заголовки */
+.entry-title {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+  position: relative;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.009em;
+  text-align: center;
+}
+
+.blog-entry__title {
+  font-family: Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #141414;
+  position: relative;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.009em;
+  font-size: 20px;
+  margin: 0;
+}
+
+/* Подпись автора у закреплённого поста */
+.more-link-span {
+  display: inline-block;
+  font-family: arial, Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  padding-right: 13px;
+  font-size: 0.875rem; /* 14px */
+}
+
+.entry-excerpt__sticky {
+  text-align: center;
+  font-size: 15px;
+  font-family: Georgia, 'Futura', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  font-weight: 300;
+  color: #696969;
+}
+
+/* Соавторы внизу карточки (padding задаёт p-[10px]) */
+.entry-authors {
+  display: inline-block;
+  font-family: arial, Georgia, Futura, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  font-size: 14px;
+  color: #3e859b;
+}
+
+/* Блок автора в карточке блога (раскладку задают flex gap-3) */
+.author-block {
+  width: 100%;
+  margin: 0;
+  font-family: 'Georgia';
+  font-size: 20px;
+  height: 140px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.author-block__name {
+  font-size: 20px;
+  margin: 0;
+}
+
+.author-block__description {
+  font-size: 15px;
+  font-family: Georgia, serif;
+  color: grey;
+  margin: 0;
+}
