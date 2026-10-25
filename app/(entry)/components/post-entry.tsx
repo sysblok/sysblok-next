@@ -2,7 +2,7 @@ import '../entry.css'
 import React from 'react'
 import Link from 'next/link'
 import type { Post, PostAcf } from '@/lib/wordpress.d'
-import { postHref } from '@/lib/utils'
+import { formatPostDate, postHref } from '@/lib/utils'
 import { siteConfig } from '@/site.config'
 import { EntryCreators } from './creators'
 import { EntryImage } from './entry-image'
@@ -14,12 +14,6 @@ interface PostEntryProps {
 }
 
 export default function PostEntry({ post, acf }: PostEntryProps) {
-  const date = post.date.toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-
   return (
     <section className="section-main-content">
       <div className="container-fluid container-fluid-with-max-width">
@@ -37,7 +31,9 @@ export default function PostEntry({ post, acf }: PostEntryProps) {
                       </span>
                     ))}
                   </span>
-                  <time className="entry-date">{date}</time>
+                  <time className="entry-date" dateTime={post.date.toISOString()}>
+                    {formatPostDate(post.date)}
+                  </time>
                 </div>
 
                 <h1 className="entry-title" dangerouslySetInnerHTML={{ __html: post.title }} />
