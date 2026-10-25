@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getCurrentUser, buildLoginUrl } from '@/lib/auth'
-
-const loginSlug = process.env.LOGIN_SLUG || 'login'
-const wpAdminUrl = `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin/`
+import { LOGIN_SLUG, WP_ADMIN_URL } from '@/lib/login-config'
 
 /**
- * GET /login?return_to=/some/path&error=...
+ * GET /login?error=...
  *
  * Route Handler for login. No page is rendered.
  * - If ?error= present: redirects to /login/error for display
@@ -13,13 +11,11 @@ const wpAdminUrl = `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin/`
  * - Otherwise: sets CSRF state cookie and redirects to WP login page
  */
 export async function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl
-  const returnTo = searchParams.get('return_to') || undefined
-  const error = searchParams.get('error')
+  const error = request.nextUrl.searchParams.get('error')
 
   // If error param present, pass through to error page
   if (error) {
-    const errorUrl = new URL(`/${loginSlug}/error`, request.url)
+    const errorUrl = new URL(`/${LOGIN_SLUG}/error`, request.url)
     errorUrl.searchParams.set('error', error)
     return NextResponse.redirect(errorUrl)
   }
@@ -27,12 +23,12 @@ export async function GET(request: NextRequest) {
   // If already logged in, redirect to WP admin
   const user = await getCurrentUser()
   if (user) {
-    return NextResponse.redirect(wpAdminUrl)
+    return NextResponse.redirect(WP_ADMIN_URL)
   }
 
   // Generate CSRF state and redirect to WP login
   const state = crypto.randomUUID()
-  const loginUrl = buildLoginUrl(state, returnTo)
+  const loginUrl = buildLoginUrl(state)
 
   const response = NextResponse.redirect(loginUrl)
   response.cookies.set('auth_state', state, {

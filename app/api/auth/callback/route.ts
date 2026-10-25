@@ -1,26 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { getSession, wordpressAuthFetch } from '@/lib/auth'
+import { LOGIN_SLUG, WP_ADMIN_URL } from '@/lib/login-config'
 
-const loginSlug = process.env.LOGIN_SLUG || 'login'
+function errorRedirect(error: string): NextResponse {
+  // NEXT_PUBLIC_URL, not request.url: behind a reverse proxy the latter may be the internal host
+  const response = NextResponse.redirect(
+    new URL(`/${LOGIN_SLUG}/error?error=${error}`, process.env.NEXT_PUBLIC_URL),
+  )
+  response.cookies.delete('auth_state')
+  return response
+}
 
 /**
- * GET /api/auth/callback?code=...&state=...&return_to=...
+ * GET /api/auth/callback?code=...&state=...
  *
  * Called by WordPress after successful login.
  * Exchanges the one-time auth code for a session token,
- * then creates an encrypted session cookie.
+ * creates an encrypted session cookie and redirects to WP admin.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
   const code = searchParams.get('code')
   const state = searchParams.get('state')
-  // Default redirect: WP admin (editors' natural starting point)
-  const wpAdminUrl = `${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-admin/`
-  const returnTo = searchParams.get('return_to') || wpAdminUrl
 
   if (!code) {
-    return NextResponse.redirect(new URL(`/${loginSlug}/error?error=missing_code`, request.url))
+    return errorRedirect('missing_code')
   }
 
   // CSRF: verify state parameter matches the cookie we set before login
@@ -28,7 +33,7 @@ export async function GET(request: NextRequest) {
   const storedState = cookieStore.get('auth_state')?.value
 
   if (!state || !storedState || state !== storedState) {
-    return NextResponse.redirect(new URL(`/${loginSlug}/error?error=invalid_state`, request.url))
+    return errorRedirect('invalid_state')
   }
 
   try {
@@ -38,7 +43,7 @@ export async function GET(request: NextRequest) {
     if (!verifyResponse.ok) {
       const error = await verifyResponse.json().catch(() => ({}))
       console.error('Auth verify failed:', verifyResponse.status, error)
-      return NextResponse.redirect(new URL(`/${loginSlug}/error?error=auth_failed`, request.url))
+      return errorRedirect('auth_failed')
     }
 
     const data = await verifyResponse.json()
@@ -55,17 +60,12 @@ export async function GET(request: NextRequest) {
     session.expiresAt = Date.now() + data.expires_in * 1000
     await session.save()
 
-    // Clean up the state cookie
-    // returnTo may be an absolute URL (WP admin) or relative path
-    const redirectUrl = returnTo.startsWith('http')
-      ? returnTo
-      : new URL(returnTo, request.url).toString()
-    const response = NextResponse.redirect(redirectUrl)
+    const response = NextResponse.redirect(WP_ADMIN_URL)
     response.cookies.delete('auth_state')
 
     return response
   } catch (error) {
     console.error('Auth callback error:', error)
-    return NextResponse.redirect(new URL(`/${loginSlug}/error?error=server_error`, request.url))
+    return errorRedirect('server_error')
   }
 }

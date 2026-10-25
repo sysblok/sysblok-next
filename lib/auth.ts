@@ -9,10 +9,7 @@ import { cookies } from 'next/headers'
 // NEXT_PUBLIC_WORDPRESS_URL is already checked in wordpress.ts
 // ---------------------------------------------------------------------------
 
-const wpLoginSlug = process.env.WORDPRESS_LOGIN_SLUG
-if (!wpLoginSlug) {
-  throw new Error('WORDPRESS_LOGIN_SLUG environment variable is not defined')
-}
+const wpLoginSlug = process.env.WORDPRESS_LOGIN_SLUG || 'wp-login.php'
 
 const publicUrl = process.env.NEXT_PUBLIC_URL
 if (!publicUrl) {
@@ -79,6 +76,9 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   if (!session.user || !session.token) {
     return null
   }
+  if (!session.expiresAt || session.expiresAt < Date.now()) {
+    return null
+  }
   return session.user
 }
 
@@ -89,12 +89,9 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 /**
  * Build the WordPress login URL with proper redirect_to and CSRF state.
  */
-export function buildLoginUrl(state: string, returnTo?: string): string {
+export function buildLoginUrl(state: string): string {
   const callbackUrl = new URL('/api/auth/callback', publicUrl)
   callbackUrl.searchParams.set('state', state)
-  if (returnTo) {
-    callbackUrl.searchParams.set('return_to', returnTo)
-  }
 
   const wpBaseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL
   const loginUrl = new URL(`${wpBaseUrl}/${wpLoginSlug}`)

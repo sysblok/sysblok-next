@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sysblok Headless Auth
  * Description: Authentication bridge for headless Next.js frontend. Handles login redirect, session tokens, and REST API authentication.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Sysblok
  * License: GPLv2 or later
  */
@@ -16,6 +16,10 @@ class Sysblok_Headless_Auth {
     const OPTION_REDIRECT_ORIGIN = 'sysblok_auth_redirect_origin';
     const OPTION_SHARED_SECRET   = 'sysblok_auth_shared_secret';
     const OPTION_TOKEN_TTL       = 'sysblok_auth_token_ttl';
+
+    // Failed shared-secret attempts allowed per IP within the window (seconds)
+    const MAX_FAILED_ATTEMPTS    = 10;
+    const FAILED_ATTEMPTS_WINDOW = 300;
 
     // Transient prefixes
     const AUTH_CODE_PREFIX       = 'sysblok_auth_code_';
@@ -35,6 +39,9 @@ class Sysblok_Headless_Auth {
         // Login redirect hook — fires after successful WP login (including 2FA)
         add_filter('login_redirect', array($this, 'handle_login_redirect'), 10, 3);
 
+        // Let wp_safe_redirect() send the user to the Next.js callback
+        add_filter('allowed_redirect_hosts', array($this, 'allow_frontend_host'));
+
         // Security: invalidate tokens on password reset/change/logout
         add_action('after_password_reset', array($this, 'invalidate_user_sessions'), 10, 1);
         add_action('profile_update', array($this, 'on_profile_update'), 10, 2);
@@ -50,7 +57,7 @@ class Sysblok_Headless_Auth {
      * Falls back to NEXT_PUBLIC_URL env var if not set in admin.
      */
     private function get_redirect_origin() {
-        return get_option(self::OPTION_REDIRECT_ORIGIN, getenv('NEXT_PUBLIC_URL') ?: '');
+        return get_option(self::OPTION_REDIRECT_ORIGIN) ?: (getenv('NEXT_PUBLIC_URL') ?: '');
     }
 
     /**
@@ -58,7 +65,7 @@ class Sysblok_Headless_Auth {
      * Falls back to WP_AUTH_SHARED_SECRET env var if not set in admin.
      */
     private function get_shared_secret() {
-        return get_option(self::OPTION_SHARED_SECRET, getenv('WP_AUTH_SHARED_SECRET') ?: '');
+        return get_option(self::OPTION_SHARED_SECRET) ?: (getenv('WP_AUTH_SHARED_SECRET') ?: '');
     }
 
     /**
@@ -68,7 +75,7 @@ class Sysblok_Headless_Auth {
     private function get_token_ttl() {
         $env_ttl = getenv('WP_AUTH_TOKEN_TTL');
         $default = $env_ttl ? intval($env_ttl) : 86400;
-        return intval(get_option(self::OPTION_TOKEN_TTL, $default));
+        return intval(get_option(self::OPTION_TOKEN_TTL)) ?: $default;
     }
 
     // -------------------------------------------------------------------------
@@ -247,23 +254,9 @@ class Sysblok_Headless_Auth {
             return $redirect_to;
         }
 
-        // Check if the redirect_to URL starts with our allowed origin
-        $parsed = wp_parse_url($requested_redirect_to);
-        $allowed_parsed = wp_parse_url($allowed_origin);
-
-        if (
-            !$parsed || !$allowed_parsed ||
-            !isset($parsed['host']) || !isset($allowed_parsed['host']) ||
-            $parsed['host'] !== $allowed_parsed['host']
-        ) {
+        // Only the exact Next.js callback endpoint may receive an auth code
+        if (!$this->is_frontend_callback_url($requested_redirect_to, $allowed_origin)) {
             // Not a headless auth redirect, use default behavior
-            return $redirect_to;
-        }
-
-        // Security: verify scheme matches (both should be https in production)
-        $parsed_scheme = isset($parsed['scheme']) ? $parsed['scheme'] : 'https';
-        $allowed_scheme = isset($allowed_parsed['scheme']) ? $allowed_parsed['scheme'] : 'https';
-        if ($parsed_scheme !== $allowed_scheme) {
             return $redirect_to;
         }
 
@@ -277,6 +270,49 @@ class Sysblok_Headless_Auth {
         $callback_url = add_query_arg('code', $code, $requested_redirect_to);
 
         return $callback_url;
+    }
+
+    /**
+     * True only if $url is exactly {allowed origin}/api/auth/callback
+     * (same scheme, host and port; no userinfo).
+     */
+    private function is_frontend_callback_url($url, $allowed_origin) {
+        $parsed = wp_parse_url($url);
+        $allowed = wp_parse_url($allowed_origin);
+
+        if (
+            !$parsed || !$allowed ||
+            empty($parsed['host']) || empty($allowed['host']) ||
+            isset($parsed['user']) || isset($parsed['pass'])
+        ) {
+            return false;
+        }
+
+        $scheme = isset($parsed['scheme']) ? $parsed['scheme'] : 'https';
+        $allowed_scheme = isset($allowed['scheme']) ? $allowed['scheme'] : 'https';
+        $default_port = function ($s) {
+            return 'http' === $s ? 80 : 443;
+        };
+        $port = isset($parsed['port']) ? $parsed['port'] : $default_port($scheme);
+        $allowed_port = isset($allowed['port']) ? $allowed['port'] : $default_port($allowed_scheme);
+
+        return $scheme === $allowed_scheme
+            && strtolower($parsed['host']) === strtolower($allowed['host'])
+            && $port === $allowed_port
+            && isset($parsed['path'])
+            && '/api/auth/callback' === $parsed['path'];
+    }
+
+    /**
+     * Add the Next.js host to the hosts accepted by wp_safe_redirect().
+     * Auth codes are still only issued for the exact callback URL.
+     */
+    public function allow_frontend_host($hosts) {
+        $allowed = wp_parse_url($this->get_redirect_origin());
+        if ($allowed && !empty($allowed['host'])) {
+            $hosts[] = $allowed['host'];
+        }
+        return $hosts;
     }
 
     // -------------------------------------------------------------------------
@@ -300,27 +336,53 @@ class Sysblok_Headless_Auth {
     }
 
     /**
+     * Validate the shared secret, with a per-IP limit on failed attempts.
+     * Returns a WP_REST_Response to send back on failure, or null if the secret is valid.
+     */
+    private function check_secret($request) {
+        $key = 'sysblok_auth_fail_' . md5(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');
+        $failures = intval(get_transient($key));
+
+        if ($failures >= self::MAX_FAILED_ATTEMPTS) {
+            return new WP_REST_Response(array('error' => 'Too many attempts'), 429);
+        }
+
+        $secret = sanitize_text_field($request->get_param('secret'));
+        $expected_secret = $this->get_shared_secret();
+
+        if (empty($expected_secret) || !hash_equals($expected_secret, $secret)) {
+            set_transient($key, $failures + 1, self::FAILED_ATTEMPTS_WINDOW);
+            return new WP_REST_Response(array('error' => 'Invalid secret'), 403);
+        }
+
+        return null;
+    }
+
+    /**
      * POST /wp-json/sysblok/v1/auth/verify
      * Exchange a one-time auth code for a session token.
      */
     public function rest_verify_code($request) {
         $code = sanitize_text_field($request->get_param('code'));
-        $secret = sanitize_text_field($request->get_param('secret'));
 
-        // Validate shared secret
-        $expected_secret = $this->get_shared_secret();
-
-        if (empty($expected_secret) || !hash_equals($expected_secret, $secret)) {
-            return new WP_REST_Response(
-                array('error' => 'Invalid secret'),
-                403
-            );
+        $denied = $this->check_secret($request);
+        if ($denied) {
+            return $denied;
         }
 
         if (empty($code)) {
             return new WP_REST_Response(
                 array('error' => 'Missing auth code'),
                 400
+            );
+        }
+
+        // Atomic claim: wp_cache_add succeeds for exactly one concurrent caller
+        // (when an external object cache is in use, which is when the race exists)
+        if (!wp_cache_add('lock_' . $code, 1, 'sysblok', 60)) {
+            return new WP_REST_Response(
+                array('error' => 'Invalid or expired auth code'),
+                401
             );
         }
 
@@ -374,16 +436,10 @@ class Sysblok_Headless_Auth {
      */
     public function rest_logout($request) {
         $token = sanitize_text_field($request->get_param('token'));
-        $secret = sanitize_text_field($request->get_param('secret'));
 
-        // Validate shared secret
-        $expected_secret = $this->get_shared_secret();
-
-        if (empty($expected_secret) || !hash_equals($expected_secret, $secret)) {
-            return new WP_REST_Response(
-                array('error' => 'Invalid secret'),
-                403
-            );
+        $denied = $this->check_secret($request);
+        if ($denied) {
+            return $denied;
         }
 
         if (!empty($token)) {

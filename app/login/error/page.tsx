@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { LOGIN_SLUG } from '@/lib/login-config'
+
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -34,7 +36,7 @@ export default async function LoginErrorPage({
           </div>
 
           <Link
-            href="../"
+            href={`/${LOGIN_SLUG}`}
             className="inline-flex items-center justify-center rounded-md text-sm font-medium bg-neutral-900 text-white hover:bg-neutral-700 h-11 px-8 w-full"
           >
             Попробовать снова

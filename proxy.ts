@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const loginSlug = process.env.LOGIN_SLUG || 'login'
+import { LOGIN_SLUG as loginSlug } from '@/lib/login-config'
+
 const isCustomSlug = loginSlug !== 'login'
 
 /**
