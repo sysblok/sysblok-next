@@ -530,6 +530,8 @@ function extractCoauthors(terms: unknown[][] | undefined): CardAuthor[] {
 export const getAuthorById = (id: number) =>
   wordpressFetch<Author>(`/wp-json/wp/v2/users/${id}`, { _fields: authorFields }, [`author-${id}`])
 
+export const AUTHOR_PHOTO_PLACEHOLDER = `${baseUrl}/wp-content/themes/mauer-narrator/components/author-photo/assets/avatar-placeholder.png`
+
 export const getAuthorPhotoById = (id: number) =>
   wordpressFetch<Author>(
     `/wp-json/wp/v2/users/${id}`,

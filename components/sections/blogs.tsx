@@ -1,12 +1,29 @@
 import {
+  AUTHOR_PHOTO_PLACEHOLDER,
+  getAuthorPhotoById,
   getCategoryBySlug,
   getChildCategories,
   getPostsPaginated,
-  getAuthorPhotoById,
 } from '@/lib/wordpress'
 import type { CardPost } from '@/lib/wordpress'
 import { PostCard } from '@/components/posts/post-card'
 import Link from 'next/link'
+
+// Фото автора приходит в _embedded только как id (даже с acf_format=standard),
+// поэтому url нужно получить отдельным запросом на автора (кэшируется по author-${id}).
+// Ошибка запроса не должна ронять весь блок — тогда показываем плейсхолдер.
+async function getAuthorPhoto(author: CardPost['author']): Promise<string> {
+  const photo = author?.acf?.photo
+  if (typeof photo === 'string') return photo
+  if (!author || typeof photo !== 'number') return AUTHOR_PHOTO_PLACEHOLDER
+
+  try {
+    return (await getAuthorPhotoById(author.id)) ?? AUTHOR_PHOTO_PLACEHOLDER
+  } catch (error) {
+    console.error(`Failed to fetch photo for author ${author.id}:`, error)
+    return AUTHOR_PHOTO_PLACEHOLDER
+  }
+}
 
 export async function Blogs() {
   const blogCategory = await getCategoryBySlug('blog')
@@ -42,25 +59,18 @@ export async function Blogs() {
 
   if (posts.length === 0) return null
 
-  // Фото автора приходит в _embedded только как id (даже с acf_format=standard),
-  // поэтому url нужно получить отдельным запросом на автора. По одному автору
-  // на карточку, запросы кэшируются по author-${id}.
   const postsWithPhotos = await Promise.all(
-    posts.map(async (post) => {
-      const photoId = post.author?.acf?.photo
-      if (typeof photoId !== 'number' || !post.author) return post
-
-      const photoUrl = await getAuthorPhotoById(post.author.id)
-      if (!photoUrl) return post
-
-      return {
-        ...post,
-        author: {
-          ...post.author,
-          acf: { ...post.author.acf, photo: photoUrl },
-        },
-      }
-    }),
+    posts.map(async (post) =>
+      post.author
+        ? {
+            ...post,
+            author: {
+              ...post.author,
+              acf: { ...post.author.acf, photo: await getAuthorPhoto(post.author) },
+            },
+          }
+        : post,
+    ),
   )
 
   return (
